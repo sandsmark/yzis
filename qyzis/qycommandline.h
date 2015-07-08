@@ -20,7 +20,7 @@
 #ifndef QYZISCOMMAND_H
 #define QYZISCOMMAND_H
 
-#include <qlineedit.h>
+#include <QLineEdit>
 
 class QYView;
 

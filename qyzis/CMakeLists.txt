@@ -61,7 +61,7 @@ if(APPLE)
 	install(TARGETS qyzis DESTINATION ${APPLE_APPLICATION_DIR})
 endif (APPLE)
 
-target_link_libraries(qyzis Qt5::Core Qt5::Gui yzis )
+target_link_libraries(qyzis Qt5::Core Qt5::Gui Qt5::Widgets yzis )
 
 ########### install files ###############
 install( FILES qyzis.desktop DESTINATION ${APPLNK_INSTALL_DIR}/Editors )
