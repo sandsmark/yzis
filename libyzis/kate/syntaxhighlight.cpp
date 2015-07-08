@@ -732,7 +732,7 @@ int YzisHlFloat::checkHgl(const QString& text, int offset, int len)
   if (!b)
     return 0;
 
-  if ((len > 0) && (text[offset].toAscii() == 'E'))
+  if ((len > 0) && (text[offset] == 'E'))
   {
     offset++;
     len--;
@@ -802,14 +802,14 @@ YzisHlCOct::YzisHlCOct(int attribute, int context, signed char regionId,signed c
 
 int YzisHlCOct::checkHgl(const QString& text, int offset, int len)
 {
-  if (text[offset].toAscii() == '0')
+  if (text[offset] == '0')
   {
     offset++;
     len--;
 
     int offset2 = offset;
 
-    while ((len > 0) && (text[offset2].toAscii() >= '0' && text[offset2].toAscii() <= '7'))
+    while ((len > 0) && (text[offset2] >= '0' && text[offset2] <= '7'))
     {
       offset2++;
       len--;
@@ -817,7 +817,7 @@ int YzisHlCOct::checkHgl(const QString& text, int offset, int len)
 
     if (offset2 > offset)
     {
-      if ((len > 0) && (text[offset2].toAscii() == 'L' || text[offset].toAscii() == 'U' ))
+      if ((len > 0) && (text[offset2] == 'L' || text[offset] == 'U' ))
         offset2++;
 
       return offset2;
@@ -837,13 +837,13 @@ YzisHlCHex::YzisHlCHex(int attribute, int context,signed char regionId,signed ch
 
 int YzisHlCHex::checkHgl(const QString& text, int offset, int len)
 {
-  if ((len > 1) && (text[offset++].toAscii() == '0') && (text[offset++].toAscii() == 'X' ))
+  if ((len > 1) && (text[offset++] == '0') && (text[offset++] == 'X' ))
   {
     len -= 2;
 
     int offset2 = offset;
 
-    while ((len > 0) && (text[offset2].isDigit() || (text[offset2].toAscii() >= 'A' && text[offset2].toAscii() <= 'F')))
+    while ((len > 0) && (text[offset2].isDigit() || (text[offset2] >= 'A' && text[offset2] <= 'F')))
     {
       offset2++;
       len--;
@@ -851,7 +851,7 @@ int YzisHlCHex::checkHgl(const QString& text, int offset, int len)
 
     if (offset2 > offset)
     {
-      if ((len > 0) && (text[offset2].toAscii() == 'L' || text[offset2].toAscii() == 'U' ))
+      if ((len > 0) && (text[offset2] == 'L' || text[offset2] == 'U' ))
         offset2++;
 
       return offset2;
@@ -890,7 +890,7 @@ int YzisHlCFloat::checkHgl(const QString& text, int offset, int len)
 
   if (offset2)
   {
-    if (text[offset2].toAscii() == 'F' )
+    if (text[offset2] == 'F' )
       offset2++;
 
     return offset2;
@@ -899,7 +899,7 @@ int YzisHlCFloat::checkHgl(const QString& text, int offset, int len)
   {
     offset2 = checkIntHgl(text, offset, len);
 
-    if (offset2 && (text[offset2].toAscii() == 'F' ))
+    if (offset2 && (text[offset2] == 'F' ))
       return ++offset2;
     else
       return 0;
@@ -1007,7 +1007,7 @@ static int checkEscapedChar(const QString& text, int offset, int& len)
     offset++;
     len--;
 
-    switch(text[offset].toAscii())
+    switch(text[offset].unicode())
     {
       case  'a': // checks for control chars
       case  'b': // we want to fall through
@@ -1033,7 +1033,7 @@ static int checkEscapedChar(const QString& text, int offset, int& len)
         // replaced with something else but
         // for right now they work
         // check for hexdigits
-        for (i = 0; len > 0 && i < 2 && ( (text[offset].toAscii() >= '0' && text[offset].toAscii() <= '9') || (text[offset].toAscii() >= 'A' && text[offset].toAscii() <= 'F')); i++)
+        for (i = 0; len > 0 && i < 2 && ( (text[offset] >= '0' && text[offset] <= '9') || (text[offset] >= 'A' && text[offset] <= 'F')); i++)
         {
           offset++;
           len--;
@@ -1046,7 +1046,7 @@ static int checkEscapedChar(const QString& text, int offset, int& len)
 
       case '0': case '1': case '2': case '3' :
       case '4': case '5': case '6': case '7' :
-        for (i = 0; (len > 0) && (i < 3) && (text[offset].toAscii() >='0'&& text[offset].toAscii() <='7'); i++)
+        for (i = 0; (len > 0) && (i < 3) && (text[offset] >='0'&& text[offset] <='7'); i++)
         {
           offset++;
           len--;

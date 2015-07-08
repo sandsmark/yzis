@@ -404,7 +404,7 @@ QString YModeEx::parseRange( const QString& inputs, YView* view, int* range, boo
         QRegExp reg( currentRange->regexp() );
         *matched = reg.exactMatch( _input );
         if ( *matched ) {
-            unsigned int nc = reg.numCaptures();
+            unsigned int nc = reg.captureCount();
             *range = (this->*( currentRange->poolMethod() )) (YExRangeArgs( currentRange, view, reg.cap( 1 ) ));
             QString s_add = reg.cap( nc - 1 );
             dbg() << "matched " << currentRange->keySeq() << ": " << *range << " and " << s_add << endl;
@@ -456,7 +456,7 @@ CmdState YModeEx::execExCommand( YView* view, const QString& inputs )
         QRegExp reg(curCommand->regexp());
         matched = reg.exactMatch( _input );
         if ( matched ) {
-            unsigned int nc = reg.numCaptures();
+            unsigned int nc = reg.captureCount();
             dbg() << "matched " << curCommand->keySeq() << " " << reg.cap( 1 ) << "," << reg.cap( nc ) << endl;
             QString arg = reg.cap( nc );
             bool force = arg[ 0 ] == '!';

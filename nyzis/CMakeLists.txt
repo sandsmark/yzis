@@ -13,14 +13,13 @@ set(nyzis_SRCS
    nystatusbar.cpp
 )
 
-qt4_automoc(${nyzis_SRCS})
 add_executable(nyzis ${nyzis_SRCS})
-target_link_libraries(nyzis ${NCURSES_LIBRARIES} ${QT_QTCORE_LIBRARY} yzis )
+target_link_libraries(nyzis ${NCURSES_LIBRARIES} Qt5::Core yzis )
 
 if (ENABLE_X_IN_NYZIS)
-	target_link_libraries(nyzis ${NCURSES_LIBRARIES} ${X11_LIBRARIES} ${QT_QTCORE_LIBRARY} yzis )
+    target_link_libraries(nyzis ${NCURSES_LIBRARIES} ${X11_LIBRARIES} Qt5::Core yzis )
 else (ENABLE_X_IN_NYZIS)
-	target_link_libraries(nyzis ${NCURSES_LIBRARIES} ${QT_QTCORE_LIBRARY} yzis )
+    target_link_libraries(nyzis ${NCURSES_LIBRARIES} Qt5::Core yzis )
 endif (ENABLE_X_IN_NYZIS)
 
 install(TARGETS nyzis DESTINATION bin)

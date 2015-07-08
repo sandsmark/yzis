@@ -15,8 +15,6 @@ set(libyzisrunner_SRCS
    main.cpp
 )
 
-qt4_automoc(${libyzisrunner_SRCS})
-
 if (APPLE)
 	# Mac OSX Bundle
 	set(MACOSX_BUNDLE_BUNDLE_NAME libyzisrunner)
@@ -28,5 +26,5 @@ else (APPLE)
 	install(TARGETS libyzisrunner DESTINATION bin)
 endif (APPLE)
 
-target_link_libraries(libyzisrunner ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} yzis )
+target_link_libraries(libyzisrunner Qt5::Core Qt5::Gui yzis )
 

@@ -28,6 +28,7 @@
 
 #include <QPair>
 #include <QVector>
+#include <QString>
 
 class YInfoJumpListRecord;
 

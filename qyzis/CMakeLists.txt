@@ -24,9 +24,8 @@ set(qyzis_SRCS
 )
 
 
-qt4_automoc(${qyzis_SRCS})
-qt4_wrap_ui(qyzis_SRCS ${qyzis_UI})
-qt4_add_resources(qyzis_RESOURCES qyzis.qrc)
+qt5_wrap_ui(qyzis_SRCS ${qyzis_UI})
+qt5_add_resources(qyzis_RESOURCES qyzis.qrc)
 
 if (MINGW)
     # resource compilation for MinGW
@@ -62,7 +61,7 @@ if(APPLE)
 	install(TARGETS qyzis DESTINATION ${APPLE_APPLICATION_DIR})
 endif (APPLE)
 
-target_link_libraries(qyzis ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} yzis )
+target_link_libraries(qyzis Qt5::Core Qt5::Gui yzis )
 
 ########### install files ###############
 install( FILES qyzis.desktop DESTINATION ${APPLNK_INSTALL_DIR}/Editors )

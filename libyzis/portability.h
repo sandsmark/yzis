@@ -49,6 +49,7 @@
 //#include <unistd.h>
 #include <pwd.h> // still needed for kate/*, which is bad
 #include "translator.h"
+#include <unistd.h>
 //#include <libintl.h>
 
  #define CHECK_GETEUID( v )  (v == geteuid())

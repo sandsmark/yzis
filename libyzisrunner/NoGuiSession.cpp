@@ -122,5 +122,4 @@ void NoGuiSession::guiSetClipboardText(const QString& text, Clipboard::Mode)
     dbg().SPrintf("guiSetClipboardText( text='%s' )", qp(text) );
 }
 
-#include "NoGuiSession.moc"
 

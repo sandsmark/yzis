@@ -308,7 +308,7 @@ int YLuaRegexp::Regexp_numCaptures(lua_State *L)
     lua_pop(L, 2);
     // stack: /
 
-    lua_pushnumber( L, regexp->numCaptures() );
+    lua_pushnumber( L, regexp->captureCount() );
     // stack: int
     YASSERT_EQUALS( lua_gettop(L), 1 );
     return 1 ;

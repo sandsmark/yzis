@@ -120,7 +120,7 @@ void YDebugBackend::init()
     // it is better left off disabled at the moment. The last one gets lost
     // and the last one is the most interesting one.
 
-    qInstallMsgHandler( yzisMsgHandler );
+    qInstallMessageHandler( yzisMsgHandler );
 
 }
 
@@ -335,7 +335,7 @@ QString YDebugBackend::toString()
     return s;
 }
 
-void YDebugBackend::yzisMsgHandler( QtMsgType msgType, const char * msg )
+void YDebugBackend::yzisMsgHandler( QtMsgType msgType, const QMessageLogContext &context, const QString &msg )
 {
     // It does not seem to be working. We do not display the last message
     // send by Qt when a qFatal() or Q_ASSERT() failure occurs.

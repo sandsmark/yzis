@@ -18,11 +18,7 @@ set(CMAKE_INCLUDE_DIRECTORIES_PROJECT_BEFORE ON)
 set(CMAKE_COLOR_MAKEFILE ON)
 
 
-if (WIN32)
-    cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
-else(WIN32)
-    cmake_minimum_required(VERSION 2.4.8 FATAL_ERROR)
-endif(WIN32)
+cmake_minimum_required(VERSION 2.4.8 FATAL_ERROR)
 
 # yzis stores the cmake modules in cmake/modules
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
@@ -109,30 +105,9 @@ find_package(LibLua51 REQUIRED)
 set(LIBLUA_INCLUDE_DIR ${LIBLUA51_INCLUDE_DIR})
 set(LIBLUA_LIBRARIES ${LIBLUA51_LIBRARIES})
 
-### Qt
-if (ENABLE_QYZIS)
-    # QYzis requires Qt 4.2
-    set(QT_MIN_VERSION "4.2.0")
-else (ENABLE_QYZIS)
-    set(QT_MIN_VERSION "4.1.0")
-endif (ENABLE_QYZIS)
-
-find_package(Qt4 REQUIRED)
-
-if (NOT QT_QTTEST_FOUND)
-	MESSAGE(FATAL_ERROR "Could not find qt-test library")
-endif(NOT QT_QTTEST_FOUND)
-
-if (NOT QT_QTGUI_FOUND)
-	MESSAGE(FATAL_ERROR "Could not find qt-gui library")
-endif(NOT QT_QTGUI_FOUND)
-
-if (NOT QT_QTXML_FOUND)
-	MESSAGE(FATAL_ERROR "Could not find qt-xml library")
-endif (NOT QT_QTXML_FOUND)
-
-
-include( FixQt4DebugBuild )
+find_package(Qt5 REQUIRED COMPONENTS Core Gui Widgets Test Xml)
+set(CMAKE_AUTOMOC ON)
+#include( FixQt4DebugBuild )
 
 # for syntax files
 if (NOT WIN32)

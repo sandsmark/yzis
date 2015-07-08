@@ -74,7 +74,7 @@ void YInternalOptionPool::loadFrom(const QString& file )
             } else {
                 if ( rx2.exactMatch( line ) ) {
                     bool matched = false;
-                    if ( rx2.numCaptures() > 1 ) {
+                    if ( rx2.captureCount() > 1 ) {
                         setOptionFromString( &matched, rx2.cap(1).trimmed() + '=' + rx2.cap(2).trimmed() );
                         if ( !matched ) // this option is not known, probably a setting
                             setQStringEntry( rx2.cap(1).trimmed(), rx2.cap(2).trimmed() );

@@ -165,7 +165,7 @@ void YInfo::read(void)
                     contents << QString::null;
                 }
 
-                dbg() << "Key:<" << key.toAscii() << ">" << endl;
+                dbg() << "Key:<" << key << ">" << endl;
                 dbg() << "Length:<" << contents.size() << ">" << endl;
                 for ( int i = 0; i < contents.size(); ++i ) {
                     dbg() << "<" << contents.at(i) << ">" << endl;

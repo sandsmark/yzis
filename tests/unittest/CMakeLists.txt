@@ -1,4 +1,3 @@
-
 # sources
 set(yzis_unittest_SRCS 
     main.cpp 
@@ -10,8 +9,6 @@ set(yzis_unittest_SRCS
 	testDrawBuffer.cpp
 )
 
-qt4_automoc(${yzis_unittest_SRCS})
-
 add_executable(yzis_unittest ${yzis_unittest_SRCS})
 
 include_directories( 
@@ -19,14 +16,13 @@ include_directories(
     ${CMAKE_SOURCE_DIR} 
     ${CMAKE_BINARY_DIR}/libyzis/ 
     ${CMAKE_SOURCE_DIR}/libyzis/ 
-    ${QT_INCLUDES}  
     ${LIBLUA_INCLUDE_DIR}
     ${YZIS_INCLUDES}
     )
 
 target_link_libraries(yzis_unittest 
-    ${QT_QTTEST_LIBRARY} 
-    ${QT_QTCORE_LIBRARY}
+    Qt5::Test
+    Qt5::Core
     ${LIBLUA_LIBRARIES}
     ${MAGIC_LIBRARIES} 
     ${GETTEXT_LIBRARIES}

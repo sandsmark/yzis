@@ -286,7 +286,7 @@ public:
       * The messages of Qt are printed on yzis log system, in the area
       * Qt, with the appropriate debugging level.
       */
-    static void yzisMsgHandler( QtMsgType msgType, const char * text );
+    static void yzisMsgHandler( QtMsgType msgType, const QMessageLogContext &context, const QString &msg );
 
     /** Allocate memory for the object from libyzis.
       *
