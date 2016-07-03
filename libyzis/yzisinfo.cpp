@@ -56,6 +56,7 @@ YInfo::YInfo()
     dbg() << HERE() << endl;
     mYzisinfo.setFileName(resourceMgr()->findResource(WritableConfigResource, "yzisinfo"));
     mYzisinfoInitialized = false;
+    read();
 }
 
 /**
@@ -66,6 +67,7 @@ YInfo::YInfo(const QString & path)
 {
     dbg() << HERE() << endl;
     mYzisinfo.setFileName(path);
+    read();
 }
 
 /**
@@ -81,7 +83,7 @@ YInfo::~YInfo()
  * YZYsisinfo::readYzisinfo
  */
 
-void YInfo::read(void)
+void YInfo::read()
 {
     dbg() << HERE() << endl;
 
@@ -236,6 +238,7 @@ void YInfo::write()
 {
     dbg() << HERE() << endl;
 
+    YSession::self()->getOptions()->setGroup("Global");
     if(mYzisinfo.open(QIODevice::WriteOnly)) {
         QTextStream write(&mYzisinfo);
         write.setCodec(QTextCodec::codecForName("utf8"));

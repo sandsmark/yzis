@@ -74,7 +74,7 @@ public:
      * Actually read the yzisinfo file.
      */
 
-    void read(void);
+    void read();
 
     /**
      * Method to update the start position for the given file
