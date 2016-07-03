@@ -3169,11 +3169,9 @@ int YzisHlManager::wildcardFind(const QString &fileName)
 int YzisHlManager::realWildcardFind(const QString &fileName)
 {
     deepdbg() << "realWidcardFind( " << fileName << ")" << endl;
-    static QRegExp sep("\\s*;\\s*");
     QList<YzisHighlighting*> highlights;
 
-    for(int ab = 0 ; ab < hlList.size(); ++ab) {
-        YzisHighlighting *highlight = hlList.at(ab);
+    for (YzisHighlighting *highlight : hlList) {
         highlight->loadWildcards();
         QStringList::Iterator it = highlight->getPlainExtensions().begin(), end = highlight->getPlainExtensions().end();
 
@@ -3182,9 +3180,7 @@ int YzisHlManager::realWildcardFind(const QString &fileName)
                 highlights.append(highlight);
             }
 
-        for(int i = 0; i < (int)highlight->getRegexpExtensions().count(); i++) {
-            QRegExp re = highlight->getRegexpExtensions()[i];
-
+        for (const QRegExp &re : highlight->getRegexpExtensions()) {
             if(re.exactMatch(fileName)) {
                 highlights.append(highlight);
             }
@@ -3195,10 +3191,8 @@ int YzisHlManager::realWildcardFind(const QString &fileName)
         int pri = -1;
         int hl = -1;
 
-        for(int ab = 0 ; ab < highlights.size(); ++ab) {
-            YzisHighlighting *highlight = highlights.at(ab);
-
-            if(highlight != 0L && highlight->priority() > pri) {
+        for (YzisHighlighting *highlight : highlights) {
+            if(highlight != nullptr && highlight->priority() > pri) {
                 pri = highlight->priority();
                 hl = hlList.indexOf(highlight);
             }
