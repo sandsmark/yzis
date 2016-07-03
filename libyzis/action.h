@@ -120,8 +120,6 @@ public:
 
 private:
     YBuffer* mBuffer;
-    YCursor* mPos;
-
 };
 
 #endif

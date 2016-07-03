@@ -370,7 +370,6 @@ class YzisHlDetectIdentifier : public YzisHlItem
 //BEGIN STATICS
 YzisHlManager *YzisHlManager::s_self = 0;
 
-static const bool trueBool = true;
 static const QString stdDeliminator = QString (" \t.():!+,-<=>%&*/;?[]^{|}~\\");
 //END
 
