@@ -35,8 +35,7 @@
 #include <QTime>
 #include <QLinkedList>
 #include <QVector>
-
-#include <magic.h>
+#include <QMimeDatabase>
 
 /* yzis */
 #include "attribute.h"
@@ -456,11 +455,8 @@ public:
 
 private:
     int wildcardFind(const QString &fileName);
-    int mimeFind(const QString &contents);
-    //    int mimeFind(const QByteArray &contents);
+    int mimeFind(const QString &filename);
     int realWildcardFind(const QString &fileName);
-    QString findByContent(const QString& contents);
-    //	QString findByContent( const QByteArray& contents );
 
 private:
     friend class YzisHighlighting;
@@ -477,7 +473,7 @@ private:
     uint dynamicCtxsCount;
     QTime lastCtxsReset;
     bool forceNoDCReset;
-    magic_t magicSet;
+    QMimeDatabase m_mimeDatabase;
 };
 
 #endif

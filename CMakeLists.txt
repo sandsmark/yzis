@@ -54,7 +54,6 @@ option(ENABLE_SAFE_MODE "prevent yzis from crashing when some bugs occured" ON)
 
 include(ConfigureDoc)
 
-find_package(Magic REQUIRED)
 find_package(Gettext REQUIRED)
 
 
@@ -156,7 +155,7 @@ if (CMAKE_COMPILER_IS_GNUCXX)
 endif (CMAKE_COMPILER_IS_GNUCXX)
 
 # libyzis dependencies includes
-set(YZIS_INCLUDES ${QT_INCLUDES} ${LUA_INCLUDE_DIR} ${MAGIC_INCLUDE_DIR} ${GETTEXT_INCLUDE_DIR})
+set(YZIS_INCLUDES ${QT_INCLUDES} ${LUA_INCLUDE_DIR} ${GETTEXT_INCLUDE_DIR})
 # libyzis includes
 set(YZIS_INCLUDES ${YZIS_INCLUDES} ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR}/libyzis ${CMAKE_SOURCE_DIR}/libyzis)
 

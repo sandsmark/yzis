@@ -47,9 +47,6 @@
 //END
 
 //BEGIN defines
-// same as in kmimemagic, no need to feed more data
-#define YZIS_HL_HOWMANY 1024
-
 // min. x seconds between two dynamic contexts reset
 static const int YZIS_DYNAMIC_CONTEXTS_RESET_DELAY = 30 * 1000;
 
@@ -3036,28 +3033,10 @@ YzisHlManager::YzisHlManager()
     if(! resource.isEmpty()) {
         YLuaEngine::self()->source(resource);
     }
-
-    magicSet = magic_open(MAGIC_MIME | MAGIC_COMPRESS | MAGIC_SYMLINK);
-
-    if(magicSet == NULL) {
-        magic_close(magicSet);
-    } else {
-        if(magic_load(magicSet, NULL) == -1) {
-            dbg() << "YzisHlManager(): magic_load(NULL) error: " << magic_error(magicSet) << endl;
-            magic_close(magicSet);
-            magicSet = NULL;
-        } else {
-            dbg() << "YzisHlManager(): magic database loaded" << endl;
-        }
-    }
 }
 
 YzisHlManager::~YzisHlManager()
 {
-    if(magicSet) {
-        magic_close(magicSet);
-    }
-
     delete syntax;
 
     // we don't need to do it for hlDict, it uses the same pointers
@@ -3105,31 +3084,6 @@ int YzisHlManager::detectHighlighting(YBuffer *doc)
 
     if(hl == -1) {
         hl = mimeFind(doc->fileName());
-        /*	QString buf = "";
-            for ( unsigned int i = 0; i < doc->lineCount(); i++ ) {
-            	buf += doc->textline( i ) + "\n";
-            }
-            hl = mimeFind( buf ); */
-        /*
-          QByteArray buf (YZIS_HL_HOWMANY);
-          uint bufpos = 0;
-          for (uint i=0; i < doc->lineCount(); i++)
-          {
-            QString line = doc->textline( i );
-            uint len = line.length() + 1;
-
-            if (bufpos + len > YZIS_HL_HOWMANY)
-              len = YZIS_HL_HOWMANY - bufpos;
-
-            memcpy(&buf[bufpos], (line + "\n").latin1(), len);
-
-            bufpos += len;
-
-            if (bufpos >= YZIS_HL_HOWMANY)
-              break;
-          }
-          buf.resize( bufpos );
-          hl = mimeFind (buf); */
     }
 
     return hl;
@@ -3204,32 +3158,11 @@ int YzisHlManager::realWildcardFind(const QString &fileName)
     return -1;
 }
 
-QString YzisHlManager::findByContent(const QString& contents)
+int YzisHlManager::mimeFind(const QString &filename)
 {
-    dbg() << "findByContent( " << contents << ")" << endl;
-
-    if(magicSet == NULL) {
-        return QString();
-    }
-
-    const char* magic_result = magic_file(magicSet, contents.toUtf8());
-
-    if(magic_result) {
-        dbg() << "findByContent(): Magic for " << contents << " results: " << magic_result << endl;
-        QString mime = QString(magic_result);
-        mime = mime.mid(0, mime.indexOf(';'));
-        dbg() << "findByContent() return " << mime << endl;
-        return mime;
-    }
-
-    return QString();
-}
-
-int YzisHlManager::mimeFind(const QString &contents)
-{
-    dbg() << "mimeFind( " << contents << ")" << endl;
+    dbg() << "mimeFind( " << filename << ")" << endl;
     static QRegExp sep("\\s*;\\s*");
-    QString mt = findByContent(contents);
+    QString mt = m_mimeDatabase.mimeTypeForFile(filename).name();
     QList<YzisHighlighting*> highlights;
     YzisHighlighting *highlight = hlList.at(0);
 

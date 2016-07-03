@@ -24,7 +24,6 @@ target_link_libraries(yzis_unittest
     Qt5::Test
     Qt5::Core
     ${LIBLUA_LIBRARIES}
-    ${MAGIC_LIBRARIES} 
     ${GETTEXT_LIBRARIES}
 	yzis
     )
