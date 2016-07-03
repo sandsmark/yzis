@@ -49,7 +49,7 @@ using namespace std;
 QYEdit::QYEdit(QYView * view )
         : QWidget( view )
         , signalMapper(this)
-		, mCursor(view, this, QYCursor::CursorFilledRect)
+        , mCursor(view, this, QYCursor::CursorHidden)
 {
     mView = view;
 
@@ -121,13 +121,7 @@ QYCursor::CursorShape QYEdit::cursorShape()
     deepdbg() << "cursorShape(): mode=" << m << endl;
     shape = mCursor.shape();
     if ( ! hasFocus() ) {
-        if (mView->mCommandLine->hasFocus()) {
-            // command line has focus
-            shape = QYCursor::CursorHidden;
-        } else {
-            // the widget no longer has focus
-            shape = QYCursor::CursorFrameRect;
-        }
+        shape = QYCursor::CursorFrameRect;
     } else {
         switch ( m ) {
         case YMode::ModeInsert :
@@ -137,10 +131,12 @@ QYCursor::CursorShape QYEdit::cursorShape()
             shape = QYCursor::CursorHbar;
             break;
         case YMode::ModeIntro:
+            shape = QYCursor::CursorHidden;
+            break;
         case YMode::ModeEx:
         case YMode::ModeSearch:
         case YMode::ModeSearchBackward:
-            shape = QYCursor::CursorHidden;
+            shape = QYCursor::CursorFrameRect;
             break;
         case YMode::ModeCompletion :
             // do not change it
