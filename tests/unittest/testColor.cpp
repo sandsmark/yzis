@@ -42,6 +42,3 @@ void TestColor::subTestColor( const QString& name,
     c.setRgb( rgb );
     CHECK_VALIDITY()
 }
-
-#include "testColor.moc"
-

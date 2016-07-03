@@ -207,6 +207,3 @@ void TestYDebugBackend::testParseRcFile()
 
     QFile::remove( fname );
 }
-
-#include "testDebug.moc"
-

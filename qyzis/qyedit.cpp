@@ -489,5 +489,3 @@ void QYEdit::imEndEvent( QIMEvent *e ) {
  e->accept();
 }*/
 
-#include "qyedit.moc"
-

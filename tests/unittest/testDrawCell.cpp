@@ -22,6 +22,3 @@ void TestDrawCell::testDrawCell()
 	QCOMPARE(c2.steps().count(), 5);
 	QCOMPARE(c2.stepsShift(), 3);
 }
-
-#include "testDrawCell.moc"
-

@@ -148,6 +148,3 @@ void TestDrawBuffer::testDrawBufferEmpty()
 	COMPARE_CELLINFO(ci, YDrawCellInfo::EOL, YCursor(0,0), QString(" "));
 	QVERIFY(!it.isValid());
 }
-
-#include "testDrawBuffer.moc"
-

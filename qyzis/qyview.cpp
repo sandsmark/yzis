@@ -334,6 +334,3 @@ void QYView::scrollView( int value )
             mVScroll->setValue( value );
     }
 }
-
-#include "qyview.moc"
-

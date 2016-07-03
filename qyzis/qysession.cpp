@@ -297,6 +297,3 @@ YDebugStream& operator<<( YDebugStream& out, const Qt::FocusReason & e )
     }
     return out;
 }
-
-#include "qysession.moc"
-
