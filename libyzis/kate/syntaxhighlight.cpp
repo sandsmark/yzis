@@ -3104,7 +3104,7 @@ int YzisHlManager::detectHighlighting(YBuffer *doc)
     int hl = wildcardFind(doc->fileNameShort());
 
     if(hl == -1) {
-        hl = mimeFind(doc->fileNameShort());
+        hl = mimeFind(doc->fileName());
         /*	QString buf = "";
             for ( unsigned int i = 0; i < doc->lineCount(); i++ ) {
             	buf += doc->textline( i ) + "\n";
