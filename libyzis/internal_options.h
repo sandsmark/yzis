@@ -92,7 +92,7 @@ public:
     /**
      * return a QString option
      */
-    const QString& readStringOption( const QString& key , const QString& def = QString() ) const;
+    const QString readStringOption(const QString& key , const QString &def = QString() ) const;
 
     /**
      * return an int option
@@ -123,7 +123,7 @@ public:
     /**
      * return a QString option
      */
-    const QString& readQStringEntry( const QString& key , const QString& def = QString() ) const;
+    const QString readQStringEntry( const QString& key , const QString& def = QString() ) const;
 
     /**
      * Sets a qstring option

@@ -304,7 +304,7 @@ bool YInternalOptionPool::fillOptionFromString( YOption* opt, const QString& ent
     return ret;
 }
 
-const QString& YInternalOptionPool::readStringOption( const QString& _key, const QString& def ) const
+const QString YInternalOptionPool::readStringOption( const QString& _key, const QString& def ) const
 {
     QString key = _key;
     if ( ! key.contains( '\\' ) )
@@ -367,7 +367,7 @@ YColor YInternalOptionPool::readColorOption( const QString& _key, const YColor& 
     return def;
 }
 
-const QString& YInternalOptionPool::readQStringEntry( const QString& key , const QString& def ) const
+const QString YInternalOptionPool::readQStringEntry( const QString& key , const QString& def ) const
 {
     QString _key = currentGroup + "\\" + key;
     if ( mOptions.contains( _key ) )
