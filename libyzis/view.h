@@ -54,121 +54,127 @@ class YOptionValue;
 class YZFoldPool;
 
 /**
- * MUST be reimplemented in the GUI. 
+ * MUST be reimplemented in the GUI.
  * It's the basis to display the content of a buffer.
  * One view is the display of some part of a buffer, it is used to receive inputs and displays
  * corresponding outputs.
  * Each @ref YBuffer can have multiple views.
  * @ref YBuffer will take care of synchronizing every views so updates are propagated to all views.
  * @short Abstract object for a view.
- * 
+ *
  */
 class YZIS_EXPORT YView : public YViewIface
 {
 
-	public:
-		//-------------------------------------------------------
-		// ----------------- Constructor/Destructor and ID
-		//-------------------------------------------------------
-		/**
-		 * Each view is bound to a buffer, @arg lines is the initial
-		 * number of columns and @arg lines the initial
-		 * number of lines that this view can display
-		 */
-		YView(YBuffer *_b, YSession *sess, int cols, int lines);
-
-		/**
-		 * The destructor
-		 */
-		virtual ~YView();
-
-		/**
-		 * Accessor to the list of foldings
-		 */
-		inline YZFoldPool* folds() const
-		{
-			return mFoldPool;
-		}
-
-		/**
-		 * A global UID for this view
-		 *   only used for local options (<filename>-view-<id>)
-		 **/
-		inline int getId() const { return id; }
-
-		/** Return a string description of the view.
-		 *
-		 * The string description contains:
-		 * - the id
-		 * - the buffer filename
-		 * - the this pointer
-		 *
-		 **/
-		QString toString() const;
-
-		//-------------------------------------------------------
-		// ----------------- Visible Areas
-		//-------------------------------------------------------
-		/**
-		 * Updates the number of visible @arg c columns and @arg l lines
-		 * 	it will cause a screen recalculation.
-		 * @arg c is the number of columns
-		 * @arg l is the number of lines
-		 */
-		void setVisibleArea( int c, int l );
-
-		//-------------------------------------------------------
-		// ----------------- Line Visibility
-		//-------------------------------------------------------
-		/**
-		 * Returns the index of the first line displayed on the view
-		 */
-		int topLine() const;
-
-		int bottomLine() const;
-
-		/**
-		 * returns the number of line this view can display
-		 */
-		int getLinesVisible() const;
-
-		/**
-		 * returns the number of lines this view can display
-		 * @return the number of visible lines
-		 */
-		int getColumnsVisible() const;
-
-		/**
-		 * Returns true if the line @arg l is visible. False otherwise.
-		 */
-		bool isLineVisible(int l) const;
-
-		/**
-		 * Returns true if the column @arg c is visible for @arg line ( expanding TABs ). False otherwise
-		 */
-		bool isColumnVisible(int column, int line) const;
-
-		//-------------------------------------------------------
-		// ----------------- Associated Objects
-		//-------------------------------------------------------
-		/**
-		 * Return my current buffer
-		 */
-		YBuffer* buffer() const { return mBuffer; }
-		//  const YBuffer *myBuffer() const { return mBuffer; }
-
-		/**
-		 * Return my current line search
-		 */
-		YLineSearch* myLineSearch()
-		{
-			return mLineSearch;
-		}
-
-		/**
-     * Accessor to the list of recorded registers
-     * @return a QList of @ref YRegisters
+public:
+    //-------------------------------------------------------
+    // ----------------- Constructor/Destructor and ID
+    //-------------------------------------------------------
+    /**
+     * Each view is bound to a buffer, @arg lines is the initial
+     * number of columns and @arg lines the initial
+     * number of lines that this view can display
      */
+    YView(YBuffer *_b, YSession *sess, int cols, int lines);
+
+    /**
+     * The destructor
+     */
+    virtual ~YView();
+
+    /**
+     * Accessor to the list of foldings
+     */
+    inline YZFoldPool* folds() const
+    {
+        return mFoldPool;
+    }
+
+    /**
+     * A global UID for this view
+     *   only used for local options (<filename>-view-<id>)
+     **/
+    inline int getId() const
+    {
+        return id;
+    }
+
+    /** Return a string description of the view.
+     *
+     * The string description contains:
+     * - the id
+     * - the buffer filename
+     * - the this pointer
+     *
+     **/
+    QString toString() const;
+
+    //-------------------------------------------------------
+    // ----------------- Visible Areas
+    //-------------------------------------------------------
+    /**
+     * Updates the number of visible @arg c columns and @arg l lines
+     * 	it will cause a screen recalculation.
+     * @arg c is the number of columns
+     * @arg l is the number of lines
+     */
+    void setVisibleArea(int c, int l);
+
+    //-------------------------------------------------------
+    // ----------------- Line Visibility
+    //-------------------------------------------------------
+    /**
+     * Returns the index of the first line displayed on the view
+     */
+    int topLine() const;
+
+    int bottomLine() const;
+
+    /**
+     * returns the number of line this view can display
+     */
+    int getLinesVisible() const;
+
+    /**
+     * returns the number of lines this view can display
+     * @return the number of visible lines
+     */
+    int getColumnsVisible() const;
+
+    /**
+     * Returns true if the line @arg l is visible. False otherwise.
+     */
+    bool isLineVisible(int l) const;
+
+    /**
+     * Returns true if the column @arg c is visible for @arg line ( expanding TABs ). False otherwise
+     */
+    bool isColumnVisible(int column, int line) const;
+
+    //-------------------------------------------------------
+    // ----------------- Associated Objects
+    //-------------------------------------------------------
+    /**
+     * Return my current buffer
+     */
+    YBuffer* buffer() const
+    {
+        return mBuffer;
+    }
+    //  const YBuffer *myBuffer() const { return mBuffer; }
+
+    /**
+     * Return my current line search
+     */
+    YLineSearch* myLineSearch()
+    {
+        return mLineSearch;
+    }
+
+    /**
+    * Accessor to the list of recorded registers
+    * @return a QList of @ref YRegisters
+    */
     const QList<QChar> registersRecorded() const
     {
         return mRegs;
@@ -180,15 +186,15 @@ class YZIS_EXPORT YView : public YViewIface
     /**
      * Adjust view vertically to show @arg line on bottom
      */
-    void scrollLineToBottom( int line );
+    void scrollLineToBottom(int line);
     /**
      * Adjust view vertically to show @arg line on top
      */
-    void scrollLineToTop( int line );
+    void scrollLineToTop(int line);
     /**
      * Adjust view vertically to show @arg line on center
      */
-    void scrollLineToCenter( int line );
+    void scrollLineToCenter(int line);
 
     //-------------------------------------------------------
     // ----------------- Command Input Buffer
@@ -201,9 +207,9 @@ class YZIS_EXPORT YView : public YViewIface
     {
         mPreviousChars.clear();
     }
-    void appendInputBuffer( const YKey & k )
+    void appendInputBuffer(const YKey & k)
     {
-        mPreviousChars.append( k );
+        mPreviousChars.append(k);
     }
     void saveInputBuffer();
     const YKeySequence &getInputBuffer() const
@@ -219,47 +225,48 @@ class YZIS_EXPORT YView : public YViewIface
     // ----------------- Cursor Motion
     //-------------------------------------------------------
 
-	/* TODO: docstring */
-	YViewCursor viewCursorFromLinePosition( int line, int position );
-	/* TODO: docstring */
-	YViewCursor viewCursorFromLinePosition( const YCursor& buffer ) {
-		return viewCursorFromLinePosition(buffer.line(), buffer.column());
-	}
-	/* TODO: docstring */
-	YViewCursor viewCursorFromLineColumn( int line, int column );
-	/* TODO: docstring */
-	YViewCursor viewCursorFromRowColumn( int row, int column ) const;
-	/* TODO: docstring */
-	YViewCursor viewCursorFromStickedLine( int line );
-	/* TODO: docstring */
-	YViewCursor viewCursorFromScreen();
-
-	/* TODO: docstring */
-	YViewCursor viewCursorMoveVertical( int ticks );
     /* TODO: docstring */
-	YViewCursor viewCursorMoveHorizontal( int ticks, bool wrap = false, bool* stopped = NULL );
+    YViewCursor viewCursorFromLinePosition(int line, int position);
+    /* TODO: docstring */
+    YViewCursor viewCursorFromLinePosition(const YCursor& buffer)
+    {
+        return viewCursorFromLinePosition(buffer.line(), buffer.column());
+    }
+    /* TODO: docstring */
+    YViewCursor viewCursorFromLineColumn(int line, int column);
+    /* TODO: docstring */
+    YViewCursor viewCursorFromRowColumn(int row, int column) const;
+    /* TODO: docstring */
+    YViewCursor viewCursorFromStickedLine(int line);
+    /* TODO: docstring */
+    YViewCursor viewCursorFromScreen();
 
-	/* TODO: docstring */
-	void gotoViewCursor( const YViewCursor& cursor );
+    /* TODO: docstring */
+    YViewCursor viewCursorMoveVertical(int ticks);
+    /* TODO: docstring */
+    YViewCursor viewCursorMoveHorizontal(int ticks, bool wrap = false, bool* stopped = NULL);
 
-	/* Shortcuts */
-	void gotoLineColumn( int line, int position );
-	void gotoLineColumnAndStick( int line, int position );
-	void gotoLinePosition( int line, int position );
-	void gotoLinePositionAndStick( int line, int position );
-	void gotoLinePosition( const YCursor& buffer );
-	void gotoLinePositionAndStick( const YCursor& buffer );
-	void gotoRowColumn( int row, int column );
-	void gotoRowColumn( const YCursor& screen );
+    /* TODO: docstring */
+    void gotoViewCursor(const YViewCursor& cursor);
 
-    void applyStartPosition( const YCursor pos );
+    /* Shortcuts */
+    void gotoLineColumn(int line, int position);
+    void gotoLineColumnAndStick(int line, int position);
+    void gotoLinePosition(int line, int position);
+    void gotoLinePositionAndStick(int line, int position);
+    void gotoLinePosition(const YCursor& buffer);
+    void gotoLinePositionAndStick(const YCursor& buffer);
+    void gotoRowColumn(int row, int column);
+    void gotoRowColumn(const YCursor& screen);
 
-	//-------------------------------------------------------
+    void applyStartPosition(const YCursor pos);
+
+    //-------------------------------------------------------
     // ----------------- Selection
     //-------------------------------------------------------
 
-	/*TODO: docstring */
-	YRawData setSelection( yzis::SelectionType type, const YInterval& bufferInterval );
+    /*TODO: docstring */
+    YRawData setSelection(yzis::SelectionType type, const YInterval& bufferInterval);
 
 
     //-------------------------------------------------------
@@ -269,7 +276,7 @@ class YZIS_EXPORT YView : public YViewIface
     /**
      * Character color at column line
      */
-    const YColor& drawColor ( int col, int line ) const;
+    const YColor& drawColor(int col, int line) const;
 
     //-------------------------------------------------------
     // ----------------- Undo
@@ -282,12 +289,12 @@ class YZIS_EXPORT YView : public YViewIface
     /**
      * Undo last action
      */
-    void undo ( int count = 1 );
+    void undo(int count = 1);
 
     /**
      * Redo last undoed action
      */
-    void redo ( int count = 1 );
+    void redo(int count = 1);
 
     /**
      * Prepares to record next undo item
@@ -300,7 +307,7 @@ class YZIS_EXPORT YView : public YViewIface
     /**
      * Start recording a macro into @param regs
      */
-    void recordMacro( const QList<QChar> &regs );
+    void recordMacro(const QList<QChar> &regs);
 
     /**
      * Stop recording macros
@@ -321,7 +328,7 @@ class YZIS_EXPORT YView : public YViewIface
     /**
      * Append after current character
      */
-    QString append ( );
+    QString append();
 
     /**
      * Reindent given line ( cindent )
@@ -334,46 +341,46 @@ class YZIS_EXPORT YView : public YViewIface
     void indent();
 
     /**
-     * Prepend enough spaces to string so line is "centered" 
+     * Prepend enough spaces to string so line is "centered"
      */
-    QString centerLine( const QString& );
+    QString centerLine(const QString&);
 
     //-------------------------------------------------------
     // ----------------- Options
     //-------------------------------------------------------
     QString getLocalOptionKey() const;
 
-    YOptionValue* getLocalOption( const QString& option ) const;
+    YOptionValue* getLocalOption(const QString& option) const;
 
     /**
      * Retrieve an int option
      */
-    int getLocalIntegerOption( const QString& option ) const;
+    int getLocalIntegerOption(const QString& option) const;
 
     /**
      * Retrieve a bool option
      */
-    bool getLocalBooleanOption( const QString& option ) const;
+    bool getLocalBooleanOption(const QString& option) const;
 
     /**
      * Retrieve a string option
      */
-    QString getLocalStringOption( const QString& option ) const;
+    QString getLocalStringOption(const QString& option) const;
 
     /**
      * Retrieve a qstringlist option
      */
-    QStringList getLocalListOption( const QString& option ) const;
+    QStringList getLocalListOption(const QString& option) const;
 
     /**
      * Retrieve a map option
      */
-    MapOption getLocalMapOption( const QString& option ) const;
+    MapOption getLocalMapOption(const QString& option) const;
 
     //-------------------------------------------------------
     // ----------------- Paint Events
     //-------------------------------------------------------
-    virtual void guiPaintEvent( const YSelection& drawMap );
+    virtual void guiPaintEvent(const YSelection& drawMap);
 
 
     /**
@@ -381,16 +388,16 @@ class YZIS_EXPORT YView : public YViewIface
      */
     void sendRefreshEvent();
 
-	/*
-	 * Ask for repainting interval @arg i of screen.
-	 */
-	void sendPaintEvent( const YInterval& i );
+    /*
+     * Ask for repainting interval @arg i of screen.
+     */
+    void sendPaintEvent(const YInterval& i);
 
     /**
      * @arg enable is true, future paint events will be directly applied
      * @arg enable is false, paint events will wait a commit to be applied
      */
-    void setPaintAutoCommit( bool enable = true );
+    void setPaintAutoCommit(bool enable = true);
 
     /**
      * drop all pending paint events and returns into autocommit mode
@@ -398,7 +405,7 @@ class YZIS_EXPORT YView : public YViewIface
     void resetPaintEvent();
 
     /**
-     * If the number of calls of commitPaintEvent is equals to the number of 
+     * If the number of calls of commitPaintEvent is equals to the number of
      * calls of setPaintAutoCommit(false), pending events are applied, and returns
      * in autocommit mode.
      */
@@ -425,23 +432,32 @@ class YZIS_EXPORT YView : public YViewIface
     {
         return mMainCursor;
     }
-	int currentRow() const;
-	inline int currentLine() const { return mMainCursor.line(); }
-	inline int currentPosition() const { return mMainCursor.position(); }
-	inline int currentColumn() const { return mMainCursor.column(); }
+    int currentRow() const;
+    inline int currentLine() const
+    {
+        return mMainCursor.line();
+    }
+    inline int currentPosition() const
+    {
+        return mMainCursor.position();
+    }
+    inline int currentColumn() const
+    {
+        return mMainCursor.column();
+    }
 
     /**
-	 * TODO: docstring
+     * TODO: docstring
      */
     const YCursor getRowColumnCursor() const;
 
     /**
-	 * TODO: docstring
+     * TODO: docstring
      */
     const YCursor getLineColumnCursor() const;
 
     /**
-	 * TODO: docstring
+     * TODO: docstring
      */
     const YCursor getLinePositionCursor() const;
 
@@ -454,7 +470,7 @@ class YZIS_EXPORT YView : public YViewIface
     void updateCursor();
 
     /** Update the GUI when current mode has changed.
-     * Updates the status bar and informs the GUI through 
+     * Updates the status bar and informs the GUI through
      * guiUpdateMode, which should update the cursor shape.
      *
      * Can't be called until the GUI has been initialized.
@@ -492,7 +508,7 @@ class YZIS_EXPORT YView : public YViewIface
      * set current column as sticky
      */
     void stickToColumn();
-	void stickToEOL();
+    void stickToEOL();
 
     //-------------------------------------------------------
     // ----------------- Mode
@@ -509,7 +525,7 @@ class YZIS_EXPORT YView : public YViewIface
 
     /** Return the current key mode of the view
      */
-    YMode * currentMode() const 
+    YMode * currentMode() const
     {
         return mModePool->current();
     }
@@ -517,70 +533,72 @@ class YZIS_EXPORT YView : public YViewIface
     //-------------------------------------------------------
     // ----------------- Modifier Keys
     //-------------------------------------------------------
-    virtual void registerModifierKeys( const QString& )
+    virtual void registerModifierKeys(const QString&)
     {}
-    virtual void unregisterModifierKeys( const QString& )
+    virtual void unregisterModifierKeys(const QString&)
     {}
 
     //-------------------------------------------------------
     // ----------------- Miscellaneous
     //-------------------------------------------------------
     /**
-     * Display Intro text message 
+     * Display Intro text message
      */
     void displayIntro();
 
-    virtual void printToFile( const QString& path );
+    virtual void printToFile(const QString& path);
 
-    QString getCharBelow( int delta );
+    QString getCharBelow(int delta);
 
     /**
      * returns a YSelection which fit view
      */
-    YSelection clipSelection( const YSelection& sel ) const;
+    YSelection clipSelection(const YSelection& sel) const;
 
-	/*
-	 * TODO: docstring
-	 */
-	void updateBufferInterval( int bl, int bl_last );
-	void updateBufferInterval( const YInterval& bi );
+    /*
+     * TODO: docstring
+     */
+    void updateBufferInterval(int bl, int bl_last);
+    void updateBufferInterval(const YInterval& bi);
 
-	// TODO: docstring
-	YDrawLine drawLineFromYLine( const YLine* yl, int start_column = 0 ) const;
-	// TODO: docstring
-	YDrawSection drawSectionOfBufferLine( int bl ) const;
+    // TODO: docstring
+    YDrawLine drawLineFromYLine(const YLine* yl, int start_column = 0) const;
+    // TODO: docstring
+    YDrawSection drawSectionOfBufferLine(int bl) const;
 
-	/* TODO: docstring */
-	inline void acquireLine( int line ) {
-		mDrawBuffer.acquireLine(line);
-	}
-	inline void releaseLine( int line ) {
-		mDrawBuffer.releaseLine(line);
-	}
+    /* TODO: docstring */
+    inline void acquireLine(int line)
+    {
+        mDrawBuffer.acquireLine(line);
+    }
+    inline void releaseLine(int line)
+    {
+        mDrawBuffer.releaseLine(line);
+    }
 
 protected:
 
     void setupKeys();
 
-    bool stringHasOnlySpaces ( const QString& what ) const;
+    bool stringHasOnlySpaces(const QString& what) const;
 
     YDrawBuffer mDrawBuffer;
 
 private:
 
-	/* update internal attributes */
-	void updateInternalAttributes();
+    /* update internal attributes */
+    void updateInternalAttributes();
 
 
-	// TODO: docstring
-	bool setBufferLineContent( int bl );
-	/* TODO: docstring */
-	void deleteFromBufferLine( int bl );
+    // TODO: docstring
+    bool setBufferLineContent(int bl);
+    /* TODO: docstring */
+    void deleteFromBufferLine(int bl);
 
     /*
      * scroll draw buffer and view
      */
-    void internalScroll( int dx, int dy );
+    void internalScroll(int dx, int dy);
 
     /**
      * Used to store previous keystrokes which are not recognised as a command,
@@ -615,7 +633,7 @@ private:
 
     YzisAttribute* mHighlightAttributes;
 
-	/* TODO: docstring */
+    /* TODO: docstring */
     int mStickyColumn;
 
     QChar m_lineFiller;

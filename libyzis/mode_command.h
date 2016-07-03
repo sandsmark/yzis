@@ -43,8 +43,7 @@ class YView;
   */
 
 /** holds the arguments a command needs in order to execute */
-struct YCommandArgs
-{
+struct YCommandArgs {
     /// the command that is executed
     const YCommand *cmd;
     /// the origin of inputs
@@ -60,7 +59,7 @@ struct YCommandArgs
     // the position in input
     YKeySequence::const_iterator *parsePos;
 
-    YCommandArgs(const YCommand *_cmd, YView *v, const QList<QChar> &r, int c, bool user, 
+    YCommandArgs(const YCommand *_cmd, YView *v, const QList<QChar> &r, int c, bool user,
                  const YKeySequence *in, YKeySequence::const_iterator *pP)
     {
         cmd = _cmd;
@@ -82,7 +81,7 @@ struct YCommandArgs
 };
 
 class YModeCommand;
-typedef CmdState (YModeCommand::*PoolMethod) (const YCommandArgs&);
+typedef CmdState(YModeCommand::*PoolMethod)(const YCommandArgs&);
 
 enum CmdArg {
     ArgNone,
@@ -99,9 +98,9 @@ enum MotionType {
 };
 
 enum MotionStick {
-	MotionNoStick,
-	MotionStickColumn,
-	MotionStickEOL
+    MotionNoStick,
+    MotionStickColumn,
+    MotionStickEOL
 };
 
 /** Contains all the necessary information that makes up a normal command. @ref YModeCommand
@@ -110,7 +109,7 @@ enum MotionStick {
 class YZIS_EXPORT YCommand
 {
 public:
-    YCommand( const YKeySequence &keySeq, PoolMethod pm, CmdArg a = ArgNone)
+    YCommand(const YKeySequence &keySeq, PoolMethod pm, CmdArg a = ArgNone)
         : mKeySeq(keySeq)
     {
         mPoolMethod = pm;
@@ -137,7 +136,10 @@ public:
         return c >= 'a' && c <= 'z';
     }
 #ifdef DEBUG
-    QString describe(void) { return QString("Command with key sequence : \"%1\"").arg(mKeySeq.describe()); }
+    QString describe(void)
+    {
+        return QString("Command with key sequence : \"%1\"").arg(mKeySeq.describe());
+    }
 #endif
 protected:
     /** the key sequence the command "listens to" */
@@ -155,8 +157,8 @@ protected:
 class YZIS_EXPORT YMotionArgs
 {
 public:
-    explicit YMotionArgs(YView *v, int cnt = 1, const YKeySequence *in=NULL, 
-                         YKeySequence::const_iterator *pP = NULL, QString c="", bool uc = false, bool s = false)
+    explicit YMotionArgs(YView *v, int cnt = 1, const YKeySequence *in = NULL,
+                         YKeySequence::const_iterator *pP = NULL, QString c = "", bool uc = false, bool s = false)
     {
         cmd = c;
         view = v;
@@ -175,7 +177,7 @@ public:
     bool usercount;
 };
 
-typedef YCursor (YModeCommand::*MotionMethod) (const YMotionArgs&, CmdState *, MotionStick*);
+typedef YCursor(YModeCommand::*MotionMethod)(const YMotionArgs&, CmdState *, MotionStick*);
 
 /**
  * Command mode (The default mode of Yzis)
@@ -203,11 +205,11 @@ public:
 
     /** Parses the string inputs, which must be a valid motion + argument,
      * and executes the corresponding motion function. */
-    
-    YCommand *parseCommand( const YKeySequence &inputs, YKeySequence::const_iterator &parsePos );
-    YMotion *parseMotion( const YKeySequence &inputs, YKeySequence::const_iterator &parsePos, int &count, MotionType &motionType );
 
-    YCursor execMotion(YView *view, const QString &inputs, int count, bool usercount, bool *stopped );
+    YCommand *parseCommand(const YKeySequence &inputs, YKeySequence::const_iterator &parsePos);
+    YMotion *parseMotion(const YKeySequence &inputs, YKeySequence::const_iterator &parsePos, int &count, MotionType &motionType);
+
+    YCursor execMotion(YView *view, const QString &inputs, int count, bool usercount, bool *stopped);
 
     // methods implementing motions
     YCursor moveLeft(const YMotionArgs &args, CmdState *state, MotionStick* stick = NULL);
@@ -251,10 +253,10 @@ public:
     YCursor searchPrev(const YMotionArgs &args, CmdState *state, MotionStick* ms = NULL);
     YCursor nextEmptyLine(const YMotionArgs &args, CmdState *state, MotionStick* ms = NULL);
     YCursor previousEmptyLine(const YMotionArgs &args, CmdState *state, MotionStick* ms = NULL);
-    YCursor scrollPageUp( const YMotionArgs &args, CmdState *state , MotionStick* ms = NULL);
-    YCursor scrollPageDown( const YMotionArgs &args, CmdState *state , MotionStick* ms = NULL);
-    YCursor scrollLineUp( const YMotionArgs &args, CmdState *state , MotionStick* ms = NULL);
-    YCursor scrollLineDown( const YMotionArgs &args, CmdState *state , MotionStick* ms = NULL);
+    YCursor scrollPageUp(const YMotionArgs &args, CmdState *state , MotionStick* ms = NULL);
+    YCursor scrollPageDown(const YMotionArgs &args, CmdState *state , MotionStick* ms = NULL);
+    YCursor scrollLineUp(const YMotionArgs &args, CmdState *state , MotionStick* ms = NULL);
+    YCursor scrollLineDown(const YMotionArgs &args, CmdState *state , MotionStick* ms = NULL);
 
     // methods implementing commands
     CmdState execMotion(const YCommandArgs &args);
@@ -308,13 +310,13 @@ public:
     CmdState replace(const YCommandArgs &args);
     CmdState abort(const YCommandArgs &args);
     CmdState delkey(const YCommandArgs &args);
-    CmdState indent( const YCommandArgs& args );
-    CmdState redoLastCommand( const YCommandArgs & args );
-    CmdState tagNext( const YCommandArgs & args );
-    CmdState tagPrev( const YCommandArgs & args );
-    CmdState undoJump( const YCommandArgs & args );
-    CmdState incrementNumber( const YCommandArgs& args );
-    CmdState decrementNumber( const YCommandArgs& args );
+    CmdState indent(const YCommandArgs& args);
+    CmdState redoLastCommand(const YCommandArgs & args);
+    CmdState tagNext(const YCommandArgs & args);
+    CmdState tagPrev(const YCommandArgs & args);
+    CmdState undoJump(const YCommandArgs & args);
+    CmdState incrementNumber(const YCommandArgs& args);
+    CmdState decrementNumber(const YCommandArgs& args);
 
     QList<YCommand*> commands;
     QList<YMotion *> motions;
@@ -325,7 +327,7 @@ public:
     virtual YInterval interval(const YCommandArgs &args, CmdState *state);
 
 private:
-    CmdState adjustNumber( const YCommandArgs& args, int change );
+    CmdState adjustNumber(const YCommandArgs& args, int change);
 };
 
 /** This class represents a command that is also a motion. Its new member is
@@ -341,10 +343,10 @@ class YZIS_EXPORT YMotion : public YCommand
 {
 public:
     YMotion(const YKeySequence &keySeq, MotionMethod mm, CmdArg a = ArgNone, MotionType type = MotionTypeExclusive)
-            : YCommand(keySeq, &YModeCommand::execMotion, a)
+        : YCommand(keySeq, &YModeCommand::execMotion, a)
     {
         mMotionMethod = mm;
-	mMotionType = type;
+        mMotionType = type;
     }
     virtual ~YMotion()
     {}
@@ -354,17 +356,19 @@ public:
     }
     const MotionType &motionType() const
     {
-	return mMotionType;
+        return mMotionType;
     }
-    bool argsPresent( const YKeySequence &inputs, YKeySequence::const_iterator &parsePos ) const {
-        if ( mArg == ArgNone )
+    bool argsPresent(const YKeySequence &inputs, YKeySequence::const_iterator &parsePos) const
+    {
+        if(mArg == ArgNone) {
             return true;
-        else if ( parsePos == inputs.end() )
+        } else if(parsePos == inputs.end()) {
             return false;
-        else
+        } else {
             return true;
+        }
     }
-    
+
     /** @return true if s is a valid key sequence + argument */
     bool matches(const QString &s, bool fully = true) const;
 protected:

@@ -32,7 +32,7 @@ bool Document::load_after()
 {
     bool bTest = Bakery::Document::load_after();
 
-    if (bTest) {
+    if(bTest) {
         //See comment in save_before().
         m_strSomething = get_contents();
     }
@@ -51,7 +51,6 @@ bool Document::save_before()
 void Document::set_something(const Glib::ustring& strSomething)
 {
     m_strSomething = strSomething;
-
     set_modified();
 }
 

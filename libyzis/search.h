@@ -26,8 +26,8 @@ class YCursor;
 class YBuffer;
 
 /**
- * YSearch : 
- * Searches are common to all buffers and views. 
+ * YSearch :
+ * Searches are common to all buffers and views.
  * When doing a search if hlsearch is set, we have to highlight
  * all matching strings on all views of each buffers.
  */
@@ -42,32 +42,32 @@ public :
     /**
      * search after current cursor position
      */
-    YCursor forward( YBuffer* buffer, const QString& pattern, bool* found, const YCursor from );
+    YCursor forward(YBuffer* buffer, const QString& pattern, bool* found, const YCursor from);
 
     /**
      * search before current cursor position
      */
-    YCursor backward( YBuffer *buffer, const QString& pattern, bool* found, const YCursor from );
+    YCursor backward(YBuffer *buffer, const QString& pattern, bool* found, const YCursor from);
 
     /**
      * replay search forward
      */
-    YCursor replayForward( YBuffer *buffer, bool* found, const YCursor from, bool skipline = false );
+    YCursor replayForward(YBuffer *buffer, bool* found, const YCursor from, bool skipline = false);
 
     /**
      * replay search backward
      */
-    YCursor replayBackward( YBuffer *buffer, bool* found, const YCursor from, bool skipline = false );
+    YCursor replayBackward(YBuffer *buffer, bool* found, const YCursor from, bool skipline = false);
 
     /**
      * Highlight given line
      */
-    void highlightLine( YBuffer* buffer, int line );
+    void highlightLine(YBuffer* buffer, int line);
 
     /**
      * Shift @arg shift lines to the bottom the search highlight layout from @ærg line line
      */
-    void shiftHighlight( YBuffer* buffer, int line, int shift );
+    void shiftHighlight(YBuffer* buffer, int line, int shift);
 
     /**
      * return current search

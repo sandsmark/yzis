@@ -17,7 +17,7 @@
  **/
 
 /* This file was taken from the Kate editor which is part of KDE
-   Kate's code is published under the LGPL version 2 (and 2 only not any later 
+   Kate's code is published under the LGPL version 2 (and 2 only not any later
    version)
    Copyright (C) 2001-2003 Christoph Cullmann <cullmann@kde.org>
    Copyright (C) 2002, 2003 Anders Lund <anders.lund@lund.tdcadsl.dk>
@@ -33,48 +33,51 @@
   */
 class YzisSchemaManager
 {
-  public:
-    YzisSchemaManager ();
-    ~YzisSchemaManager ();
+public:
+    YzisSchemaManager();
+    ~YzisSchemaManager();
 
     /**
      * Schema Config changed, update all renderers
      */
-    void update (bool readfromfile = true);
+    void update(bool readfromfile = true);
 
     /**
      * return kconfig with right group set or set to Normal if not there
      */
-    QString schema (uint number) const;
+    QString schema(uint number) const;
 
-    void addSchema (const QString &t);
+    void addSchema(const QString &t);
 
-    void removeSchema (uint number);
+    void removeSchema(uint number);
 
     /**
      * is this schema valid ? (does it exist ?)
      */
-    bool validSchema (uint number) const;
+    bool validSchema(uint number) const;
 
     /**
      * if not found, defaults to 0
      */
-    uint number (const QString &name) const;
+    uint number(const QString &name) const;
 
     /**
      * group names in the end, no i18n involved
      */
-    QString name (uint number) const;
+    QString name(uint number) const;
 
     /**
      * Don't modify, list with the names of the schemas (i18n name for the default ones)
      */
-    const QStringList &list () const { return m_schemas; }
+    const QStringList &list() const
+    {
+        return m_schemas;
+    }
 
-    static QString normalSchema ();
-    static QString printingSchema ();
+    static QString normalSchema();
+    static QString printingSchema();
 
-  private:
+private:
     QStringList m_schemas;
 };
 

@@ -27,86 +27,88 @@
 class YDrawBuffer;
 class YCursor;
 
-struct YZIS_EXPORT YDrawCellInfo
-{
-	enum YDrawCellType {
-		Data,
-		EOL
-	};
+struct YZIS_EXPORT YDrawCellInfo {
+    enum YDrawCellType {
+        Data,
+        EOL
+    };
 
-	YDrawCellType type;
-	YCursor pos;
-	YDrawCell cell;
+    YDrawCellType type;
+    YCursor pos;
+    YDrawCell cell;
 };
 
 class YZIS_EXPORT YDrawBufferAbstractIterator
 {
 public:
-	virtual ~YDrawBufferAbstractIterator() {};
+    virtual ~YDrawBufferAbstractIterator() {};
 
-	/* TODO: docstring */
-	bool isValid() const;
-	/* TODO: docstring */
-	void next();
+    /* TODO: docstring */
+    bool isValid() const;
+    /* TODO: docstring */
+    void next();
 
-	/* TODO: docstring */
-	int bufferLine() const;
-	/* TODO: docstring */
-	int screenLine() const;
-	/* TODO: docstring */
-	int lineHeight() const;
-	/* TODO: screenColumn */
+    /* TODO: docstring */
+    int bufferLine() const;
+    /* TODO: docstring */
+    int screenLine() const;
+    /* TODO: docstring */
+    int lineHeight() const;
+    /* TODO: screenColumn */
 
 protected:
-	YDrawBufferAbstractIterator( YDrawBuffer* db );
-	void setup( const YInterval& i, yzis::IntervalType itype );
-	void step();
+    YDrawBufferAbstractIterator(YDrawBuffer* db);
+    void setup(const YInterval& i, yzis::IntervalType itype);
+    void step();
 
-	virtual void setupCell( int cut ) = 0;
-	virtual void setupEOLCell() = 0;
+    virtual void setupCell(int cut) = 0;
+    virtual void setupEOLCell() = 0;
 
-	int getCut();
+    int getCut();
 
-	YDrawBuffer* mDrawBuffer;
-	YInterval mI;
-	yzis::IntervalType mIntervalType;
-	bool mStopped;
-	int mCurBLine;
-	int mCurLine;
-	int mCurCell;
-	YCursor mPos;
-	int mPosShift;
+    YDrawBuffer* mDrawBuffer;
+    YInterval mI;
+    yzis::IntervalType mIntervalType;
+    bool mStopped;
+    int mCurBLine;
+    int mCurLine;
+    int mCurCell;
+    YCursor mPos;
+    int mPosShift;
 };
 
 class YZIS_EXPORT YDrawBufferConstIterator : public YDrawBufferAbstractIterator
 {
 public:
-	virtual ~YDrawBufferConstIterator() {}
-	const YDrawCellInfo drawCellInfo() const;
+    virtual ~YDrawBufferConstIterator() {}
+    const YDrawCellInfo drawCellInfo() const;
 
 protected :
-	virtual void setupCell( int cut );
-	virtual void setupEOLCell();
-	YDrawBufferConstIterator( YDrawBuffer* db ) : YDrawBufferAbstractIterator(db) {}
-	YDrawCellInfo mNext;
+    virtual void setupCell(int cut);
+    virtual void setupEOLCell();
+    YDrawBufferConstIterator(YDrawBuffer* db) : YDrawBufferAbstractIterator(db) {}
+    YDrawCellInfo mNext;
 
-	friend class YDrawBuffer;
+    friend class YDrawBuffer;
 };
 
 class YZIS_EXPORT YDrawBufferIterator : public YDrawBufferAbstractIterator
 {
 public:
-	virtual ~YDrawBufferIterator() {}
-	inline YDrawCell* cell() const { return mNext; }
-	/* TODO: flush -> try to join splitted cells */
+    virtual ~YDrawBufferIterator() {}
+    inline YDrawCell* cell() const
+    {
+        return mNext;
+    }
+    /* TODO: flush -> try to join splitted cells */
 
 protected:
-	virtual void setupCell( int cut );
-	virtual void setupEOLCell();
-	YDrawBufferIterator( YDrawBuffer* db ) : YDrawBufferAbstractIterator(db) {}
-	YDrawCell* mNext;
+    virtual void setupCell(int cut);
+    virtual void setupEOLCell();
+    YDrawBufferIterator(YDrawBuffer* db) : YDrawBufferAbstractIterator(db) {}
+    YDrawCell* mNext;
 
-	friend class YDrawBuffer;
+    friend class YDrawBuffer;
 };
 
 

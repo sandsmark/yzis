@@ -42,7 +42,7 @@ class YView;
   *
   * All code related to the lua engine and lua stack should go in this class.
   * Implementation of actual lua functions (the binding) is done in \ref
-  * YLuaFuncs. The functions are registered to lua by the call to 
+  * YLuaFuncs. The functions are registered to lua by the call to
   * YLuaFuncs::registerLuaFuncs(),
   * performed during the class instancing.
   *
@@ -79,7 +79,7 @@ public:
            * \return "" if file isn't found, or Script raised an error, else returns the return value of the script
            *
      */
-    QString source( const QString& filename );
+    QString source(const QString& filename);
 
     /**
      * Execute some lua code.
@@ -145,7 +145,7 @@ public:
       * - >: now describing the return values of the function
       *
       * For return values, the meaning is the same:
-      * - d: double return value expected 
+      * - d: double return value expected
       * - i: int return value expected
       * - s: char * return value expected
       *
@@ -190,7 +190,7 @@ public:
             * @param luacode lua code to execute
             * @return 0 in case of success, 1 in case of error
             */
-    int execInLua( const QString & luacode );
+    int execInLua(const QString & luacode);
 
     /** Called when lua wants to print */
     void yzisprint(const QString & text);
@@ -201,7 +201,7 @@ public:
            * this function because you should pop the lua stack items by items
            * and you should know exactly how many items were put on the stack.
      */
-    static void cleanLuaStack( lua_State * L );
+    static void cleanLuaStack(lua_State * L);
 
     /** Wrapper around lua_pcall()
       *
@@ -215,9 +215,9 @@ public:
       *  @param nbReturn number of expected results from the function call
       *  @param context string describing the context of the call,
       *  displayed when an error occurs.
-      *  @return true if the call is without error 
+      *  @return true if the call is without error
       */
-    bool yzpcall( int nbArg, int nbReturn, const QString & context = QString() );
+    bool yzpcall(int nbArg, int nbReturn, const QString & context = QString());
 
     /**
       * Check that the lua stack contains the number of expected argument.
@@ -239,7 +239,7 @@ public:
                                        int argNbMin,
                                        int argNbMax,
                                        const char * functionName,
-                                       const char * functionArgDesc );
+                                       const char * functionArgDesc);
 
     /** Print one stack element on the debug interface.
       *
@@ -261,7 +261,7 @@ public:
       *
       * @param L the lua state
       * @param msg a message describing the context in which this function
-      * is called. 
+      * is called.
       * @param type_only whether to output table content (false) or just the type name (true)
       */
     static void print_lua_stack(lua_State *L, const char * msg, bool type_only = false);
@@ -288,7 +288,7 @@ public:
       */
     static QString lua_table_to_string(lua_State*L, int index, int depth);
 
-    void setLuaReturnValue( const QString & value );
+    void setLuaReturnValue(const QString & value);
 
 protected:
     /** Lua state.

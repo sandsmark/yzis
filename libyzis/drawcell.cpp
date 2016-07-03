@@ -28,160 +28,182 @@
  ************************/
 
 YDrawCell::YDrawCell() :
-	mSelections(0),
-	mColorForeground(),
-	mColorBackground(),
-	mFont(),
-	mContent(),
-	mSteps(),
-	mStepsShift(0)
+    mSelections(0),
+    mColorForeground(),
+    mColorBackground(),
+    mFont(),
+    mContent(),
+    mSteps(),
+    mStepsShift(0)
 {
 }
-YDrawCell::YDrawCell( const YDrawCell& cell ) :
-	mSelections(cell.mSelections),
-	mColorForeground(cell.mColorForeground),
-	mColorBackground(cell.mColorBackground),
-	mFont(cell.mFont),
-	mContent(cell.mContent),
-	mSteps(cell.mSteps),
-	mStepsShift(cell.mStepsShift)
+YDrawCell::YDrawCell(const YDrawCell& cell) :
+    mSelections(cell.mSelections),
+    mColorForeground(cell.mColorForeground),
+    mColorBackground(cell.mColorBackground),
+    mFont(cell.mFont),
+    mContent(cell.mContent),
+    mSteps(cell.mSteps),
+    mStepsShift(cell.mStepsShift)
 {
 }
 YDrawCell::~YDrawCell()
 {
 }
 
-void YDrawCell::addSelection( yzis::SelectionType selType )
+void YDrawCell::addSelection(yzis::SelectionType selType)
 {
-	mSelections |= selType;
+    mSelections |= selType;
 }
-void YDrawCell::delSelection( yzis::SelectionType selType )
+void YDrawCell::delSelection(yzis::SelectionType selType)
 {
-	if ( hasSelection( selType ) )
-		mSelections -= selType;
+    if(hasSelection(selType)) {
+        mSelections -= selType;
+    }
 }
-void YDrawCell::setForegroundColor( const YColor& color )
+void YDrawCell::setForegroundColor(const YColor& color)
 {
-	mColorForeground = color;
+    mColorForeground = color;
 }
-void YDrawCell::setBackgroundColor( const YColor& color )
+void YDrawCell::setBackgroundColor(const YColor& color)
 {
-	mColorBackground = color;
+    mColorBackground = color;
 }
-void YDrawCell::setFont( const YFont& font )
+void YDrawCell::setFont(const YFont& font)
 {
-	mFont = font;
+    mFont = font;
 }
-int YDrawCell::step( const QString& data )
+int YDrawCell::step(const QString& data)
 {
-	mContent += data;
-	mSteps.append(data.length());
-	return data.length();
+    mContent += data;
+    mSteps.append(data.length());
+    return data.length();
 }
 void YDrawCell::clear()
 {
-	mContent.clear();
-	mSteps.clear();
-	mColorBackground = YColor();
-	mColorForeground = YColor();
-	mSelections = 0;
-	mFont = YFont();
+    mContent.clear();
+    mSteps.clear();
+    mColorBackground = YColor();
+    mColorForeground = YColor();
+    mSelections = 0;
+    mFont = YFont();
 }
 
-int YDrawCell::widthForLength( int length ) const
+int YDrawCell::widthForLength(int length) const
 {
-	YASSERT(length >= 0);
-	int w = 0;
-	length = qMin(length, mSteps.count());
-	while ( length-- ) {
-		w += mSteps.at(length);
-	}
-	return w;
+    YASSERT(length >= 0);
+    int w = 0;
+    length = qMin(length, mSteps.count());
+
+    while(length--) {
+        w += mSteps.at(length);
+    }
+
+    return w;
 }
 
-int YDrawCell::lengthForWidth( int width ) const
+int YDrawCell::lengthForWidth(int width) const
 {
-	YASSERT(width >= 0);
-	int w = mStepsShift;
-	int l = 0;
-	for( ; w < width; ++l ) {
-		w += mSteps[l];
-	}
-	return l;
+    YASSERT(width >= 0);
+    int w = mStepsShift;
+    int l = 0;
+
+    for(; w < width; ++l) {
+        w += mSteps[l];
+    }
+
+    return l;
 }
 
-YDrawCell YDrawCell::left_steps( int steps ) const
+YDrawCell YDrawCell::left_steps(int steps) const
 {
-	YDrawCell c(*this);
-	if ( steps < length() ) {
-		c.mSteps.clear();
-		int w = mStepsShift;
-		for ( int i = 0; i < steps; i++ ) {
-			c.mSteps << mSteps[i];
-			w += mSteps[i];
-		}
-		c.mContent = mContent.left(w);
-	}
-	return c;
+    YDrawCell c(*this);
+
+    if(steps < length()) {
+        c.mSteps.clear();
+        int w = mStepsShift;
+
+        for(int i = 0; i < steps; i++) {
+            c.mSteps << mSteps[i];
+            w += mSteps[i];
+        }
+
+        c.mContent = mContent.left(w);
+    }
+
+    return c;
 }
-YDrawCell YDrawCell::mid_steps( int steps ) const
+YDrawCell YDrawCell::mid_steps(int steps) const
 {
-	YDrawCell c(*this);
-	if ( steps > 0 ) {
-		c.mStepsShift = 0;
-		int w = mStepsShift;
-		for ( int i = 0; i < steps; i++ ) {
-			w += mSteps[i];
-		}
-		c.mContent = mContent.mid(w);
-		c.mSteps = mSteps.mid(steps);
-	}
-	return c;
+    YDrawCell c(*this);
+
+    if(steps > 0) {
+        c.mStepsShift = 0;
+        int w = mStepsShift;
+
+        for(int i = 0; i < steps; i++) {
+            w += mSteps[i];
+        }
+
+        c.mContent = mContent.mid(w);
+        c.mSteps = mSteps.mid(steps);
+    }
+
+    return c;
 }
 
-YDrawCell YDrawCell::left( int column ) const
+YDrawCell YDrawCell::left(int column) const
 {
-	YDrawCell c(*this);
-	if ( column < width() ) {
-		c.mContent = mContent.left(column);
-		c.mSteps.clear();
-		int w = 0;
-		int r = column;
-		foreach( int s, mSteps ) {
-			if ( r == 0 ) break;
-			if ( s > r ) {
-				c.mSteps << r;
-				r = 0;
-			} else {
-				c.mSteps << s;
-				w += s;
-				r -= s;
-			}
-		}
-	}
-	return c;
+    YDrawCell c(*this);
+
+    if(column < width()) {
+        c.mContent = mContent.left(column);
+        c.mSteps.clear();
+        int w = 0;
+        int r = column;
+
+        foreach(int s, mSteps) {
+            if(r == 0) {
+                break;
+            }
+
+            if(s > r) {
+                c.mSteps << r;
+                r = 0;
+            } else {
+                c.mSteps << s;
+                w += s;
+                r -= s;
+            }
+        }
+    }
+
+    return c;
 }
-YDrawCell YDrawCell::mid( int column ) const
+YDrawCell YDrawCell::mid(int column) const
 {
-	YDrawCell c(*this);
-	if ( column > 0 ) {
-		c.mContent = mContent.mid(column);
-		c.mSteps.clear();
-		int r = column;
-		foreach( int s, mSteps ) {
-			if ( r == 0 ) {
-				c.mSteps << s;
-			} else {
-				if ( s > r ) {
-					c.mStepsShift = s - r;
-					r = 0;
-				} else {
-					r -= s;
-				}
-			}
-		}
-	}
-	return c;
+    YDrawCell c(*this);
+
+    if(column > 0) {
+        c.mContent = mContent.mid(column);
+        c.mSteps.clear();
+        int r = column;
+
+        foreach(int s, mSteps) {
+            if(r == 0) {
+                c.mSteps << s;
+            } else {
+                if(s > r) {
+                    c.mStepsShift = s - r;
+                    r = 0;
+                } else {
+                    r -= s;
+                }
+            }
+        }
+    }
+
+    return c;
 }
 
 

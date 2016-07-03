@@ -29,8 +29,7 @@ class YDebugStream;
 /**
  * A text fold
  */
-struct YZFold
-{
+struct YZFold {
     int to;
     bool opened;
 };
@@ -41,43 +40,43 @@ struct YZFold
 class YZFoldPool
 {
 
-    friend YDebugStream& operator<<( YDebugStream& out, const YZFoldPool& f );
+    friend YDebugStream& operator<<(YDebugStream& out, const YZFoldPool& f);
 
 public:
-    YZFoldPool( YView* view );
+    YZFoldPool(YView* view);
     virtual ~YZFoldPool();
 
     /**
      * create a new fold
      */
-    void create( int from, int to );
+    void create(int from, int to);
 
     /**
      * returns true if line is the head of a fold
      */
-    bool isHead( int line ) const;
+    bool isHead(int line) const;
 
     /**
      * returns true if line is inside a fold (head excluded)
      * if head is not NULL, it will contains the line heading the fold
      */
-    bool contains( int line, int* head = NULL ) const;
+    bool contains(int line, int* head = NULL) const;
 
     /**
-     * same as contains && fold is closed 
+     * same as contains && fold is closed
      *  => line should be hidden
      */
-    bool isFolded( int line, int* head = NULL ) const;
+    bool isFolded(int line, int* head = NULL) const;
 
     /**
      * returns the line number under the fold containing line. If line isn't inside a fold, returns line
      */
-    int lineAfterFold( int line ) const;
+    int lineAfterFold(int line) const;
 
     /**
      * returns the head of the fold containing line. If line isn't inside a fold, returns line
      */
-    int lineHeadingFold( int line ) const;
+    int lineHeadingFold(int line) const;
 
 private:
     YView* m_view;

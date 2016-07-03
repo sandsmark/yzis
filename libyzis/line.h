@@ -44,34 +44,43 @@ public:
     {
         return mData.length();
     }
-    inline const QVector<short> &ctxArray () const
+    inline const QVector<short> &ctxArray() const
     {
         return m_ctx;
     };
-    inline void setContext (QVector<short> &val)
+    inline void setContext(QVector<short> &val)
     {
         m_ctx = val;
     }
-    inline bool hlLineContinue () const
+    inline bool hlLineContinue() const
     {
         return m_flags & YLine::FlagHlContinue;
     }
 
-    inline void setHlLineContinue (bool cont)
+    inline void setHlLineContinue(bool cont)
     {
-        if (cont) m_flags = m_flags | YLine::FlagHlContinue;
-        else m_flags = m_flags & ~ YLine::FlagHlContinue;
+        if(cont) {
+            m_flags = m_flags | YLine::FlagHlContinue;
+        } else {
+            m_flags = m_flags & ~ YLine::FlagHlContinue;
+        }
     }
 
     void clearAttributes()
     {
         mAttributesList.clear();
     }
-    void addAttribute ( int start, int length, int attribute );
+    void addAttribute(int start, int length, int attribute);
 
 
-    inline uchar *attributes() { return mAttributes.data(); }
-    inline const uchar *attributes() const { return mAttributes.data(); }
+    inline uchar *attributes()
+    {
+        return mAttributes.data();
+    }
+    inline const uchar *attributes() const
+    {
+        return mAttributes.data();
+    }
 
     bool initialized() const
     {
@@ -83,14 +92,13 @@ public:
     int nextNonSpaceChar(uint pos) const;
     int previousNonSpaceChar(uint pos) const;
 
-    enum Flag
-    {
+    enum Flag {
         //   FlagNoOtherData = 0x1, // ONLY INTERNAL USE, NEVER EVER SET THAT !!!!
         FlagHlContinue = 0x2,
         FlagVisible = 0x4,
         FlagAutoWrapped = 0x8
     };
-    Q_DECLARE_FLAGS( Flags, Flag );
+    Q_DECLARE_FLAGS(Flags, Flag);
 
 private:
     Flags m_flags;
@@ -108,6 +116,6 @@ private:
     bool m_initialized;
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS( YLine::Flags );
+Q_DECLARE_OPERATORS_FOR_FLAGS(YLine::Flags);
 
 #endif

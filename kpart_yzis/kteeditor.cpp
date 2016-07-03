@@ -33,7 +33,7 @@ KTEEditor* KTEEditor::me = 0;
 // --------------------------------  methods
 
 KTEEditor::KTEEditor(QObject* parent)
-        : KTextEditor::Editor(parent)
+    : KTextEditor::Editor(parent)
 {}
 
 KTEEditor::~KTEEditor()
@@ -42,16 +42,17 @@ KTEEditor::~KTEEditor()
 
 KTextEditor::Editor* KTEEditor::self()
 {
-    if (!me) {
+    if(!me) {
         me = new KTEEditor(0);
     }
+
     return me;
 }
 
-KTextEditor::Document* KTEEditor::createDocument( QObject *parent )
+KTextEditor::Document* KTEEditor::createDocument(QObject *parent)
 {
     KTEDocument* doc = new KTEDocument(parent);
-    emit documentCreated( this, doc );
+    emit documentCreated(this, doc);
     return doc;
 }
 
@@ -61,18 +62,18 @@ const QList<KTextEditor::Document*>& KTEEditor::documents()
     return m_documents;
 }
 
-const KAboutData* KTEEditor::aboutData () const
+const KAboutData* KTEEditor::aboutData() const
 {
     // TODO: implement
     return 0;
 }
 
-void KTEEditor::readConfig (KConfig* /*config*/)
+void KTEEditor::readConfig(KConfig* /*config*/)
 {
     // TODO: implement
 }
 
-void KTEEditor::writeConfig( KConfig* /*config*/ )
+void KTEEditor::writeConfig(KConfig* /*config*/)
 {
     // TODO: implement
 }
@@ -83,7 +84,7 @@ bool KTEEditor::configDialogSupported() const
     return false;
 }
 
-void KTEEditor::configDialog( QWidget* /*parent*/ )
+void KTEEditor::configDialog(QWidget* /*parent*/)
 {
     // TODO: implement
 }
@@ -94,25 +95,25 @@ int KTEEditor::configPages() const
     return 0;
 }
 
-KTextEditor::ConfigPage* KTEEditor::configPage( int /*number*/, QWidget* /*parent*/ )
+KTextEditor::ConfigPage* KTEEditor::configPage(int /*number*/, QWidget* /*parent*/)
 {
     // TODO: implement
     return 0;
 }
 
-QString KTEEditor::configPageName( int /*number*/ ) const
+QString KTEEditor::configPageName(int /*number*/) const
 {
     // TODO: implement
     return QString();
 }
 
-QString KTEEditor::configPageFullName( int /*number*/ ) const
+QString KTEEditor::configPageFullName(int /*number*/) const
 {
     // TODO: implement
     return QString();
 }
 
-KIcon KTEEditor::configPageIcon( int /*number*/ ) const
+KIcon KTEEditor::configPageIcon(int /*number*/) const
 {
     // TODO: implement
     return KIcon();

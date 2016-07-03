@@ -14,7 +14,7 @@ class QString;
 class YZIS_EXPORT YStatusBarIface
 {
 public:
-    virtual ~YStatusBarIface(){};
+    virtual ~YStatusBarIface() {};
 
     /** Used to display the mode we are currently in.
      */

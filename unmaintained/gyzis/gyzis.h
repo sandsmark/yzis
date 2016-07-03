@@ -36,21 +36,21 @@ public:
     virtual void init();
 
     //YZSession
-    void guiChangeCurrentView( YZView* )
+    void guiChangeCurrentView(YZView*)
     {}
-    void deleteView ( int Id = -1 )
+    void deleteView(int Id = -1)
     {}
-    void guiDeleteBuffer( YZBuffer *b )
+    void guiDeleteBuffer(YZBuffer *b)
     {}
     void quit(int errorCode = 0)
     {}
-    void guiPopupMessage( const QString& message )
+    void guiPopupMessage(const QString& message)
     {}
     bool guiPromptYesNo(const QString& title, const QString& message)
     {}
     YZBuffer *createBuffer(const QString& path = QString())
     {}
-    YZView* createView ( YZBuffer* )
+    YZView* createView(YZBuffer*)
     {}
     void guiSetFocusCommandLine()
     {}

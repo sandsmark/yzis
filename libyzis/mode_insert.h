@@ -42,30 +42,30 @@ public:
     virtual void initMotionPool();
     virtual void initCommandPool();
 
-    virtual void enter( YView *view );
-    virtual void leave( YView *view );
-    virtual CmdState execCommand( YView *view, const YKeySequence &inputs,
-				  YKeySequence::const_iterator &parsePos);
+    virtual void enter(YView *view);
+    virtual void leave(YView *view);
+    virtual CmdState execCommand(YView *view, const YKeySequence &inputs,
+                                 YKeySequence::const_iterator &parsePos);
 
     virtual CmdState commandInsert(const YCommandArgs &args);
-    CmdState insertFromBelow( const YCommandArgs &args );
-    CmdState insertFromAbove( const YCommandArgs &args );
-    CmdState completion( const YCommandArgs &args );
-    CmdState completionNext( const YCommandArgs &args );
-    CmdState completionPrevious( const YCommandArgs &args );
-    virtual CmdState backspace( const YCommandArgs &args );
-    CmdState deleteWordBefore( const YCommandArgs &args );
-    CmdState deleteLineBefore( const YCommandArgs &args );
-    CmdState commandEnter( const YCommandArgs &args );
+    CmdState insertFromBelow(const YCommandArgs &args);
+    CmdState insertFromAbove(const YCommandArgs &args);
+    CmdState completion(const YCommandArgs &args);
+    CmdState completionNext(const YCommandArgs &args);
+    CmdState completionPrevious(const YCommandArgs &args);
+    virtual CmdState backspace(const YCommandArgs &args);
+    CmdState deleteWordBefore(const YCommandArgs &args);
+    CmdState deleteLineBefore(const YCommandArgs &args);
+    CmdState commandEnter(const YCommandArgs &args);
 
-    virtual CmdState addText( YView* mView, const QString& text );
+    virtual CmdState addText(YView* mView, const QString& text);
 
     // Dubious
-    CmdState deleteChar( const YCommandArgs &args );
-    CmdState deleteCharBackwards( const YCommandArgs &args );
-    void imBegin( YView* );
-    void imCompose( YView* mView, const QString& entry );
-    void imEnd( YView* mView, const QString& entry );
+    CmdState deleteChar(const YCommandArgs &args);
+    CmdState deleteCharBackwards(const YCommandArgs &args);
+    void imBegin(YView*);
+    void imCompose(YView* mView, const QString& entry);
+    void imEnd(YView* mView, const QString& entry);
 
     void initModifierKeys();
 protected :
@@ -82,9 +82,9 @@ public :
     virtual ~YModeReplace()
     {}
 
-    virtual CmdState addText( YView* mView, const QString& key );
-    virtual CmdState commandInsert( const YCommandArgs &args );
-    virtual CmdState backspace( const YCommandArgs &args );
+    virtual CmdState addText(YView* mView, const QString& key);
+    virtual CmdState commandInsert(const YCommandArgs &args);
+    virtual CmdState backspace(const YCommandArgs &args);
 };
 
 #endif

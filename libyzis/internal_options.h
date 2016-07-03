@@ -52,8 +52,8 @@ public:
      * returns true if we succed to set the value
      *  => matched && returns false => option found, but the value given in the entry is bad.
      */
-    bool setOptionFromString( bool* matched, const QString& entry, yzis::OptScope user_scope = yzis::ScopeDefault, YBuffer* b = NULL, YView* v = NULL );
-    bool setOptionFromString( const QString& entry, yzis::OptScope user_scope = yzis::ScopeDefault, YBuffer* b = NULL, YView* v = NULL );
+    bool setOptionFromString(bool* matched, const QString& entry, yzis::OptScope user_scope = yzis::ScopeDefault, YBuffer* b = NULL, YView* v = NULL);
+    bool setOptionFromString(const QString& entry, yzis::OptScope user_scope = yzis::ScopeDefault, YBuffer* b = NULL, YView* v = NULL);
 
 
     /**
@@ -80,8 +80,8 @@ public:
 
     /**
      * There is two type of options :
-     *  - options, They cannot be dynamically created (except with createOption), 
-     *   they are attached to type, a context, a scope, and may 
+     *  - options, They cannot be dynamically created (except with createOption),
+     *   they are attached to type, a context, a scope, and may
      *   run command after their value has been changed.
      *  - settings, simple entries in the config files.
      *
@@ -92,109 +92,109 @@ public:
     /**
      * return a QString option
      */
-    const QString readStringOption(const QString& key , const QString &def = QString() ) const;
+    const QString readStringOption(const QString& key , const QString &def = QString()) const;
 
     /**
      * return an int option
      */
-    int readIntegerOption( const QString& key, int def = 0 ) const;
+    int readIntegerOption(const QString& key, int def = 0) const;
 
     /**
      * return a bool option
      */
-    bool readBooleanOption( const QString& key , bool def = false ) const;
+    bool readBooleanOption(const QString& key , bool def = false) const;
 
     /**
      * return a list option
      */
-    QStringList readListOption( const QString& key, const QStringList& def = QStringList() ) const;
+    QStringList readListOption(const QString& key, const QStringList& def = QStringList()) const;
 
     /**
      * returns a map option
      */
-    MapOption readMapOption( const QString& key ) const;
+    MapOption readMapOption(const QString& key) const;
 
     /**
      * return a color option
      */
-    YColor readColorOption( const QString& key, const YColor& def = YColor() ) const;
+    YColor readColorOption(const QString& key, const YColor& def = YColor()) const;
 
 
     /**
      * return a QString option
      */
-    const QString readQStringEntry( const QString& key , const QString& def = QString() ) const;
+    const QString readQStringEntry(const QString& key , const QString& def = QString()) const;
 
     /**
      * Sets a qstring option
      */
-    void setQStringEntry( const QString& key, const QString& value );
+    void setQStringEntry(const QString& key, const QString& value);
 
     /**
      * return an int option
      */
-    int readIntEntry( const QString& key, int def = 0 ) const;
+    int readIntEntry(const QString& key, int def = 0) const;
 
     /**
      * Sets an int option
      */
-    void setIntEntry( const QString& key, int value );
+    void setIntEntry(const QString& key, int value);
 
     /**
      * return a bool option
      */
-    bool readBoolEntry( const QString& key , bool def = false ) const;
+    bool readBoolEntry(const QString& key , bool def = false) const;
 
     /**
      * Sets a bool option
      */
-    void setBoolEntry( const QString& key, bool value );
+    void setBoolEntry(const QString& key, bool value);
 
     /**
      * return a list option
      */
-    QStringList readQStringListEntry( const QString& key, const QStringList& def = QStringList() ) const; // QStringList::split("","") );
+    QStringList readQStringListEntry(const QString& key, const QStringList& def = QStringList()) const;   // QStringList::split("","") );
 
     /**
      * Sets a qstringlist option
      */
-    void setQStringListEntry( const QString& key, const QStringList& value );
+    void setQStringListEntry(const QString& key, const QStringList& value);
 
     /**
      * return a YColor option
      */
-    YColor readYColorEntry( const QString& key, const YColor& def ) const;
+    YColor readYColorEntry(const QString& key, const YColor& def) const;
 
     /**
      * Sets a YColor option
      */
-    void setYColorEntry( const QString& key, const YColor& value );
+    void setYColorEntry(const QString& key, const YColor& value);
 
 
     /**
      * Changes the current group of options
      */
-    void setGroup( const QString& group );
+    void setGroup(const QString& group);
 
     /**
      * Does this group already exists ?
      */
-    bool hasGroup ( const QString& group ) const;
+    bool hasGroup(const QString& group) const;
 
     /**
      * Check the existence of an option
      */
-    bool hasOption ( const QString& key ) const;
+    bool hasOption(const QString& key) const;
 
     /**
      * Return a pointer on a specific option
      */
-    YOptionValue* getOption( const QString& option );
+    YOptionValue* getOption(const QString& option);
 
     /**
      * Dynamically creates a new option for yzis
      */
-    void createOption(const QString& optionName, const QString& group, const QString& defaultValue, const QString& value, yzis::OptContext ctx, yzis::OptType type );
+    void createOption(const QString& optionName, const QString& group, const QString& defaultValue, const QString& value, yzis::OptContext ctx, yzis::OptType type);
 
     /**
      * Update the keys depending on buffers file name when a buffer change his name
@@ -206,9 +206,9 @@ public:
 private:
     void init();
     void initConfFiles();
-    void applyOption( YOption* option, yzis::OptContext ctx, yzis::OptScope scope, YBuffer* b, YView* v );
+    void applyOption(YOption* option, yzis::OptContext ctx, yzis::OptScope scope, YBuffer* b, YView* v);
 
-    bool fillOptionFromString( YOption* opt, const QString& entry );
+    bool fillOptionFromString(YOption* opt, const QString& entry);
 
     /**
      * Clean memory

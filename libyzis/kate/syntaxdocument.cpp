@@ -41,19 +41,20 @@
 #define dbg()        yzDebug("YzisSyntaxDocument")
 #define err()        yzError("YzisSyntaxDocument")
 
-static void lookupPrefix( const QString& prefix, const QString& relpath, const QString& relPart, const QRegExp &regexp, QStringList& list, QStringList& relList, bool recursive, bool unique );
-static void lookupDirectory( const QString& path, const QString &relPart, const QRegExp &regexp, QStringList& list, QStringList& relList, bool recursive, bool unique );
+static void lookupPrefix(const QString& prefix, const QString& relpath, const QString& relPart, const QRegExp &regexp, QStringList& list, QStringList& relList, bool recursive, bool unique);
+static void lookupDirectory(const QString& path, const QString &relPart, const QRegExp &regexp, QStringList& list, QStringList& relList, bool recursive, bool unique);
 
 YzisSyntaxDocument::YzisSyntaxDocument(bool force)
-  : QDomDocument()
+    : QDomDocument()
 {
-  setupModeList(force);
+    setupModeList(force);
 }
 
 YzisSyntaxDocument::~YzisSyntaxDocument()
 {
-  for (int i=0; i < myModeList.size(); i++)
-    delete myModeList[i];
+    for(int i = 0; i < myModeList.size(); i++) {
+        delete myModeList[i];
+    }
 }
 
 /** If the open hl file is different from the one needed, it opens
@@ -62,274 +63,269 @@ YzisSyntaxDocument::~YzisSyntaxDocument()
 */
 bool YzisSyntaxDocument::setIdentifier(const QString& identifier)
 {
-  // if the current file is the same as the new one don't do anything.
-  if(currentFile != identifier)
-  {
-    // let's open the new file
-    QFile f( identifier );
+    // if the current file is the same as the new one don't do anything.
+    if(currentFile != identifier) {
+        // let's open the new file
+        QFile f(identifier);
 
-    if ( f.open(QIODevice::ReadOnly) )
-    {
-      // Let's parse the contets of the xml file
-      /* The result of this function should be check for robustness,
-         a false returned means a parse error */
-      QString errorMsg;
-      int line, col;
-      bool success=setContent(&f,&errorMsg,&line,&col);
+        if(f.open(QIODevice::ReadOnly)) {
+            // Let's parse the contets of the xml file
+            /* The result of this function should be check for robustness,
+               a false returned means a parse error */
+            QString errorMsg;
+            int line, col;
+            bool success = setContent(&f, &errorMsg, &line, &col);
+            // Ok, now the current file is the pretended one (identifier)
+            currentFile = identifier;
+            // Close the file, is not longer needed
+            f.close();
 
-      // Ok, now the current file is the pretended one (identifier)
-      currentFile = identifier;
-
-      // Close the file, is not longer needed
-      f.close();
-
-      if (!success)
-      {
-        //KMessageBox::error(0L,i18n("<qt>The error <b>%4</b><br> has been detected in the file %1 at %2/%3</qt>").arg(identifier)
-          //  .arg(line).arg(col).arg(i18n("QXml",errorMsg.utf8())));
-        return false;
-      }
+            if(!success) {
+                //KMessageBox::error(0L,i18n("<qt>The error <b>%4</b><br> has been detected in the file %1 at %2/%3</qt>").arg(identifier)
+                //  .arg(line).arg(col).arg(i18n("QXml",errorMsg.utf8())));
+                return false;
+            }
+        } else {
+            // Oh o, we couldn't open the file.
+            //KMessageBox::error( 0L, i18n("Unable to open %1").arg(identifier) );
+            return false;
+        }
     }
-    else
-    {
-      // Oh o, we couldn't open the file.
-      //KMessageBox::error( 0L, i18n("Unable to open %1").arg(identifier) );
-      return false;
-    }
-  }
-  return true;
+
+    return true;
 }
 
 /**
  * Jump to the next group, YzisSyntaxContextData::currentGroup will point to the next group
  */
-bool YzisSyntaxDocument::nextGroup( YzisSyntaxContextData* data )
+bool YzisSyntaxDocument::nextGroup(YzisSyntaxContextData* data)
 {
-  if(!data)
-    return false;
+    if(!data) {
+        return false;
+    }
 
-  // No group yet so go to first child
-  if (data->currentGroup.isNull())
-  {
-    // Skip over non-elements. So far non-elements are just comments
-    QDomNode node = data->parent.firstChild();
-    while (node.isComment())
-      node = node.nextSibling();
+    // No group yet so go to first child
+    if(data->currentGroup.isNull()) {
+        // Skip over non-elements. So far non-elements are just comments
+        QDomNode node = data->parent.firstChild();
 
-    data->currentGroup = node.toElement();
-  }
-  else
-  {
-    // common case, iterate over siblings, skipping comments as we go
-    QDomNode node = data->currentGroup.nextSibling();
-    while (node.isComment())
-      node = node.nextSibling();
+        while(node.isComment()) {
+            node = node.nextSibling();
+        }
 
-    data->currentGroup = node.toElement();
-  }
+        data->currentGroup = node.toElement();
+    } else {
+        // common case, iterate over siblings, skipping comments as we go
+        QDomNode node = data->currentGroup.nextSibling();
 
-  return !data->currentGroup.isNull();
+        while(node.isComment()) {
+            node = node.nextSibling();
+        }
+
+        data->currentGroup = node.toElement();
+    }
+
+    return !data->currentGroup.isNull();
 }
 
 /**
  * Jump to the next item, YzisSyntaxContextData::item will point to the next item
  */
-bool YzisSyntaxDocument::nextItem( YzisSyntaxContextData* data)
+bool YzisSyntaxDocument::nextItem(YzisSyntaxContextData* data)
 {
-  if(!data)
-    return false;
+    if(!data) {
+        return false;
+    }
 
-  if (data->item.isNull())
-  {
-    QDomNode node = data->currentGroup.firstChild();
-    while (node.isComment())
-      node = node.nextSibling();
+    if(data->item.isNull()) {
+        QDomNode node = data->currentGroup.firstChild();
 
-    data->item = node.toElement();
-  }
-  else
-  {
-    QDomNode node = data->item.nextSibling();
-    while (node.isComment())
-      node = node.nextSibling();
+        while(node.isComment()) {
+            node = node.nextSibling();
+        }
 
-    data->item = node.toElement();
-  }
+        data->item = node.toElement();
+    } else {
+        QDomNode node = data->item.nextSibling();
 
-  return !data->item.isNull();
+        while(node.isComment()) {
+            node = node.nextSibling();
+        }
+
+        data->item = node.toElement();
+    }
+
+    return !data->item.isNull();
 }
 
 /**
  * This function is used to fetch the attributes of the tags of the item in a YzisSyntaxContextData.
  */
-QString YzisSyntaxDocument::groupItemData( const YzisSyntaxContextData* data, const QString& name){
-  if(!data)
+QString YzisSyntaxDocument::groupItemData(const YzisSyntaxContextData* data, const QString& name)
+{
+    if(!data) {
+        return QString();
+    }
+
+    // If there's no name just return the tag name of data->item
+    if((!data->item.isNull()) && (name.isEmpty())) {
+        return data->item.tagName();
+    }
+
+    // if name is not empty return the value of the attribute name
+    if(!data->item.isNull()) {
+        return data->item.attribute(name);
+    }
+
     return QString();
-
-  // If there's no name just return the tag name of data->item
-  if ( (!data->item.isNull()) && (name.isEmpty()))
-  {
-    return data->item.tagName();
-  }
-
-  // if name is not empty return the value of the attribute name
-  if (!data->item.isNull())
-  {
-    return data->item.attribute(name);
-  }
-
-  return QString();
-
 }
 
-QString YzisSyntaxDocument::groupData( const YzisSyntaxContextData* data,const QString& name)
+QString YzisSyntaxDocument::groupData(const YzisSyntaxContextData* data, const QString& name)
 {
-  if(!data)
-    return QString();
+    if(!data) {
+        return QString();
+    }
 
-  if (!data->currentGroup.isNull())
-  {
-    return data->currentGroup.attribute(name);
-  }
-  else
-  {
-    return QString();
-  }
+    if(!data->currentGroup.isNull()) {
+        return data->currentGroup.attribute(name);
+    } else {
+        return QString();
+    }
 }
 
-void YzisSyntaxDocument::freeGroupInfo( YzisSyntaxContextData* data)
+void YzisSyntaxDocument::freeGroupInfo(YzisSyntaxContextData* data)
 {
-  if (data)
-    delete data;
+    if(data) {
+        delete data;
+    }
 }
 
 YzisSyntaxContextData* YzisSyntaxDocument::getSubItems(YzisSyntaxContextData* data)
 {
-  YzisSyntaxContextData *retval = new YzisSyntaxContextData;
+    YzisSyntaxContextData *retval = new YzisSyntaxContextData;
 
-  if (data != 0)
-  {
-    retval->parent = data->currentGroup;
-    retval->currentGroup = data->item;
-  }
+    if(data != 0) {
+        retval->parent = data->currentGroup;
+        retval->currentGroup = data->item;
+    }
 
-  return retval;
+    return retval;
 }
 
-bool YzisSyntaxDocument::getElement (QDomElement &element, const QString &mainGroupName, const QString &config)
+bool YzisSyntaxDocument::getElement(QDomElement &element, const QString &mainGroupName, const QString &config)
 {
-  deepdbg() << "getElement( element, \"" << mainGroupName << "\", \"" << config << "\" )" << endl;
+    deepdbg() << "getElement( element, \"" << mainGroupName << "\", \"" << config << "\" )" << endl;
+    QDomNodeList nodes = documentElement().childNodes();
 
-  QDomNodeList nodes = documentElement().childNodes();
+    // Loop over all these child nodes looking for mainGroupName
+    for(int i = 0; i < nodes.count(); i++) {
+        QDomElement elem = nodes.item(i).toElement();
 
-  // Loop over all these child nodes looking for mainGroupName
-  for (int i=0; i<nodes.count(); i++)
-  {
-    QDomElement elem = nodes.item(i).toElement();
-    if (elem.tagName() == mainGroupName)
-    {
-      // Found mainGroupName ...
-      QDomNodeList subNodes = elem.childNodes();
+        if(elem.tagName() == mainGroupName) {
+            // Found mainGroupName ...
+            QDomNodeList subNodes = elem.childNodes();
 
-      // ... so now loop looking for config
-      for (int j=0; j<subNodes.count(); j++)
-      {
-        QDomElement subElem = subNodes.item(j).toElement();
-        if (subElem.tagName() == config)
-        {
-          // Found it!
-          element = subElem;
-          return true;
+            // ... so now loop looking for config
+            for(int j = 0; j < subNodes.count(); j++) {
+                QDomElement subElem = subNodes.item(j).toElement();
+
+                if(subElem.tagName() == config) {
+                    // Found it!
+                    element = subElem;
+                    return true;
+                }
+            }
+
+            deepdbg() << "getElement(): WARNING: \"" << config << "\" wasn't found!" << endl;
+            return false;
         }
-      }
-
-      deepdbg() << "getElement(): WARNING: \""<< config <<"\" wasn't found!" << endl;
-      return false;
     }
-  }
 
-  deepdbg() << "getElement(): WARNING: \""<< mainGroupName <<"\" wasn't found!" << endl;
-  return false;
+    deepdbg() << "getElement(): WARNING: \"" << mainGroupName << "\" wasn't found!" << endl;
+    return false;
 }
 
 YzisSyntaxContextData* YzisSyntaxDocument::getConfig(const QString& mainGroupName, const QString &config)
 {
-  QDomElement element;
-  if (getElement(element, mainGroupName, config))
-  {
-    YzisSyntaxContextData *data = new YzisSyntaxContextData;
-    data->item = element;
-    return data;
-  }
-  return 0;
+    QDomElement element;
+
+    if(getElement(element, mainGroupName, config)) {
+        YzisSyntaxContextData *data = new YzisSyntaxContextData;
+        data->item = element;
+        return data;
+    }
+
+    return 0;
 }
 
 YzisSyntaxContextData* YzisSyntaxDocument::getGroupInfo(const QString& mainGroupName, const QString &group)
 {
-  QDomElement element;
-  if (getElement(element, mainGroupName, group+'s'))
-  {
-    YzisSyntaxContextData *data = new YzisSyntaxContextData;
-    data->parent = element;
-    return data;
-  }
-  return 0;
+    QDomElement element;
+
+    if(getElement(element, mainGroupName, group + 's')) {
+        YzisSyntaxContextData *data = new YzisSyntaxContextData;
+        data->parent = element;
+        return data;
+    }
+
+    return 0;
 }
 
 QStringList& YzisSyntaxDocument::finddata(const QString& mainGroup, const QString& type, bool clearList)
 {
-  deepdbg()<< "finddata( mainGroup=\"" << mainGroup<<"\", type=\"" << type << "\", clearList="<< clearList <<" ) " <<endl;
-  if (clearList)
-    m_data.clear();
+    deepdbg() << "finddata( mainGroup=\"" << mainGroup << "\", type=\"" << type << "\", clearList=" << clearList << " ) " << endl;
 
-  for(QDomNode node = documentElement().firstChild(); !node.isNull(); node = node.nextSibling())
-  {
-    QDomElement elem = node.toElement();
-    if (elem.tagName() == mainGroup)
-    {
-      deepdbg()<<"\""<<mainGroup<<"\" found."<<endl;
-      QDomNodeList nodelist1 = elem.elementsByTagName("list");
-
-      for (int l=0; l<nodelist1.count(); l++)
-      {
-        if (nodelist1.item(l).toElement().attribute("name") == type)
-        {
-          deepdbg()<<"List with attribute name=\""<<type<<"\" found."<<endl;
-          QDomNodeList childlist = nodelist1.item(l).toElement().childNodes();
-
-          for (int i=0; i<childlist.count(); i++)
-          {
-            QString element = childlist.item(i).toElement().text().simplified();
-            if (element.isEmpty())
-              continue;
-#ifndef NDEBUG
-            if (i<6)
-            {
-              deepdbg()<<"\""<<element<<"\" added to the list \""<<type<<"\""<<endl;
-            }
-            else if(i==6)
-            {
-              deepdbg()<<"... The list continues ..."<<endl;
-            }
-#endif
-            m_data += element;
-          }
-
-          break;
-        }
-      }
-      break;
+    if(clearList) {
+        m_data.clear();
     }
-  }
 
-  return m_data;
+    for(QDomNode node = documentElement().firstChild(); !node.isNull(); node = node.nextSibling()) {
+        QDomElement elem = node.toElement();
+
+        if(elem.tagName() == mainGroup) {
+            deepdbg() << "\"" << mainGroup << "\" found." << endl;
+            QDomNodeList nodelist1 = elem.elementsByTagName("list");
+
+            for(int l = 0; l < nodelist1.count(); l++) {
+                if(nodelist1.item(l).toElement().attribute("name") == type) {
+                    deepdbg() << "List with attribute name=\"" << type << "\" found." << endl;
+                    QDomNodeList childlist = nodelist1.item(l).toElement().childNodes();
+
+                    for(int i = 0; i < childlist.count(); i++) {
+                        QString element = childlist.item(i).toElement().text().simplified();
+
+                        if(element.isEmpty()) {
+                            continue;
+                        }
+
+#ifndef NDEBUG
+
+                        if(i < 6) {
+                            deepdbg() << "\"" << element << "\" added to the list \"" << type << "\"" << endl;
+                        } else if(i == 6) {
+                            deepdbg() << "... The list continues ..." << endl;
+                        }
+
+#endif
+                        m_data += element;
+                    }
+
+                    break;
+                }
+            }
+
+            break;
+        }
+    }
+
+    return m_data;
 }
 
 QStringList
-YzisSyntaxDocument::findAllResources( const char *,
-			         const QString& filter,
-					 bool recursive,
-					 bool unique) const
+YzisSyntaxDocument::findAllResources(const char *,
+                                     const QString& filter,
+                                     bool recursive,
+                                     bool unique) const
 {
     deepdbg() << "findAllResources( \"\" , filter=" << filter << ",recursive=" << recursive << ", unique=" << unique << ")" << endl;
     QStringList list;
@@ -337,37 +333,38 @@ YzisSyntaxDocument::findAllResources( const char *,
     QString filterFile;
     QStringList relList;
 
-    if (filter.length())
-    {
-       int slash = filter.lastIndexOf('/');
-       if (slash < 0)
-	   filterFile = filter;
-       else {
-	   filterPath = filter.left(slash + 1);
-	   filterFile = filter.mid(slash + 1);
-       }
+    if(filter.length()) {
+        int slash = filter.lastIndexOf('/');
+
+        if(slash < 0) {
+            filterFile = filter;
+        } else {
+            filterPath = filter.left(slash + 1);
+            filterFile = filter.mid(slash + 1);
+        }
     }
 
     QStringList candidates;
-/*    if (filterPath.startsWith("/")) // absolute path
-    {*/
-        candidates << filterPath.mid(0, filterPath.indexOf("/")+1);
-        filterPath = filterPath.mid(filterPath.indexOf("/")+1);
-/*    }
-    else
-    {
-        if (d && d->restrictionsActive && (strcmp(type, "data")==0))
-            applyDataRestrictions(filter);
-        candidates = resourceDirs(type);
-    }*/
-    if (filterFile.isEmpty())
-	filterFile = "*";
+    /*    if (filterPath.startsWith("/")) // absolute path
+        {*/
+    candidates << filterPath.mid(0, filterPath.indexOf("/") + 1);
+    filterPath = filterPath.mid(filterPath.indexOf("/") + 1);
+
+    /*    }
+        else
+        {
+            if (d && d->restrictionsActive && (strcmp(type, "data")==0))
+                applyDataRestrictions(filter);
+            candidates = resourceDirs(type);
+        }*/
+    if(filterFile.isEmpty()) {
+        filterFile = "*";
+    }
 
     QRegExp regExp(filterFile, Qt::CaseSensitive, QRegExp::Wildcard);
 
-    for (QStringList::ConstIterator it = candidates.begin();
-         it != candidates.end(); it++)
-    {
+    for(QStringList::ConstIterator it = candidates.begin();
+        it != candidates.end(); it++) {
         lookupPrefix(*it, filterPath, "", regExp, list,
                      relList, recursive, unique);
     }
@@ -375,162 +372,171 @@ YzisSyntaxDocument::findAllResources( const char *,
     return list;
 }
 
-static void lookupDirectory(const QString& path, const QString &relPart, const QRegExp &regexp, QStringList& list, QStringList& relList, bool recursive, bool unique) {
-
+static void lookupDirectory(const QString& path, const QString &relPart, const QRegExp &regexp, QStringList& list, QStringList& relList, bool recursive, bool unique)
+{
     deepdbg() << "lookupDirectory( " << endl;
     deepdbg() << "\tpath=" << path << endl;
     deepdbg() << "\trelPart=" << relPart << endl;
     deepdbg() << "\tregexp=" << regexp.pattern() << endl;
     deepdbg() << "\tlist=(" << list.join(" , ") << " ) "  << endl;
     deepdbg() << "\trelList=(" << relList.join(" , ") << " ) " << endl;
-    deepdbg() << "\trecursive=" << recursive << endl; 
+    deepdbg() << "\trecursive=" << recursive << endl;
     deepdbg() << "\tunique=" << unique << endl;
     deepdbg() << ")" << endl;
+    QString pattern = regexp.pattern();
 
-  QString pattern = regexp.pattern();
-  if (recursive || pattern.contains('?') || pattern.contains('*'))
-  {
-    // We look for a set of files.
-    //DIR *dp = opendir( QFile::encodeName(path));
-    //if (!dp)
-    QDir dir(QFile::encodeName(path));
-    if (!dir.exists()) 
-      return;
+    if(recursive || pattern.contains('?') || pattern.contains('*')) {
+        // We look for a set of files.
+        //DIR *dp = opendir( QFile::encodeName(path));
+        //if (!dp)
+        QDir dir(QFile::encodeName(path));
 
-//    assert(path.at(path.length() - 1) == '/');
-
-    //struct dirent *ep;
-    struct stat buff;
-
-    QString _dot(".");
-    QString _dotdot("..");
-
-    //while( ( ep = readdir( dp ) ) != 0L )
-    QFileInfoList fileList = dir.entryInfoList();
-    for (int i = 0; i < fileList.size(); i++)
-    {
-      //QString fn( QFile::decodeName(ep->d_name));
-      QString fn( fileList.at(i).fileName());
-      if (fn == _dot || fn == _dotdot || fn.at(fn.length() - 1) == QChar( '~' ))
-
-	continue;
-
-      if (!recursive && !regexp.exactMatch(fn))
-	continue; // No match
-
-      QString pathfn = path + fn;
-      if ( stat( QFile::encodeName(pathfn), &buff ) != 0 ) {
-	continue; // Couldn't stat (e.g. no read permissions)
-      }
-      if ( recursive ) {
-	if ( S_ISDIR( buff.st_mode )) {
-	  lookupDirectory(pathfn + '/', relPart + fn + '/', regexp, list, relList, recursive, unique);
-	}
-        if (!regexp.exactMatch(fn))
-	  continue; // No match
-      }
-      if ( S_ISREG( buff.st_mode))
-      {
-        if (!unique || !relList.contains(relPart + fn))
-        {
-	    list.append( pathfn );
-	    relList.append( relPart + fn );
+        if(!dir.exists()) {
+            return;
         }
-      }
+
+        //    assert(path.at(path.length() - 1) == '/');
+        //struct dirent *ep;
+        struct stat buff;
+        QString _dot(".");
+        QString _dotdot("..");
+        //while( ( ep = readdir( dp ) ) != 0L )
+        QFileInfoList fileList = dir.entryInfoList();
+
+        for(int i = 0; i < fileList.size(); i++) {
+            //QString fn( QFile::decodeName(ep->d_name));
+            QString fn(fileList.at(i).fileName());
+
+            if(fn == _dot || fn == _dotdot || fn.at(fn.length() - 1) == QChar('~')) {
+                continue;
+            }
+
+            if(!recursive && !regexp.exactMatch(fn)) {
+                continue;    // No match
+            }
+
+            QString pathfn = path + fn;
+
+            if(stat(QFile::encodeName(pathfn), &buff) != 0) {
+                continue; // Couldn't stat (e.g. no read permissions)
+            }
+
+            if(recursive) {
+                if(S_ISDIR(buff.st_mode)) {
+                    lookupDirectory(pathfn + '/', relPart + fn + '/', regexp, list, relList, recursive, unique);
+                }
+
+                if(!regexp.exactMatch(fn)) {
+                    continue;    // No match
+                }
+            }
+
+            if(S_ISREG(buff.st_mode)) {
+                if(!unique || !relList.contains(relPart + fn)) {
+                    list.append(pathfn);
+                    relList.append(relPart + fn);
+                }
+            }
+        }
+
+        //closedir( dp );
+    } else {
+        // We look for a single file.
+        QString fn = pattern;
+        QString pathfn = path + fn;
+        struct stat buff;
+
+        if(stat(QFile::encodeName(pathfn), &buff) != 0) {
+            return;    // File not found
+        }
+
+        if(S_ISREG(buff.st_mode)) {
+            if(!unique || !relList.contains(relPart + fn)) {
+                list.append(pathfn);
+                relList.append(relPart + fn);
+            }
+        }
     }
-    //closedir( dp );
-  }
-  else
-  {
-     // We look for a single file.
-     QString fn = pattern;
-     QString pathfn = path + fn;
-     struct stat buff;
-     if ( stat( QFile::encodeName(pathfn), &buff ) != 0 )
-        return; // File not found
-     if ( S_ISREG( buff.st_mode))
-     {
-       if (!unique || !relList.contains(relPart + fn))
-       {
-         list.append( pathfn );
-         relList.append( relPart + fn );
-       }
-     }
-  }
 }
 
 
-static void lookupPrefix(const QString& prefix, const QString& relpath, const QString& relPart, const QRegExp &regexp, QStringList& list, QStringList& relList, bool recursive, bool unique) {
+static void lookupPrefix(const QString& prefix, const QString& relpath, const QString& relPart, const QRegExp &regexp, QStringList& list, QStringList& relList, bool recursive, bool unique)
+{
     deepdbg() << "lookupPrefix( " << endl;
     deepdbg() << "\tprefix=" << prefix << endl;
     deepdbg() << "\trelpath=" << relpath << endl;
     deepdbg() << "\trelPart=" << relPart << endl;
     deepdbg() << "\tregexp=" << regexp.pattern() << endl;
     deepdbg() << "\tlist=(" << list.join(" , ") << ")" << endl;
-    deepdbg() << "\trelList=("<<relList.join(" , ") << ")" << endl; 
-    deepdbg() << "\trecursive=" << recursive << endl; 
+    deepdbg() << "\trelList=(" << relList.join(" , ") << ")" << endl;
+    deepdbg() << "\trecursive=" << recursive << endl;
     deepdbg() << "\tunique=" << unique << endl;
     deepdbg() << ")" << endl;
 
-    if (relpath.isNull()) {
-       lookupDirectory(prefix, relPart, regexp, list,
-		       relList, recursive, unique);
-       return;
+    if(relpath.isNull()) {
+        lookupDirectory(prefix, relPart, regexp, list,
+                        relList, recursive, unique);
+        return;
     }
+
     QString path;
     QString rest;
 
-    if (relpath.length())
-    {
-       int slash = relpath.indexOf('/');
-       if (slash < 0)
-	   rest = relpath.left(relpath.length() - 1);
-       else {
-	   path = relpath.left(slash);
-	   rest = relpath.mid(slash + 1);
-       }
+    if(relpath.length()) {
+        int slash = relpath.indexOf('/');
+
+        if(slash < 0) {
+            rest = relpath.left(relpath.length() - 1);
+        } else {
+            path = relpath.left(slash);
+            rest = relpath.mid(slash + 1);
+        }
     }
 
-//    assert(prefix.at(prefix.length() - 1) == '/');
-
+    //    assert(prefix.at(prefix.length() - 1) == '/');
     struct stat buff;
 
-    if (path.contains('*') || path.contains('?')) {
+    if(path.contains('*') || path.contains('?')) {
+        QRegExp pathExp(path, Qt::CaseSensitive, QRegExp::Wildcard);
+        //DIR *dp = opendir( QFile::encodeName(prefix) );
+        //if (!dp) {
+        QDir dir(QFile::encodeName(prefix));
 
-	QRegExp pathExp(path, Qt::CaseSensitive, QRegExp::Wildcard);
-	//DIR *dp = opendir( QFile::encodeName(prefix) );
-	//if (!dp) {
-    QDir dir(QFile::encodeName(prefix));
-    if (!dir.exists()) {
-	    return;
-	}
+        if(!dir.exists()) {
+            return;
+        }
 
-	//struct dirent *ep;
-
+        //struct dirent *ep;
         QString _dot(".");
         QString _dotdot("..");
+        //while( ( ep = readdir( dp ) ) != 0L )
+        QFileInfoList fileList = dir.entryInfoList();
 
-	//while( ( ep = readdir( dp ) ) != 0L )
-    QFileInfoList fileList = dir.entryInfoList();
-    for (int i = 0; i < fileList.size(); i++)
-	    {
-		//QString fn( QFile::decodeName(ep->d_name));
-        QString fn( fileList.at(i).fileName());
-		if (fn == _dot || fn == _dotdot || fn.at(fn.length() - 1) == '~')
-		    continue;
+        for(int i = 0; i < fileList.size(); i++) {
+            //QString fn( QFile::decodeName(ep->d_name));
+            QString fn(fileList.at(i).fileName());
 
-		if ( !pathExp.exactMatch(fn) )
-		    continue; // No match
-		QString rfn = relPart+fn;
-		fn = prefix + fn;
-		if ( stat( QFile::encodeName(fn), &buff ) != 0 ) {
-		    continue; // Couldn't stat (e.g. no permissions)
-		}
-		if ( S_ISDIR( buff.st_mode ))
-		    lookupPrefix(fn + '/', rest, rfn + '/', regexp, list, relList, recursive, unique);
-	    }
+            if(fn == _dot || fn == _dotdot || fn.at(fn.length() - 1) == '~') {
+                continue;
+            }
 
-	//closedir( dp );
+            if(!pathExp.exactMatch(fn)) {
+                continue;    // No match
+            }
+
+            QString rfn = relPart + fn;
+            fn = prefix + fn;
+
+            if(stat(QFile::encodeName(fn), &buff) != 0) {
+                continue; // Couldn't stat (e.g. no permissions)
+            }
+
+            if(S_ISDIR(buff.st_mode)) {
+                lookupPrefix(fn + '/', rest, rfn + '/', regexp, list, relList, recursive, unique);
+            }
+        }
+
+        //closedir( dp );
     } else {
         // Don't stat, if the dir doesn't exist we will find out
         // when we try to open it.
@@ -544,159 +550,137 @@ static void lookupPrefix(const QString& prefix, const QString& relpath, const QS
 /** Generate the list of hl modes, store them in myModeList
     force: if true forces to rebuild the Mode List from the xml files (instead of configfile)
 */
-void YzisSyntaxDocument::setupModeList (bool force)
+void YzisSyntaxDocument::setupModeList(bool force)
 {
-  // If there's something in myModeList the Mode List was already built so, don't do it again
-  if (!myModeList.isEmpty())
-    return;
-
-  // We'll store the ModeList in katesyntaxhighlightingrc
-  //KConfig config("katesyntaxhighlightingrc", false, false);
-  YInternalOptionPool* config = YSession::self()->getOptions();
-
-  // figure our if the kate install is too new
-  config->setGroup ("General");
-  if (config->readIntEntry ("Version") > config->readIntEntry ("CachedVersion"))
-  {
-    config->setIntEntry ("CachedVersion", config->readIntEntry ("Version"));
-    force = true;
-  }
-
-  // Let's get a list of all the xml files for hl
-  QStringList resourceDirList = resourceMgr()->resourceDirList( SyntaxHlResource );
-  dbg() << "setupModeList() looking for syntax files in directories : "<< resourceDirList << endl;
-  QStringList list;
-  foreach( QString resourceDir, resourceDirList ) {
-        list += findAllResources("data", resourceDir + "/*.xml",false,true);
-  }
-
-  deepdbg() << "setupModeList(): syntax file list = " << list.join("\n") << endl;
-
-  // Let's iterate through the list and build the Mode List
-  QStringList::Iterator it = list.begin(), end = list.end();
-  for ( ; it != end; ++it )
-  {
-    deepdbg() << "setupModeList(): analysing resource " << *it << endl;
-    // Each file has a group called:
-    QString Group="HL Cache "+ *it;
-
-	// Let's go to this group
-	config->setGroup(Group);
-
-    // stat the file
-    struct stat sbuf;
-    memset (&sbuf, 0, sizeof(sbuf));
-    stat(QFile::encodeName(*it), &sbuf);
-
-    // If the group exist and we're not forced to read the xml file, let's build myModeList for katesyntax..rc
-    if ( config->hasGroup(Group) && !force && (sbuf.st_mtime == config->readIntEntry("lastModified")) )
-    {
-      // Let's make a new YzisSyntaxModeListItem to instert in myModeList from the information in katesyntax..rc
-      YzisSyntaxModeListItem *mli=new YzisSyntaxModeListItem;
-      mli->name       = config->readQStringEntry("name");
-      mli->nameTranslated = _(mli->name.toUtf8());
-      mli->section    = config->readQStringEntry("section").toUtf8();
-      mli->mimetype   = config->readQStringEntry("mimetype");
-      mli->extension  = config->readQStringEntry("extension");
-      mli->version    = config->readQStringEntry("version");
-      mli->priority   = config->readQStringEntry("priority");
-      mli->author    = config->readQStringEntry("author");
-      mli->license   = config->readQStringEntry("license");
-      mli->hidden   =  config->readBoolEntry("hidden");
-      mli->identifier = *it;
-
-      // Apend the item to the list
-      myModeList.append(mli);
-      deepdbg() << "NO update hl cache for: " << *it << endl;
+    // If there's something in myModeList the Mode List was already built so, don't do it again
+    if(!myModeList.isEmpty()) {
+        return;
     }
-    else
-    {
-      deepdbg() << "UPDATE hl cache for: " << *it << endl;
 
-      // We're forced to read the xml files or the mode doesn't exist in the katesyntax...rc
-      QFile f(*it);
+    // We'll store the ModeList in katesyntaxhighlightingrc
+    //KConfig config("katesyntaxhighlightingrc", false, false);
+    YInternalOptionPool* config = YSession::self()->getOptions();
+    // figure our if the kate install is too new
+    config->setGroup("General");
 
-      if (f.open(QIODevice::ReadOnly))
-      {
-        // Ok we opened the file, let's read the contents and close the file
-        /* the return of setContent should be checked because a false return shows a parsing error */
-        QString errMsg;
-        int line, col;
+    if(config->readIntEntry("Version") > config->readIntEntry("CachedVersion")) {
+        config->setIntEntry("CachedVersion", config->readIntEntry("Version"));
+        force = true;
+    }
 
-        bool success = setContent(&f,&errMsg,&line,&col);
+    // Let's get a list of all the xml files for hl
+    QStringList resourceDirList = resourceMgr()->resourceDirList(SyntaxHlResource);
+    dbg() << "setupModeList() looking for syntax files in directories : " << resourceDirList << endl;
+    QStringList list;
 
-        f.close();
+    foreach(QString resourceDir, resourceDirList) {
+        list += findAllResources("data", resourceDir + "/*.xml", false, true);
+    }
 
-        if (success)
-        {
-          QDomElement root = documentElement();
+    deepdbg() << "setupModeList(): syntax file list = " << list.join("\n") << endl;
+    // Let's iterate through the list and build the Mode List
+    QStringList::Iterator it = list.begin(), end = list.end();
 
-          if (!root.isNull())
-          {
-            // If the 'first' tag is language, go on
-            if (root.tagName()=="language")
-            {
-              // let's make the mode list item.
-              YzisSyntaxModeListItem *mli = new YzisSyntaxModeListItem;
+    for(; it != end; ++it) {
+        deepdbg() << "setupModeList(): analysing resource " << *it << endl;
+        // Each file has a group called:
+        QString Group = "HL Cache " + *it;
+        // Let's go to this group
+        config->setGroup(Group);
+        // stat the file
+        struct stat sbuf;
+        memset(&sbuf, 0, sizeof(sbuf));
+        stat(QFile::encodeName(*it), &sbuf);
 
-              mli->name      = root.attribute("name");
-              mli->section   = root.attribute("section");
-              mli->mimetype  = root.attribute("mimetype");
-              mli->extension = root.attribute("extensions");
-              mli->version   = root.attribute("version");
-              mli->priority  = root.attribute("priority");
-              mli->author    = root.attribute("author");
-              mli->license   = root.attribute("license");
+        // If the group exist and we're not forced to read the xml file, let's build myModeList for katesyntax..rc
+        if(config->hasGroup(Group) && !force && (sbuf.st_mtime == config->readIntEntry("lastModified"))) {
+            // Let's make a new YzisSyntaxModeListItem to instert in myModeList from the information in katesyntax..rc
+            YzisSyntaxModeListItem *mli = new YzisSyntaxModeListItem;
+            mli->name       = config->readQStringEntry("name");
+            mli->nameTranslated = _(mli->name.toUtf8());
+            mli->section    = config->readQStringEntry("section").toUtf8();
+            mli->mimetype   = config->readQStringEntry("mimetype");
+            mli->extension  = config->readQStringEntry("extension");
+            mli->version    = config->readQStringEntry("version");
+            mli->priority   = config->readQStringEntry("priority");
+            mli->author    = config->readQStringEntry("author");
+            mli->license   = config->readQStringEntry("license");
+            mli->hidden   =  config->readBoolEntry("hidden");
+            mli->identifier = *it;
+            // Apend the item to the list
+            myModeList.append(mli);
+            deepdbg() << "NO update hl cache for: " << *it << endl;
+        } else {
+            deepdbg() << "UPDATE hl cache for: " << *it << endl;
+            // We're forced to read the xml files or the mode doesn't exist in the katesyntax...rc
+            QFile f(*it);
 
-              QString hidden = root.attribute("hidden");
-              mli->hidden    = (hidden == "true" || hidden == "TRUE");
+            if(f.open(QIODevice::ReadOnly)) {
+                // Ok we opened the file, let's read the contents and close the file
+                /* the return of setContent should be checked because a false return shows a parsing error */
+                QString errMsg;
+                int line, col;
+                bool success = setContent(&f, &errMsg, &line, &col);
+                f.close();
 
-              mli->identifier = *it;
+                if(success) {
+                    QDomElement root = documentElement();
 
-              // Now let's write or overwrite (if force==true) the entry in katesyntax...rc
-              config->setGroup(Group);
-              config->setQStringEntry("name",mli->name);
-			  config->setQStringEntry("section",mli->section);
-              config->setQStringEntry("mimetype",mli->mimetype);
-              config->setQStringEntry("extension",mli->extension);
-              config->setQStringEntry("version",mli->version);
-              config->setQStringEntry("priority",mli->priority);
-              config->setQStringEntry("author",mli->author);
-              config->setQStringEntry("license",mli->license);
-              config->setBoolEntry("hidden",mli->hidden);
-
-              // modified time to keep cache in sync
-              config->setIntEntry("lastModified", sbuf.st_mtime);
-
-              // Now that the data is in the config file, translate section
-			  mli->section    = _( "Language Section"); // We need the i18n context for when reading again the config
-              mli->nameTranslated = _(mli->name.toUtf8());
-
-              // Append the new item to the list.
-              myModeList.append(mli);
+                    if(!root.isNull()) {
+                        // If the 'first' tag is language, go on
+                        if(root.tagName() == "language") {
+                            // let's make the mode list item.
+                            YzisSyntaxModeListItem *mli = new YzisSyntaxModeListItem;
+                            mli->name      = root.attribute("name");
+                            mli->section   = root.attribute("section");
+                            mli->mimetype  = root.attribute("mimetype");
+                            mli->extension = root.attribute("extensions");
+                            mli->version   = root.attribute("version");
+                            mli->priority  = root.attribute("priority");
+                            mli->author    = root.attribute("author");
+                            mli->license   = root.attribute("license");
+                            QString hidden = root.attribute("hidden");
+                            mli->hidden    = (hidden == "true" || hidden == "TRUE");
+                            mli->identifier = *it;
+                            // Now let's write or overwrite (if force==true) the entry in katesyntax...rc
+                            config->setGroup(Group);
+                            config->setQStringEntry("name", mli->name);
+                            config->setQStringEntry("section", mli->section);
+                            config->setQStringEntry("mimetype", mli->mimetype);
+                            config->setQStringEntry("extension", mli->extension);
+                            config->setQStringEntry("version", mli->version);
+                            config->setQStringEntry("priority", mli->priority);
+                            config->setQStringEntry("author", mli->author);
+                            config->setQStringEntry("license", mli->license);
+                            config->setBoolEntry("hidden", mli->hidden);
+                            // modified time to keep cache in sync
+                            config->setIntEntry("lastModified", sbuf.st_mtime);
+                            // Now that the data is in the config file, translate section
+                            mli->section    = _("Language Section");  // We need the i18n context for when reading again the config
+                            mli->nameTranslated = _(mli->name.toUtf8());
+                            // Append the new item to the list.
+                            myModeList.append(mli);
+                        }
+                    }
+                } else {
+                    YzisSyntaxModeListItem *emli = new YzisSyntaxModeListItem;
+                    emli->section = _("Errors!");
+                    emli->mimetype = "invalid_file/invalid_file";
+                    emli->extension = "invalid_file.invalid_file";
+                    emli->version = "1.";
+                    emli->name = QString("Error: %1").arg(*it); // internal
+                    emli->nameTranslated = QString("Error: %1").arg(*it); // translated
+                    emli->identifier = (*it);
+                    myModeList.append(emli);
+                }
             }
-          }
         }
-        else
-        {
-          YzisSyntaxModeListItem *emli=new YzisSyntaxModeListItem;
-
-          emli->section=_( "Errors!" );
-          emli->mimetype="invalid_file/invalid_file";
-          emli->extension="invalid_file.invalid_file";
-          emli->version="1.";
-          emli->name=QString ("Error: %1").arg(*it); // internal
-          emli->nameTranslated=QString("Error: %1").arg(*it); // translated
-          emli->identifier=(*it);
-
-          myModeList.append(emli);
-        }
-      }
     }
-  }
-  QString resource = resourceMgr()->findResource( WritableConfigResource, "hl.conf" );
-  if (! resource.isEmpty()) {
-      config->saveTo( resource, "HL Cache", "", true );
-  }
+
+    QString resource = resourceMgr()->findResource(WritableConfigResource, "hl.conf");
+
+    if(! resource.isEmpty()) {
+        config->saveTo(resource, "HL Cache", "", true);
+    }
 }
 

@@ -39,7 +39,7 @@ public:
 
     // Reimplemented to please compilation
 
-    virtual void guiSetCommandLineText( const QString& text);
+    virtual void guiSetCommandLineText(const QString& text);
 
     virtual void guiSetFocusCommandLine();
 
@@ -47,21 +47,21 @@ public:
 
     virtual QString guiGetCommandLineText() const;
 
-    virtual void invalidateLine( unsigned int );
+    virtual void invalidateLine(unsigned int);
 
-    virtual void refreshScreen( );
+    virtual void refreshScreen();
 
-    virtual void paintEvent( unsigned int /*curx*/, unsigned int /*cury*/, unsigned int /*curw*/, unsigned int /*curh*/ );
+    virtual void paintEvent(unsigned int /*curx*/, unsigned int /*cury*/, unsigned int /*curw*/, unsigned int /*curh*/);
 
-    virtual void scrollUp( int );
-    virtual void scrollDown( int );
+    virtual void scrollUp(int);
+    virtual void scrollDown(int);
     virtual void registerModifierKeys(const QString& s);
 
-    virtual void paintEvent( const YSelection& );
+    virtual void paintEvent(const YSelection&);
 
-    virtual void guiScroll( int dx, int dy );
+    virtual void guiScroll(int dx, int dy);
 
-    virtual void guiNotifyContentChanged( const YSelection& s );
+    virtual void guiNotifyContentChanged(const YSelection& s);
 
     virtual bool guiPopupFileSaveAs();
 
@@ -74,7 +74,7 @@ public:
     virtual void guiDisplayInfo(const QString&);
 
     virtual void guiHighlightingChanged();
-	virtual void guiSetup();
+    virtual void guiSetup();
     void guiPreparePaintEvent();
     void guiEndPaintEvent();
     void guiDrawCell(YCursor, const YDrawCell&);
@@ -86,7 +86,7 @@ protected:
     class Mapping
     {
     public:
-        Mapping( QString ptext = "", int pkey = 0)
+        Mapping(QString ptext = "", int pkey = 0)
         {
             text = ptext;
             key = pkey;

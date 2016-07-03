@@ -35,38 +35,59 @@ class YZIS_EXPORT YViewCursor
 
 public:
     YViewCursor();
-    YViewCursor( int line, int position, int column );
-    YViewCursor( const YViewCursor &c);
+    YViewCursor(int line, int position, int column);
+    YViewCursor(const YViewCursor &c);
     virtual ~YViewCursor();
 
-    YViewCursor &operator=( const YViewCursor &c );
+    YViewCursor &operator=(const YViewCursor &c);
 
-	/* buffer line */
-	inline int line() const { return mBuffer.line(); } 
-    inline void setLine( int value ) { mBuffer.setLine(value); }
-	/* buffer position */
-	inline int position() const { return mBuffer.column(); }
-	inline void setPosition( int value ) { mBuffer.setColumn(value); }
+    /* buffer line */
+    inline int line() const
+    {
+        return mBuffer.line();
+    }
+    inline void setLine(int value)
+    {
+        mBuffer.setLine(value);
+    }
+    /* buffer position */
+    inline int position() const
+    {
+        return mBuffer.column();
+    }
+    inline void setPosition(int value)
+    {
+        mBuffer.setColumn(value);
+    }
 
-	inline YCursor buffer() const { return mBuffer; }
+    inline YCursor buffer() const
+    {
+        return mBuffer;
+    }
 
-	/* view column */
-	inline int column() const { return mColumn; }
-	inline void setColumn( int value ) { mColumn = value; }
+    /* view column */
+    inline int column() const
+    {
+        return mColumn;
+    }
+    inline void setColumn(int value)
+    {
+        mColumn = value;
+    }
 
     /*
      * operators
      */
-    bool operator== ( const YViewCursor right ) const;
-    bool operator!= ( const YViewCursor right ) const;
-    bool operator< ( const YViewCursor right ) const;
-    bool operator<= ( const YViewCursor right ) const;
-    bool operator> ( const YViewCursor right ) const;
-    bool operator>= ( const YViewCursor right ) const;
+    bool operator== (const YViewCursor right) const;
+    bool operator!= (const YViewCursor right) const;
+    bool operator< (const YViewCursor right) const;
+    bool operator<= (const YViewCursor right) const;
+    bool operator> (const YViewCursor right) const;
+    bool operator>= (const YViewCursor right) const;
 
 private :
-	YCursor mBuffer;
-	int mColumn;
+    YCursor mBuffer;
+    int mColumn;
 };
 
 #endif

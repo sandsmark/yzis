@@ -32,17 +32,14 @@
 #include <kxmlguifactory.h>
 
 
-KTEView::KTEView( KTEDocument* doc, QWidget* parent )
-        : KTextEditor::View(parent), m_doc(doc), m_popup(0)
+KTEView::KTEView(KTEDocument* doc, QWidget* parent)
+    : KTextEditor::View(parent), m_doc(doc), m_popup(0)
 {
     m_view = static_cast<KYView*>(KYSession::self()->createView(doc->buffer()));
-    m_view->setParent( this );
-
-    QGridLayout* g = new QGridLayout( this );
-    g->addWidget( m_view, 0, 0 );
-
-    setXMLFile( "yzis_kpart/yzis_kpart.rc" );
-
+    m_view->setParent(this);
+    QGridLayout* g = new QGridLayout(this);
+    g->addWidget(m_view, 0, 0);
+    setXMLFile("yzis_kpart/yzis_kpart.rc");
     m_view->show();
 }
 
@@ -68,7 +65,7 @@ enum KTextEditor::View::EditMode KTEView::viewEditMode() const
     return KTextEditor::View::EditInsert;
 }
 
-void KTEView::setContextMenu( QMenu* menu )
+void KTEView::setContextMenu(QMenu* menu)
 {
     m_popup = menu;
 }
@@ -78,18 +75,20 @@ QMenu* KTEView::contextMenu() const
     return m_popup;
 }
 
-QMenu* KTEView::defaultContextMenu( QMenu* menu ) const
+QMenu* KTEView::defaultContextMenu(QMenu* menu) const
 {
     QMenu * popup = 0;
-    if (m_popup)
+
+    if(m_popup) {
         popup = m_popup;
-    else
+    } else {
         popup = menu;
+    }
 
     return popup;
 }
 
-bool KTEView::setCursorPosition( KTextEditor::Cursor position )
+bool KTEView::setCursorPosition(KTextEditor::Cursor position)
 {
     kDebug() << "KTEView::setCursorPosition x: " << position.column() << " y: " << position.line() << "\n";
     m_view->gotoLinePosition(position.line(), position.column());
@@ -98,22 +97,22 @@ bool KTEView::setCursorPosition( KTextEditor::Cursor position )
 
 KTextEditor::Cursor KTEView::cursorPosition() const
 {
-    return KTextEditor::Cursor( m_view->getLinePositionCursor().y(), m_view->getLinePositionCursor().x() );
+    return KTextEditor::Cursor(m_view->getLinePositionCursor().y(), m_view->getLinePositionCursor().x());
 }
 
 KTextEditor::Cursor KTEView::cursorPositionVirtual() const
 {
-    return KTextEditor::Cursor( m_view->getLinePositionCursor().y(), m_view->getLinePositionCursor().x() );
+    return KTextEditor::Cursor(m_view->getLinePositionCursor().y(), m_view->getLinePositionCursor().x());
 }
 
-QPoint KTEView::cursorToCoordinate( const KTextEditor::Cursor& cursor ) const
+QPoint KTEView::cursorToCoordinate(const KTextEditor::Cursor& cursor) const
 {
-    return QPoint( cursor.column(), cursor.line() );
+    return QPoint(cursor.column(), cursor.line());
 }
 
 QPoint KTEView::cursorPositionCoordinates() const
 {
-    return cursorToCoordinate( cursorPosition() );
+    return cursorToCoordinate(cursorPosition());
 }
 
 bool KTEView::mouseTrackingEnabled() const
@@ -128,7 +127,7 @@ bool KTEView::setMouseTrackingEnabled(bool /*enable*/)
     return false;
 }
 
-bool KTEView::setSelection ( const KTextEditor::Range &range )
+bool KTEView::setSelection(const KTextEditor::Range &range)
 {
     // TODO: implement
     return false;

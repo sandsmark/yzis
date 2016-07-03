@@ -23,7 +23,7 @@
 #include "kyview.h"
 
 KYEditor::KYEditor(KYView* parent)
-        : QYEdit(parent)
+    : QYEdit(parent)
 {
 }
 

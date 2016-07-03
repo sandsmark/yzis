@@ -28,15 +28,11 @@ int
 main(int argc, char* argv[])
 {
     Gtk::Main mainDoc(argc, argv);
-
     Bakery::init();
-    qtgtk_init( 0 );
-
+    qtgtk_init(0);
     GYzis* pApp = new GYzis("test");
     GYzis::set_command_line_args(argc, argv);
     pApp->init(); //Sets it up and shows it.
-
     mainDoc.run();
-
     return 0;
 }

@@ -101,7 +101,7 @@ public:
       * @return an empty QString if the resource could not be found, or
       * the absolute path of the resource.
       */
-    QString findResource( ResourceType type, const QString & fname );
+    QString findResource(ResourceType type, const QString & fname);
 
     /** Get a list of all directories that are looked up for finding a
       * resource.
@@ -111,7 +111,7 @@ public:
       *
       * The method includes the results of guiResourceDirList() as well.
       */
-    QStringList resourceDirList( ResourceType type);
+    QStringList resourceDirList(ResourceType type);
 
 protected:
     /** Creates the user yzis directory and some default config files.
@@ -140,6 +140,6 @@ inline YResourceMgr * resourceMgr()
     return YSession::self()->resourceMgr();
 }
 
-YDebugStream& operator<<( YDebugStream& out, const ResourceType & type );
+YDebugStream& operator<<(YDebugStream& out, const ResourceType & type);
 
 #endif // RESOURCE_MGR_H

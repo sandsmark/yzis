@@ -35,16 +35,16 @@ class NoGuiSession : public QObject, public YSession
 public:
     static void createInstance();
 
-    virtual void guiPopupMessage( const QString& message);
+    virtual void guiPopupMessage(const QString& message);
 
     virtual void guiQuit(bool /*savePopup=true */);
 
-    virtual void guiChangeCurrentView( YView* );
-    virtual void guiSetFocusCommandLine( );
-    virtual void guiSetFocusMainWindow( );
+    virtual void guiChangeCurrentView(YView*);
+    virtual void guiSetFocusCommandLine();
+    virtual void guiSetFocusMainWindow();
     virtual bool guiQuit(int);
     virtual bool guiPromptYesNo(const QString&, const QString&);
-    virtual int guiPromptYesNoCancel( const QString&, const QString& );
+    virtual int guiPromptYesNoCancel(const QString&, const QString&);
     virtual void guiSplitHorizontally(YView*);
     virtual YView *guiCreateView(YBuffer*b);
     virtual void guiDeleteView(YView*v);

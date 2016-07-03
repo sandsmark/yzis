@@ -34,13 +34,12 @@ void NoGuiSession::createInstance()
     // such allocation (i.e. not "new QYisSession") will ensure that
     // "instance" object will be properly and automatically deleted
     // when program exits
-
     static NoGuiSession instance;
     setInstance(&instance);
 }
 
 NoGuiSession::NoGuiSession()
-        : YSession()
+    : YSession()
 {
     dbg() << HERE() << endl;
 }
@@ -51,12 +50,12 @@ void NoGuiSession::frontendGuiReady()
     YSession::self()->frontendGuiReady();
 }
 
-void NoGuiSession::guiPopupMessage( const QString& message)
+void NoGuiSession::guiPopupMessage(const QString& message)
 {
     dbg() << "NoGuiSession::guiPopupMessage: '" << message << "' \n";
     printf("popupMessage:\n");
     printf("============\n");
-    printf("%s\n\n", message.toLatin1().constData() );
+    printf("%s\n\n", message.toLatin1().constData());
 }
 
 void NoGuiSession::guiQuit(bool savePopup)
@@ -65,22 +64,22 @@ void NoGuiSession::guiQuit(bool savePopup)
     QCoreApplication::exit(0);
 }
 
-void NoGuiSession::guiChangeCurrentView( YView* v )
+void NoGuiSession::guiChangeCurrentView(YView* v)
 {
     // notification
     dbg() << "changeCurrentView( " << v->toString() << " )" << endl;
 }
-void NoGuiSession::guiSetFocusCommandLine( )
+void NoGuiSession::guiSetFocusCommandLine()
 {
     dbg() << "NoGuiSession::guiSetFocusCommandLine" << endl;
 }
 
-void NoGuiSession::guiSetFocusMainWindow( )
+void NoGuiSession::guiSetFocusMainWindow()
 {
     dbg() << "NoGuiSession::guiSetFocusMainWindow" << endl;
 }
 
-bool NoGuiSession::guiQuit(int errorCode )
+bool NoGuiSession::guiQuit(int errorCode)
 {
     dbg() << "guiQuit( errorCode=" << errorCode << " ) " << endl;
     QCoreApplication::exit(0);
@@ -93,7 +92,7 @@ bool NoGuiSession::guiPromptYesNo(const QString&, const QString&)
     return true;
 }
 
-int NoGuiSession::guiPromptYesNoCancel( const QString&, const QString& )
+int NoGuiSession::guiPromptYesNoCancel(const QString&, const QString&)
 {
     dbg() << "NoGuiSession::guiPromptYesNoCancel" << endl;
     return 0;
@@ -106,20 +105,20 @@ void NoGuiSession::guiSplitHorizontally(YView*)
 
 YView * NoGuiSession::guiCreateView(YBuffer*b)
 {
-    dbg().SPrintf("guiCreateView( %s )", qp(b->toString() ) );
+    dbg().SPrintf("guiCreateView( %s )", qp(b->toString()));
     return new NoGuiView(b, YSession::self());
 }
 
 void NoGuiSession::guiDeleteView(YView*v)
 {
-    dbg().SPrintf("guiDeleteView( %s )", qp(v->toString() ) );
-    NoGuiView * ngv = static_cast<NoGuiView *>( v );
+    dbg().SPrintf("guiDeleteView( %s )", qp(v->toString()));
+    NoGuiView * ngv = static_cast<NoGuiView *>(v);
     delete ngv;
 }
 
 void NoGuiSession::guiSetClipboardText(const QString& text, Clipboard::Mode)
 {
-    dbg().SPrintf("guiSetClipboardText( text='%s' )", qp(text) );
+    dbg().SPrintf("guiSetClipboardText( text='%s' )", qp(text));
 }
 
 

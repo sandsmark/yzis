@@ -17,7 +17,7 @@
  **/
 /**
  * This file was originally taken from Kate, KDE editor
-   Kate's code is published under the LGPL version 2 (and 2 only not any later 
+   Kate's code is published under the LGPL version 2 (and 2 only not any later
    version)
    The copyrights follow below :
    Copyright (C) 2003 Hamish Rodda <rodda@kde.org>
@@ -35,107 +35,145 @@
 class YzisAttribute
 {
 public:
-  enum items {
-    Weight = 0x1,
-    Bold = 0x2,
-    Italic = 0x4,
-    Underline = 0x8,
-    StrikeOut = 0x10,
-    Outline = 0x20,
-    TextColor = 0x40,
-    SelectedTextColor = 0x80,
-    BGColor = 0x100,
-    SelectedBGColor = 0x200,
-	Overline = 0x400
-  };
+    enum items {
+        Weight = 0x1,
+        Bold = 0x2,
+        Italic = 0x4,
+        Underline = 0x8,
+        StrikeOut = 0x10,
+        Outline = 0x20,
+        TextColor = 0x40,
+        SelectedTextColor = 0x80,
+        BGColor = 0x100,
+        SelectedBGColor = 0x200,
+        Overline = 0x400
+    };
 
-  YzisAttribute();
-  virtual ~YzisAttribute();
+    YzisAttribute();
+    virtual ~YzisAttribute();
 
-  YFont font(const YFont& ref) const;
+    YFont font(const YFont& ref) const;
 
-  inline bool itemSet(int item) const
-  { return item & m_itemsSet; };
+    inline bool itemSet(int item) const
+    {
+        return item & m_itemsSet;
+    };
 
-  inline bool isSomethingSet() const
-  { return m_itemsSet; };
+    inline bool isSomethingSet() const
+    {
+        return m_itemsSet;
+    };
 
-  inline int itemsSet() const
-  { return m_itemsSet; };
+    inline int itemsSet() const
+    {
+        return m_itemsSet;
+    };
 
-  inline void clearAttribute(int item)
-  { m_itemsSet &= (~item); }
+    inline void clearAttribute(int item)
+    {
+        m_itemsSet &= (~item);
+    }
 
-  inline int weight() const
-  { return m_weight; };
+    inline int weight() const
+    {
+        return m_weight;
+    };
 
-  void setWeight(int weight);
+    void setWeight(int weight);
 
-  inline bool bold() const
-  { return weight() >= YFont::Bold; };
+    inline bool bold() const
+    {
+        return weight() >= YFont::Bold;
+    };
 
-  void setBold(bool enable = true);
+    void setBold(bool enable = true);
 
-  inline bool italic() const
-  { return m_italic; };
+    inline bool italic() const
+    {
+        return m_italic;
+    };
 
-  void setItalic(bool enable = true);
+    void setItalic(bool enable = true);
 
-  inline bool overline() const
-  { return m_overline; };
+    inline bool overline() const
+    {
+        return m_overline;
+    };
 
-  void setOverline(bool enable = true);
+    void setOverline(bool enable = true);
 
-  inline bool underline() const
-  { return m_underline; };
+    inline bool underline() const
+    {
+        return m_underline;
+    };
 
-  void setUnderline(bool enable = true);
+    void setUnderline(bool enable = true);
 
-  inline bool strikeOut() const
-  { return m_strikeout; };
+    inline bool strikeOut() const
+    {
+        return m_strikeout;
+    };
 
-  void setStrikeOut(bool enable = true);
+    void setStrikeOut(bool enable = true);
 
-  inline const YColor& outline() const
-  { return m_outline; };
+    inline const YColor& outline() const
+    {
+        return m_outline;
+    };
 
-  void setOutline(const YColor& color);
+    void setOutline(const YColor& color);
 
-  inline const YColor& textColor() const
-  { return m_textColor; };
+    inline const YColor& textColor() const
+    {
+        return m_textColor;
+    };
 
-  void setTextColor(const YColor& color);
+    void setTextColor(const YColor& color);
 
-  inline const YColor& selectedTextColor() const
-  { return m_selectedTextColor; };
+    inline const YColor& selectedTextColor() const
+    {
+        return m_selectedTextColor;
+    };
 
-  void setSelectedTextColor(const YColor& color);
+    void setSelectedTextColor(const YColor& color);
 
-  inline const YColor& bgColor() const
-  { return m_bgColor; };
+    inline const YColor& bgColor() const
+    {
+        return m_bgColor;
+    };
 
-  void setBGColor(const YColor& color);
+    void setBGColor(const YColor& color);
 
-  inline const YColor& selectedBGColor() const
-  { return m_selectedBGColor; };
+    inline const YColor& selectedBGColor() const
+    {
+        return m_selectedBGColor;
+    };
 
-  void setSelectedBGColor(const YColor& color);
+    void setSelectedBGColor(const YColor& color);
 
-  YzisAttribute& operator+=(const YzisAttribute& a);
+    YzisAttribute& operator+=(const YzisAttribute& a);
 
-  friend bool operator ==(const YzisAttribute& h1, const YzisAttribute& h2);
-  friend bool operator !=(const YzisAttribute& h1, const YzisAttribute& h2);
+    friend bool operator ==(const YzisAttribute& h1, const YzisAttribute& h2);
+    friend bool operator !=(const YzisAttribute& h1, const YzisAttribute& h2);
 
-  virtual void changed() { m_changed = true; };
-  bool isChanged() { bool ret = m_changed; m_changed = false; return ret; };
+    virtual void changed()
+    {
+        m_changed = true;
+    };
+    bool isChanged()
+    {
+        bool ret = m_changed;
+        m_changed = false;
+        return ret;
+    };
 
-  void clear();
+    void clear();
 
 private:
-  int m_weight;
-  bool m_italic, m_underline, m_overline, m_strikeout, m_changed;
-  YColor m_outline, m_textColor, m_selectedTextColor, m_bgColor, m_selectedBGColor;
-  int m_itemsSet;
+    int m_weight;
+    bool m_italic, m_underline, m_overline, m_strikeout, m_changed;
+    YColor m_outline, m_textColor, m_selectedTextColor, m_bgColor, m_selectedBGColor;
+    int m_itemsSet;
 };
 
 #endif

@@ -15,7 +15,7 @@ namespace boost
 {
 
 /**
-  * Private copy constructor and copy assignment ensure classes derived from 
+  * Private copy constructor and copy assignment ensure classes derived from
   * lass noncopyable cannot be copied.
   * Contributed by Dave Abrahams
   */
@@ -27,8 +27,8 @@ protected:
     ~noncopyable()
     {}
 private:   // emphasize the following members are private
-    noncopyable( const noncopyable& );
-    const noncopyable& operator=( const noncopyable& );
+    noncopyable(const noncopyable&);
+    const noncopyable& operator=(const noncopyable&);
 };
 
 } // namespace boost

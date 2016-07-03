@@ -38,7 +38,7 @@ public:
     /**
      * Add an inputs event to history
      */
-    void addToSwap( YBufferOperation::OperationType type, const YRawData& data, const YInterval& interval);
+    void addToSwap(YBufferOperation::OperationType type, const YRawData& data, const YInterval& interval);
 
     /**
      * Clear the history
@@ -56,7 +56,7 @@ public:
     /**
      * Changes the swap filename
      */
-    void setFileName( const QString& filename );
+    void setFileName(const QString& filename);
     inline const QString& filename() const
     {
         return mFilename;
@@ -82,11 +82,10 @@ protected:
     /**
      * Replay one event on the buffer during a recover
      */
-    void replay( YBufferOperation::OperationType type, const YInterval& interval, const YRawData& data );
+    void replay(YBufferOperation::OperationType type, const YInterval& interval, const YRawData& data);
 
 private:
-    struct swapEntry
-    {
+    struct swapEntry {
         YBufferOperation::OperationType type;
         YInterval interval;
         YRawData data;

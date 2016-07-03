@@ -45,31 +45,31 @@ public:
     /*
      * YSession interface :
      */
-    virtual bool guiQuit ( int errorCode ) ;
-    virtual void guiPopupMessage( const QString& message );
+    virtual bool guiQuit(int errorCode) ;
+    virtual void guiPopupMessage(const QString& message);
     virtual void guiSetFocusCommandLine();
     virtual void guiSetFocusMainWindow();
-    virtual bool guiPromptYesNo( const QString& title, const QString& message );
-    virtual int guiPromptYesNoCancel( const QString& title, const QString& message );
-    virtual void guiSplitHorizontally( YView *view );
-    virtual void guiSetClipboardText( const QString& text, Clipboard::Mode mode );
+    virtual bool guiPromptYesNo(const QString& title, const QString& message);
+    virtual int guiPromptYesNoCancel(const QString& title, const QString& message);
+    virtual void guiSplitHorizontally(YView *view);
+    virtual void guiSetClipboardText(const QString& text, Clipboard::Mode mode);
 
 protected:
-    virtual YView* guiCreateView( YBuffer* buffer );
-    virtual void guiDeleteView( YView *view );
+    virtual YView* guiCreateView(YBuffer* buffer);
+    virtual void guiDeleteView(YView *view);
 
 private:
     NYSession();
     NYSession(const NYSession&); // disable copy
     NYSession& operator=(const NYSession&); // disable copy
-    virtual ~NYSession( );
+    virtual ~NYSession();
 
     /**
      * Fill the map of keycodes ncurses->Qt
      */
     void initialiseKeycodes();
 
-    virtual void guiChangeCurrentView ( YView * );
+    virtual void guiChangeCurrentView(YView *);
 
     /**
       * mapping ncurses->qt for keycodes
@@ -82,7 +82,7 @@ public Q_SLOTS:
       * and the Qt event loop is running.
       */
     void frontendGuiReady();
-    bool processInput( int );
+    bool processInput(int);
 
 };
 

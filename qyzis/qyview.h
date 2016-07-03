@@ -58,28 +58,31 @@ signals :
     void newStatus();
 
 public:
-    QYView(YBuffer *doc, YSession * ysession );
+    QYView(YBuffer *doc, YSession * ysession);
     virtual ~QYView();
-    void guiSetCommandLineText( const QString& text );
+    void guiSetCommandLineText(const QString& text);
     QString guiGetCommandLineText() const;
     void guiSetFocusCommandLine();
     void guiSetFocusMainWindow();
-    void guiScroll( int dx, int dy );
+    void guiScroll(int dx, int dy);
 
-    void setVisibleArea( int columns, int lines );
+    void setVisibleArea(int columns, int lines);
 
     virtual YStatusBarIface* guiStatusBar();
 
-    void wheelEvent( QWheelEvent * e );
+    void wheelEvent(QWheelEvent * e);
 
-    void applyConfig( const QSettings& settings, bool refresh = true );
+    void applyConfig(const QSettings& settings, bool refresh = true);
 
     QChar currentChar() const;
 
-    QYEdit *editor() { return mEdit; }
+    QYEdit *editor()
+    {
+        return mEdit;
+    }
 
-    virtual void registerModifierKeys( const QString& keys );
-    virtual void unregisterModifierKeys( const QString& keys );
+    virtual void registerModifierKeys(const QString& keys);
+    virtual void unregisterModifierKeys(const QString& keys);
 
     void guiSetup();
 
@@ -90,24 +93,24 @@ public:
     void guiHighlightingChanged();
 
 protected:
-    void focusInEvent( QFocusEvent * e );
-    void resizeEvent( QResizeEvent * e );
-    void guiDrawSetMaxLineNumber( int max );
-    void guiDrawSetLineNumber( int y, int n, int h );
+    void focusInEvent(QFocusEvent * e);
+    void resizeEvent(QResizeEvent * e);
+    void guiDrawSetMaxLineNumber(int max);
+    void guiDrawSetLineNumber(int y, int n, int h);
     virtual void guiPreparePaintEvent();
     virtual void guiEndPaintEvent();
-    virtual void guiDrawCell( YCursor pos, const YDrawCell& cell );
-    virtual void guiDrawClearToEOL( YCursor pos, const YDrawCell& clearCell );
+    virtual void guiDrawCell(YCursor pos, const YDrawCell& cell);
+    virtual void guiDrawClearToEOL(YCursor pos, const YDrawCell& clearCell);
 
-    void guiPaintEvent( const YSelection& s );
+    void guiPaintEvent(const YSelection& s);
 
 
-    virtual void guiNotifyContentChanged( const YSelection& i );
+    virtual void guiNotifyContentChanged(const YSelection& i);
 
     /**
      * Get the screen coordinates of the cursor position
      * @return cursor screen coordinates
-     */ 
+     */
     //    virtual QPoint cursorPositionCoordinates () const;
 
 public slots:
@@ -116,7 +119,7 @@ public slots:
 
     void fileSave();
     void fileSaveAs();
-    void scrollView( int );
+    void scrollView(int);
     //  void scrollLineUp();
     //  void scrollLineDown();
 

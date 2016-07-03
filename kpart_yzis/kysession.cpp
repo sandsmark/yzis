@@ -40,7 +40,7 @@ KYSession* KYSession::me = NULL;
 
 void KYSession::createInstance()
 {
-    if (!me) {
+    if(!me) {
         me = new KYSession();
         setInstance(me);
     }
@@ -54,12 +54,12 @@ YView* KYSession::guiCreateView(YBuffer* buffer)
     return view;
 }
 
-void KYSession::guiCreateBuffer( YBuffer* b )
+void KYSession::guiCreateBuffer(YBuffer* b)
 {
-	Q_UNUSED(b);
+    Q_UNUSED(b);
 }
 
-void KYSession::guiDeleteBuffer( YBuffer* b )
+void KYSession::guiDeleteBuffer(YBuffer* b)
 {
     delete b;
 }
@@ -68,46 +68,50 @@ void KYSession::guiSplitHorizontally(YView*)
 {
 }
 
-bool KYSession::guiQuit( int )
+bool KYSession::guiQuit(int)
 {
     return true;
 }
 
 void KYSession::guiPopupMessage(const QString& message)
 {
-    KYView* v = static_cast< KYView* >( currentView() );
-    KMessageBox::information( v, message );
+    KYView* v = static_cast< KYView* >(currentView());
+    KMessageBox::information(v, message);
 }
 
 bool KYSession::guiPromptYesNo(const QString& title, const QString& message)
 {
-    int v = KMessageBox::questionYesNo( static_cast< KYView* >( currentView() ), message, title );
-    if ( v == KMessageBox::Yes )
+    int v = KMessageBox::questionYesNo(static_cast< KYView* >(currentView()), message, title);
+
+    if(v == KMessageBox::Yes) {
         return true;
-    else
+    } else {
         return false;
+    }
 }
 
 int KYSession::guiPromptYesNoCancel(const QString& title, const QString& message)
 {
-    int v = KMessageBox::questionYesNoCancel( static_cast< KYView* >( currentView() ), message, title );
-    if ( v == KMessageBox::Yes )
+    int v = KMessageBox::questionYesNoCancel(static_cast< KYView* >(currentView()), message, title);
+
+    if(v == KMessageBox::Yes) {
         return 0;
-    else if ( v == KMessageBox::No )
+    } else if(v == KMessageBox::No) {
         return 1;
+    }
 
     return 2;
 }
 
 void KYSession::guiSetFocusCommandLine()
 {
-    KYView *v = static_cast<KYView*>( currentView() );
+    KYView *v = static_cast<KYView*>(currentView());
     v->guiSetFocusCommandLine();
 }
 
 void KYSession::guiSetFocusMainWindow()
 {
-    KYView *v = static_cast<KYView*>( currentView() );
+    KYView *v = static_cast<KYView*>(currentView());
     v->guiSetFocusMainWindow();
 }
 
@@ -117,13 +121,13 @@ void KYSession::guiSetClipboardText(const QString&, Clipboard::Mode)
 
 void KYSession::guiDeleteView(YView* view)
 {
-    KYView* v = static_cast< KYView* >( view );
+    KYView* v = static_cast< KYView* >(view);
     v->close();
 }
 
-void KYSession::guiChangeCurrentView( YView* view)
+void KYSession::guiChangeCurrentView(YView* view)
 {
-    KYView* kyzisview = static_cast< KYView* >( view );
+    KYView* kyzisview = static_cast< KYView* >(view);
     kyzisview->activateWindow();
     kyzisview->setFocus();
 }

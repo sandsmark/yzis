@@ -38,7 +38,7 @@
  */
 class YzisSyntaxModeListItem
 {
-  public:
+public:
     QString name;
     QString nameTranslated;
     QString section;
@@ -62,7 +62,7 @@ typedef QList<YzisSyntaxModeListItem*> YzisSyntaxModeList;
  */
 class YzisSyntaxContextData
 {
-  public:
+public:
     QDomElement parent;
     QDomElement currentGroup;
     QDomElement item;
@@ -73,7 +73,7 @@ class YzisSyntaxContextData
  */
 class YzisSyntaxDocument : public QDomDocument
 {
-  public:
+public:
     /**
      * Constructor
      * Sets the current file to nothing and build the ModeList
@@ -87,7 +87,7 @@ class YzisSyntaxDocument : public QDomDocument
     ~YzisSyntaxDocument();
 
     /**
-	 * If the open hl file is different from the one needed, it opens
+     * If the open hl file is different from the one needed, it opens
      * the new one and assign some other things.
      * @param identifier file name and path of the new xml needed
      */
@@ -97,7 +97,10 @@ class YzisSyntaxDocument : public QDomDocument
      * Get the mode list
      * @return mode list
      */
-    const YzisSyntaxModeList &modeList() const { return myModeList; }
+    const YzisSyntaxModeList &modeList() const
+    {
+        return myModeList;
+    }
 
     /**
      * Jump to the next group, YzisSyntaxContextData::currentGroup will point to the next group
@@ -116,8 +119,8 @@ class YzisSyntaxDocument : public QDomDocument
     /**
      * This function is used to fetch the attributes of the tags.
      */
-    QString groupItemData(const YzisSyntaxContextData* data,const QString& name);
-    QString groupData(const YzisSyntaxContextData* data,const QString& name);
+    QString groupItemData(const YzisSyntaxContextData* data, const QString& name);
+    QString groupData(const YzisSyntaxContextData* data, const QString& name);
 
     void freeGroupInfo(YzisSyntaxContextData* data);
     YzisSyntaxContextData* getSubItems(YzisSyntaxContextData* data);
@@ -137,28 +140,28 @@ class YzisSyntaxDocument : public QDomDocument
     /**
      * Returns a list with all the keywords inside the list type
      */
-    QStringList& finddata(const QString& mainGroup,const QString& type,bool clearList=true);
+    QStringList& finddata(const QString& mainGroup, const QString& type, bool clearList = true);
 
 
-  private:
+private:
     /**
      * Generate the list of hl modes, store them in myModeList
      * force: if true forces to rebuild the Mode List from the xml files (instead of katesyntax...rc)
      * @param force if true forces to rebuild the Mode List from the xml files (instead of katesyntax...rc)
-	 */
+     */
     void setupModeList(bool force);
 
     /**
      * Used by getConfig and getGroupInfo to traverse the xml nodes and
      * evenually return the found element
     */
-    bool getElement (QDomElement &element, const QString &mainGroupName, const QString &config);
+    bool getElement(QDomElement &element, const QString &mainGroupName, const QString &config);
 
     /**
      * List of mode items
      */
     YzisSyntaxModeList myModeList;
-	QStringList findAllResources( const char *type, const QString& filter, bool recursive, bool unique) const;
+    QStringList findAllResources(const char *type, const QString& filter, bool recursive, bool unique) const;
 
     /**
      * current parsed filename

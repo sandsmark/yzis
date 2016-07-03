@@ -53,7 +53,7 @@ typedef QList<YView*> YViewList;
   *
   * @short Singleton class representing an Yzis application.
   *
-  * The YSession is managing all global attributes and method of Yzis. 
+  * The YSession is managing all global attributes and method of Yzis.
   *
   * It takes care of everything that is not local to a YBuffer or YView.
   *
@@ -175,7 +175,7 @@ public:
       * and the application is quitted.
       *
       */
-    void parseCommandLine( int argc, char * argv[] );
+    void parseCommandLine(int argc, char * argv[]);
 
     /** Call this method when the frontend is ready.
       *
@@ -199,25 +199,25 @@ public:
 
 public:
     /** Returns the mode map
-     * 
+     *
      * @return YModeMap
      */
     YModeMap getModes() const;
 
     /** Returns the ex pool
-     * 
+     *
      * @return YModeEx*
      */
     YModeEx* getExPool();
 
     /** Returns the command pool
-     * 
+     *
      * @return YModeCommand*
      */
     YModeCommand* getCommandPool();
 
     /** Returns the yzisinfo list
-     * 
+     *
      * @return YInfo*
      */
     YInfo* getYzisinfo();
@@ -254,7 +254,7 @@ public:
      * Creates a new buffer and puts it in a new view
      * To get the created buffer, call YView::myBuffer()
      */
-    YView *createBufferAndView( const QString &path = QString() );
+    YView *createBufferAndView(const QString &path = QString());
 
     /**
      * Remove a buffer.
@@ -262,7 +262,7 @@ public:
      * This buffer is no longer used by Yzis. Yzis calls deleteView() on all
      * the views of the buffer. The last view calls deleteBuffer().
      */
-    void removeBuffer( YBuffer * b );
+    void removeBuffer(YBuffer * b);
 
     /**
      * Final step of buffer deletion.
@@ -275,7 +275,7 @@ public:
      * The gui is informed of the buffer deletion
      * with a call to guiDeleteBuffer().
      */
-    void deleteBuffer( YBuffer * b );
+    void deleteBuffer(YBuffer * b);
 
     /**
      * Returns a const reference to the buffer list
@@ -290,7 +290,7 @@ public:
     /**
      * Finds a buffer by a filename
      */
-    YBuffer* findBuffer( const QString& path );
+    YBuffer* findBuffer(const QString& path);
 
     /**
      * Check if one buffer is modified and not saved
@@ -298,7 +298,7 @@ public:
      */
     bool isOneBufferModified() const;
 
-/*private: XXX why is this thing private?? */
+    /*private: XXX why is this thing private?? */
     /**
      * Creates a new buffer.
      *
@@ -315,13 +315,13 @@ public:
     /**
      * Create a new view on a @p buffer.
      */
-    YView* createView ( YBuffer* buffer );
+    YView* createView(YBuffer* buffer);
 
     /**
      * Delete the view @p v.
      *
      * The view is removed from the view list and guiDeleteView() is called to
-     * let the GUI delete the view instance. 
+     * let the GUI delete the view instance.
      *
      * Deleting a view triggers a buffer deletion if the view is the last one
      * on the buffer.
@@ -330,17 +330,20 @@ public:
      * called and methods returns immediately, without calling
      * guiDeleteView().
      */
-    void deleteView ( YView* v );
+    void deleteView(YView* v);
 
     /**
      * Returns a pointer to the current view
      */
-    YView* currentView() { return mCurView; }
+    YView* currentView()
+    {
+        return mCurView;
+    }
 
     /**
      * Change the current view ( unassigned )
      */
-    void setCurrentView( YView* );
+    void setCurrentView(YView*);
 
     /**
      * Gets a list of all YViews active in the system
@@ -351,7 +354,7 @@ public:
            *
            * Can be called with a NULL argument.
      */
-    YView *findViewByBuffer( const YBuffer *buffer );
+    YView *findViewByBuffer(const YBuffer *buffer);
 
     /**
      * Finds the first view
@@ -411,22 +414,22 @@ public:
     /**
      * Retrieve an int option
      */
-    static int getIntegerOption( const QString& option );
+    static int getIntegerOption(const QString& option);
 
     /**
      * Retrieve a bool option
      */
-    static bool getBooleanOption( const QString& option );
+    static bool getBooleanOption(const QString& option);
 
     /**
      * Retrieve a string option
      */
-    static QString getStringOption( const QString& option );
+    static QString getStringOption(const QString& option);
 
     /**
      * Retrieve a qstringlist option
      */
-    static QStringList getListOption( const QString& option );
+    static QStringList getListOption(const QString& option);
 
     //-------------------------------------------------------
     // ----------------- Event plugins
@@ -434,7 +437,7 @@ public:
     /**
      * Connect an event to a lua function
      */
-    void eventConnect( const QString& event, const QString& function );
+    void eventConnect(const QString& event, const QString& function);
 
     /**
      * call a lua event
@@ -447,13 +450,13 @@ public:
     /**
      * Fills the register @param r with the @param value
      */
-    void setRegister( QChar r, const QStringList& value );
+    void setRegister(QChar r, const QStringList& value);
 
     /**
      * Gets the value of register @param r
      * Returns a QString containing the register content
      */
-    QStringList& getRegister ( QChar r );
+    QStringList& getRegister(QChar r);
 
     /**
      * Gets the list of registers
@@ -464,13 +467,13 @@ public:
     // ----------------- Command line
     //-------------------------------------------------------
     /** Show help text for -h and --help option */
-    void showCmdLineHelp( const QString & progName );
+    void showCmdLineHelp(const QString & progName);
 
     /** Show version text for -v and --version option */
     void showCmdLineVersion();
 
     /** Show error message for unknown option */
-    void showCmdLineUnknowOption( const QString & opt );
+    void showCmdLineUnknowOption(const QString & opt);
 
     /** Return a version string for Yzis.
       *
@@ -494,7 +497,7 @@ public:
     //-------------------------------------------------------
 
     /** Copied from view */
-    CmdState sendMultipleKeys( YView * view, YKeySequence &keys);
+    CmdState sendMultipleKeys(YView * view, YKeySequence &keys);
 
     //-------------------------------------------------------
     // ----------------- Send events to GUI
@@ -502,32 +505,32 @@ public:
     /**
      * transfer key events from GUI to core
      */
-    virtual CmdState sendKey( YView * view, YKey _key );
+    virtual CmdState sendKey(YView * view, YKey _key);
 
-    void registerModifier ( const QString& mod );
-    void unregisterModifier ( const QString& mod );
+    void registerModifier(const QString& mod);
+    void unregisterModifier(const QString& mod);
 
     void saveJumpPosition();
-    void saveJumpPosition( const QPoint cursor );
+    void saveJumpPosition(const QPoint cursor);
     const YCursor previousJumpPosition();
 
     /** Because of windows, we need to have new defined in the
       * shared library. */
-    void * operator new( size_t tSize );
+    void * operator new(size_t tSize);
 
     /** Because of windows, we need to have delete defined in the
       * shared library. */
-    void operator delete( void* p );
+    void operator delete(void* p);
 
 
 protected:
     /**
      * Send multiple key sequence to yzis.
-     * 
+     *
            * The key sequence is automatically sent to the right view,
            * even if the view is switched in the middle.
      */
-    void scriptSendMultipleKeys ( const QString& text );
+    void scriptSendMultipleKeys(const QString& text);
 
 
     void initModes();

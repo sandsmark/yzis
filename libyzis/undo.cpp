@@ -34,33 +34,45 @@
 QString YBufferOperation::toString() const
 {
     QString ots;
-    switch ( type ) {
-		case OpAddRegion: ots = "OpAddText"; break;
-		case OpDelRegion: ots = "OpDelRegion"; break;
+
+    switch(type) {
+    case OpAddRegion:
+        ots = "OpAddText";
+        break;
+
+    case OpDelRegion:
+        ots = "OpDelRegion";
+        break;
     }
-	return QString("%1 %2 '%3'").arg(ots).arg(interval.toString()).arg(data.join("\\n"));
+
+    return QString("%1 %2 '%3'").arg(ots).arg(interval.toString()).arg(data.join("\\n"));
 }
 
-void YBufferOperation::performOperation( YView* pView, bool opposite)
+void YBufferOperation::performOperation(YView* pView, bool opposite)
 {
     OperationType t = type;
-
     yzDebug("YZUndoBuffer") << "YBufferOperation: " << (opposite ? "undo " : "redo ") << toString() << endl;
 
-    if (opposite == true) {
-        switch ( type ) {
-			case OpAddRegion: t = OpDelRegion; break;
-			case OpDelRegion: t = OpAddRegion; break;
+    if(opposite == true) {
+        switch(type) {
+        case OpAddRegion:
+            t = OpDelRegion;
+            break;
+
+        case OpDelRegion:
+            t = OpAddRegion;
+            break;
         }
     }
 
-    switch ( t) {
-		case OpAddRegion:
-			pView->buffer()->insertRegion(interval.fromPos(), data);
-			break;
-		case OpDelRegion:
-			pView->buffer()->deleteRegion(interval);
-			break;
+    switch(t) {
+    case OpAddRegion:
+        pView->buffer()->insertRegion(interval.fromPos(), data);
+        break;
+
+    case OpDelRegion:
+        pView->buffer()->deleteRegion(interval);
+        break;
     }
 
     // yzDebug("YZUndoBuffer") << "YBufferOperation::performOperation Buf -> '" << buf->getWholeText() << "'\n";
@@ -80,64 +92,77 @@ UndoItem::UndoItem()
 //                          YZUndoBuffer
 // -------------------------------------------------------------------
 
-YZUndoBuffer::YZUndoBuffer( YBuffer * buffer )
-        : mBuffer(buffer), mFutureUndoItem( 0L )
+YZUndoBuffer::YZUndoBuffer(YBuffer * buffer)
+    : mBuffer(buffer), mFutureUndoItem(0L)
 {
     mCurrentIndex = 0;
     mInsideUndo = false;
-
     // Create the mFutureUndoItem
     commitUndoItem(0, 0);
 }
 
 YZUndoBuffer::~YZUndoBuffer()
 {
-    if ( mFutureUndoItem ) {
-        foreach ( YBufferOperation *operation, *mFutureUndoItem )
-        delete operation;
+    if(mFutureUndoItem) {
+        foreach(YBufferOperation *operation, *mFutureUndoItem) {
+            delete operation;
+        }
+
         delete mFutureUndoItem;
     }
 
-    foreach ( UndoItem *item, mUndoItemList )
-    delete item;
+    foreach(UndoItem *item, mUndoItemList) {
+        delete item;
+    }
 }
 
-void YZUndoBuffer::commitUndoItem(uint cursorX, uint cursorY )
+void YZUndoBuffer::commitUndoItem(uint cursorX, uint cursorY)
 {
-    if (mInsideUndo == true) return ;
-    if (mFutureUndoItem && mFutureUndoItem->count() == 0) return ;
+    if(mInsideUndo == true) {
+        return ;
+    }
 
-    if (mFutureUndoItem) {
+    if(mFutureUndoItem && mFutureUndoItem->count() == 0) {
+        return ;
+    }
+
+    if(mFutureUndoItem) {
         removeUndoItemAfterCurrent();
         mFutureUndoItem->endCursorX = cursorX;
         mFutureUndoItem->endCursorY = cursorY;
-        mUndoItemList.push_back( mFutureUndoItem );
+        mUndoItemList.push_back(mFutureUndoItem);
         mCurrentIndex = mUndoItemList.size();
         //  yzDebug("YZUndoBuffer") << "UndoItem::commitUndoItem" << toString() << endl;
     }
+
     mFutureUndoItem = new UndoItem();
     mFutureUndoItem->startCursorX = cursorX;
     mFutureUndoItem->startCursorY = cursorY;
 }
 
-void YZUndoBuffer::addBufferOperation( YBufferOperation::OperationType type,
-                                       const YRawData& data,
-                                       const YInterval& interval )
+void YZUndoBuffer::addBufferOperation(YBufferOperation::OperationType type,
+                                      const YRawData& data,
+                                      const YInterval& interval)
 {
-    if (mInsideUndo == true) return ;
-    YASSERT( mFutureUndoItem != NULL );
+    if(mInsideUndo == true) {
+        return ;
+    }
+
+    YASSERT(mFutureUndoItem != NULL);
     YBufferOperation *bufOperation = new YBufferOperation();
     bufOperation->type = type;
     bufOperation->data = data;
     bufOperation->interval = interval;
-    mFutureUndoItem->push_back( bufOperation );
+    mFutureUndoItem->push_back(bufOperation);
     removeUndoItemAfterCurrent();
 }
 
 void YZUndoBuffer::removeUndoItemAfterCurrent()
 {
-    while ( (uint)mUndoItemList.size() > mCurrentIndex )
+    while((uint)mUndoItemList.size() > mCurrentIndex) {
         mUndoItemList.pop_back();
+    }
+
     //delete pointer XXX
 }
 
@@ -145,26 +170,30 @@ template <typename T>
 static QList<T> reverse(const QList<T> &yzlist)
 {
     QList<T> rev;
-    foreach( T t, yzlist )
-    rev.push_front(t);
+
+    foreach(T t, yzlist) {
+        rev.push_front(t);
+    }
 
     return rev;
 }
 
-void YZUndoBuffer::undo( YView* pView )
+void YZUndoBuffer::undo(YView* pView)
 {
-    if (mayUndo() == false) {
+    if(mayUndo() == false) {
         // notify the user that undo is not possible
         return ;
     }
-    setInsideUndo( true );
+
+    setInsideUndo(true);
     pView->setPaintAutoCommit(false);
-
     UndoItem *item = mUndoItemList[ mCurrentIndex - 1 ];
-    UndoItemBase reversed = reverse( *item );
+    UndoItemBase reversed = reverse(*item);
 
-    foreach ( YBufferOperation *operation, reversed)
-    operation->performOperation( pView, true );
+    foreach(YBufferOperation *operation, reversed) {
+        operation->performOperation(pView, true);
+    }
+
     /*
     UndoItem * undoItem = mUndoItemList.at(mCurrentIndex-1);
     UndoItemContentIterator it( *undoItem );
@@ -177,25 +206,26 @@ void YZUndoBuffer::undo( YView* pView )
     mCurrentIndex--;
     pView->gotoLinePosition(item->endCursorY, item->endCursorX);
     pView->commitPaintEvent();
-    setInsideUndo( false );
+    setInsideUndo(false);
 }
 
-void YZUndoBuffer::redo( YView* pView )
+void YZUndoBuffer::redo(YView* pView)
 {
-    if (mayRedo() == false) {
+    if(mayRedo() == false) {
         // notify the user that undo is not possible
         return ;
     }
-    setInsideUndo( true );
+
+    setInsideUndo(true);
     pView->setPaintAutoCommit(false);
-
     ++mCurrentIndex;
-
     UndoItem * undoItem = mUndoItemList[ mCurrentIndex - 1 ];
-    foreach ( YBufferOperation *operation, *undoItem)
-    operation->performOperation( pView, false );
 
-    setInsideUndo( false );
+    foreach(YBufferOperation *operation, *undoItem) {
+        operation->performOperation(pView, false);
+    }
+
+    setInsideUndo(false);
     pView->commitPaintEvent();
 }
 
@@ -213,18 +243,23 @@ bool YZUndoBuffer::mayUndo() const
     return ret;
 }
 
-QString YZUndoBuffer::undoItemToString( UndoItem * undoItem ) const
+QString YZUndoBuffer::undoItemToString(UndoItem * undoItem) const
 {
     QString s;
     QString offsetS = "  ";
     s += offsetS + offsetS + "UndoItem:\n";
-    if (! undoItem ) return s;
+
+    if(! undoItem) {
+        return s;
+    }
+
     s += offsetS + offsetS + QString("start cursor: line %1 col %2\n").arg(undoItem->startCursorX).arg(undoItem->startCursorY);
 
-    foreach ( YBufferOperation*operation, *undoItem )
-    s += offsetS + offsetS + offsetS + operation->toString() + '\n';
-    s += offsetS + offsetS + QString("end cursor: line %1 col %2\n").arg(undoItem->endCursorX).arg(undoItem->endCursorY);
+    foreach(YBufferOperation*operation, *undoItem) {
+        s += offsetS + offsetS + offsetS + operation->toString() + '\n';
+    }
 
+    s += offsetS + offsetS + QString("end cursor: line %1 col %2\n").arg(undoItem->endCursorX).arg(undoItem->endCursorY);
     return s;
 }
 
@@ -234,13 +269,14 @@ QString YZUndoBuffer::toString(const QString& msg) const
     QString offsetS = "  ";
     s += offsetS + "mUndoItemList\n";
 
-    foreach( UndoItem *it, mUndoItemList )
-    s += undoItemToString(it);
+    foreach(UndoItem *it, mUndoItemList) {
+        s += undoItemToString(it);
+    }
 
     s += offsetS + "mFutureUndoItem\n";
-    s += undoItemToString( mFutureUndoItem );
+    s += undoItemToString(mFutureUndoItem);
     s += offsetS + "current UndoItem\n";
-    s += (mCurrentIndex > 0) ? undoItemToString( mUndoItemList[ mCurrentIndex - 1 ] )
+    s += (mCurrentIndex > 0) ? undoItemToString(mUndoItemList[ mCurrentIndex - 1 ])
          : offsetS + offsetS + "None\n";
     s += '\n';
     return s;

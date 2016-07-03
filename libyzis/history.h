@@ -27,7 +27,7 @@ public:
     /**
      * add a new entry to the end of the history list
      */
-    void addEntry( const QString &entry );
+    void addEntry(const QString &entry);
 
     /**
      * returns the last entry added to the list
@@ -71,14 +71,14 @@ public:
      * ugh, I don't like this interface, but I don't
      * want to template it and make iterators
      */
-    QString &getEntryByIdx( unsigned int idx );
-    const QString &getEntryByIdx( unsigned int idx ) const;
+    QString &getEntryByIdx(unsigned int idx);
+    const QString &getEntryByIdx(unsigned int idx) const;
 
     /**
      * write the history out to text stream
      * useful for saving to .yzisinfo
      */
-    QTextStream& writeToStream( QTextStream &stream ) const;
+    QTextStream& writeToStream(QTextStream &stream) const;
 
 private:
     struct Private;

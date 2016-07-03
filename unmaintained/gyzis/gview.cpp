@@ -22,10 +22,8 @@
 View::View()
 {
     pack_start(m_Entry, Gtk::PACK_EXPAND_WIDGET);
-
     //Connect signals:
     //m_Entry.signal_changed().connect(sigc::mem_fun(*this, &View::on_Entry_changed));
-
     show_all();
 }
 

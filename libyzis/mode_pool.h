@@ -35,31 +35,31 @@
 class YZIS_EXPORT YModePool
 {
 public:
-    YModePool( YView* view );
+    YModePool(YView* view);
     virtual ~YModePool();
 
-    CmdState sendKey( const YKey &key );
+    CmdState sendKey(const YKey &key);
     CmdState replayKey();
 
     /**
      * pop current @arg mode and push @arg mode
      */
-    void change( ModeType mode, bool leave_me = true );
+    void change(ModeType mode, bool leave_me = true);
 
     /**
      * push @arg mode
      */
-    void push( ModeType mode );
+    void push(ModeType mode);
 
     /**
      * pop one mode (go to previous)
      */
-    void pop( bool leave_me = true );
+    void pop(bool leave_me = true);
 
     /**
      * pop until current mode is @arg mode
      */
-    void pop( ModeType mode );
+    void pop(ModeType mode);
 
     void registerModifierKeys();
     void unregisterModifierKeys();

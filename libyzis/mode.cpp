@@ -40,34 +40,85 @@ using namespace yzis;
 #define dbg() yzDebug("YMode")
 #define err() yzError("YMode")
 
-YDebugStream& operator<<( YDebugStream& out, const CmdState & state )
+YDebugStream& operator<<(YDebugStream& out, const CmdState & state)
 {
-    switch ( state ) {
-    case CmdStopped: out << "CmdStopped"; break;
-    case CmdError: out << "CmdError"; break;
-    case CmdNotYetValid: out << "CmdNotYetValid"; break;
-    case CmdOperatorPending: out << "CmdOperatorPending"; break;
-    case CmdOk: out << "CmdOk"; break;
-    case CmdQuit: out << "CmdQuit"; break;
+    switch(state) {
+    case CmdStopped:
+        out << "CmdStopped";
+        break;
+
+    case CmdError:
+        out << "CmdError";
+        break;
+
+    case CmdNotYetValid:
+        out << "CmdNotYetValid";
+        break;
+
+    case CmdOperatorPending:
+        out << "CmdOperatorPending";
+        break;
+
+    case CmdOk:
+        out << "CmdOk";
+        break;
+
+    case CmdQuit:
+        out << "CmdQuit";
+        break;
     }
+
     return out;
 }
 
-YDebugStream& operator<<( YDebugStream& out, const YMode::ModeType & type )
+YDebugStream& operator<<(YDebugStream& out, const YMode::ModeType & type)
 {
-    switch ( type ) {
-    case YMode::ModeCommand: out << "ModeCommand"; break;
-    case YMode::ModeInsert: out << "ModeInsert"; break;
-    case YMode::ModeReplace: out << "ModeReplace"; break;
-    case YMode::ModeEx: out << "ModeEx"; break;
-    case YMode::ModeSearch: out << "ModeSearch"; break;
-    case YMode::ModeSearchBackward: out << "ModeSearchBackward"; break;
-    case YMode::ModeIntro: out << "ModeIntro"; break;
-    case YMode::ModeCompletion: out << "ModeCompletion"; break;
-    case YMode::ModeVisual: out << "ModeVisual"; break;
-    case YMode::ModeVisualLine: out << "ModeVisualLine"; break;
-    case YMode::ModeVisualBlock: out << "ModeVisualBlock"; break;
+    switch(type) {
+    case YMode::ModeCommand:
+        out << "ModeCommand";
+        break;
+
+    case YMode::ModeInsert:
+        out << "ModeInsert";
+        break;
+
+    case YMode::ModeReplace:
+        out << "ModeReplace";
+        break;
+
+    case YMode::ModeEx:
+        out << "ModeEx";
+        break;
+
+    case YMode::ModeSearch:
+        out << "ModeSearch";
+        break;
+
+    case YMode::ModeSearchBackward:
+        out << "ModeSearchBackward";
+        break;
+
+    case YMode::ModeIntro:
+        out << "ModeIntro";
+        break;
+
+    case YMode::ModeCompletion:
+        out << "ModeCompletion";
+        break;
+
+    case YMode::ModeVisual:
+        out << "ModeVisual";
+        break;
+
+    case YMode::ModeVisualLine:
+        out << "ModeVisualLine";
+        break;
+
+    case YMode::ModeVisualBlock:
+        out << "ModeVisualBlock";
+        break;
     }
+
     return out;
 }
 
@@ -117,7 +168,7 @@ bool YMode::registered() const
 {
     return mRegistered;
 }
-void YMode::setRegistered( bool registered )
+void YMode::setRegistered(bool registered)
 {
     mRegistered = registered;
 }
@@ -127,17 +178,17 @@ void YMode::init()
 }
 void YMode::initModifierKeys()
 {}
-void YMode::enter( YView* )
+void YMode::enter(YView*)
 {}
-void YMode::leave( YView* )
+void YMode::leave(YView*)
 {}
-void YMode::cursorMoved( YView* )
+void YMode::cursorMoved(YView*)
 {}
-void YMode::imBegin( YView* )
+void YMode::imBegin(YView*)
 {}
-void YMode::imCompose( YView*, const QString& )
+void YMode::imCompose(YView*, const QString&)
 {}
-void YMode::imEnd( YView*, const QString& )
+void YMode::imEnd(YView*, const QString&)
 {}
 
 
@@ -160,56 +211,55 @@ YModeIntro::YModeIntro() : YMode()
     mIsCmdLineMode = false;
     mIsSelMode = false;
 }
-void YModeIntro::enter( YView* mView )
+void YModeIntro::enter(YView* mView)
 {
-	YRawData content;
-	content << mView->centerLine(VERSION_CHAR_LONG);
+    YRawData content;
+    content << mView->centerLine(VERSION_CHAR_LONG);
 #if defined VERSION_CHAR_DATE
-	content << mView->centerLine(VERSION_CHAR_DATE);
+    content << mView->centerLine(VERSION_CHAR_DATE);
 #endif
-    content << mView->centerLine( VERSION_CHAR_ST );
+    content << mView->centerLine(VERSION_CHAR_ST);
     content << "";
-    content << mView->centerLine( "http://www.yzis.org" );
-    content << mView->centerLine( "contact/patches/requests: yzis-dev@yzis.org" );
+    content << mView->centerLine("http://www.yzis.org");
+    content << mView->centerLine("contact/patches/requests: yzis-dev@yzis.org");
     content << "";
-    content << mView->centerLine( "Yzis is distributed under the terms of the GPL v2" );
+    content << mView->centerLine("Yzis is distributed under the terms of the GPL v2");
     content << "";
-    content << mView->centerLine( "please report bugs at http://bugs.yzis.org" );
+    content << mView->centerLine("please report bugs at http://bugs.yzis.org");
+    int spaceh = mView->getLinesVisible() - content.count();
+    int i = 0;
 
-	int spaceh = mView->getLinesVisible() - content.count();
-	int i = 0;
-	for ( ; i < spaceh / 2; ++i ) {
-		content.insert(0, "");
-	}
-	for ( ; i < spaceh; ++i ) {
-		content << "";
-	}
+    for(; i < spaceh / 2; ++i) {
+        content.insert(0, "");
+    }
+
+    for(; i < spaceh; ++i) {
+        content << "";
+    }
 
     /* Don't record these in the undo list */
     mView->buffer()->undoBuffer()->setInsideUndo(true);
-
     mView->gotoLinePosition(0, 0);
-	mView->buffer()->clearText();
-	mView->buffer()->insertRegion(YCursor(0,0), content);
-	mView->buffer()->setChanged(false);
-
+    mView->buffer()->clearText();
+    mView->buffer()->insertRegion(YCursor(0, 0), content);
+    mView->buffer()->setChanged(false);
     mView->buffer()->undoBuffer()->setInsideUndo(false);
 }
-void YModeIntro::leave( YView* mView )
+void YModeIntro::leave(YView* mView)
 {
     YBuffer* mBuffer = mView->buffer();
-    mBuffer->undoBuffer()->setInsideUndo( true );
+    mBuffer->undoBuffer()->setInsideUndo(true);
     mView->gotoLinePosition(0 , 0);
     mBuffer->clearText();
-    mBuffer->undoBuffer()->setInsideUndo( false );
-    mBuffer->setChanged( false );
+    mBuffer->undoBuffer()->setInsideUndo(false);
+    mBuffer->setChanged(false);
     mView->recalcScreen();
 }
-CmdState YModeIntro::execCommand( YView* mView, const YKeySequence &keys, YKeySequence::const_iterator &parsePos )
+CmdState YModeIntro::execCommand(YView* mView, const YKeySequence &keys, YKeySequence::const_iterator &parsePos)
 {
     Q_UNUSED(keys);
     Q_UNUSED(parsePos);
-    mView->modePool()->change( ModeCommand );
+    mView->modePool()->change(ModeCommand);
     return mView->modePool()->replayKey();
 }
 

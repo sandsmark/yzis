@@ -37,15 +37,15 @@ public:
     YModeSearch();
     virtual ~YModeSearch();
 
-    virtual void enter( YView* view );
-    virtual void leave( YView* view );
+    virtual void enter(YView* view);
+    virtual void leave(YView* view);
     virtual void initModifierKeys();
 
-    virtual CmdState execCommand( YView* view, const YKeySequence &keys, YKeySequence::const_iterator &parsePos );
+    virtual CmdState execCommand(YView* view, const YKeySequence &keys, YKeySequence::const_iterator &parsePos);
 
-    virtual YCursor search( YView* view, const QString& s, bool* found );
-    virtual YCursor search( YView* view, const QString& s, const YCursor begin, int* matchlength, bool* found );
-    virtual YCursor replaySearch( YView* view, bool* found );
+    virtual YCursor search(YView* view, const QString& s, bool* found);
+    virtual YCursor search(YView* view, const QString& s, const YCursor begin, int* matchlength, bool* found);
+    virtual YCursor replaySearch(YView* view, bool* found);
 
     YZHistory *getHistory()
     {
@@ -71,9 +71,9 @@ public :
     YModeSearchBackward();
     virtual ~YModeSearchBackward();
 
-    virtual YCursor search( YView* view, const QString& s, bool* found );
-    virtual YCursor search( YView* view, const QString& s, const YCursor begin, int* matchlength, bool* found );
-    virtual YCursor replaySearch( YView* view, bool* found );
+    virtual YCursor search(YView* view, const QString& s, bool* found);
+    virtual YCursor search(YView* view, const QString& s, const YCursor begin, int* matchlength, bool* found);
+    virtual YCursor replaySearch(YView* view, bool* found);
 };
 
 

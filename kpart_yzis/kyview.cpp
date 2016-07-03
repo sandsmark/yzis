@@ -26,8 +26,8 @@
 
 #define dbg() yzDebug("KYView")
 
-KYView::KYView( YBuffer* buffer)
-        : QYView(buffer, KYSession::self())
+KYView::KYView(YBuffer* buffer)
+    : QYView(buffer, KYSession::self())
 {
 }
 
@@ -37,7 +37,7 @@ KYView::~KYView()
 
 void KYView::guiUpdateFileName()
 {
-	dbg() << "KYView::guiUpdateFileName() (do nothing)" << endl;
+    dbg() << "KYView::guiUpdateFileName() (do nothing)" << endl;
 }
 
 #include "kyview.moc"

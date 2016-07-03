@@ -29,15 +29,15 @@ class YZQtPrinter : public QPrinter
 {
 
 public:
-    YZQtPrinter( YView *view );
-    virtual ~YZQtPrinter( );
+    YZQtPrinter(YView *view);
+    virtual ~YZQtPrinter();
 
-    void printToFile( const QString& path );
-    void run( );
+    void printToFile(const QString& path);
+    void run();
 
 private:
     /* methods */
-    void doPrint( );
+    void doPrint();
 
     /* members */
     YView *mView;

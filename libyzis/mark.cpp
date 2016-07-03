@@ -24,33 +24,42 @@
 #define dbg()    yzDebug("YViewMark")
 #define err()    yzError("YViewMark")
 
-void YDocMark::add( uint line, uint mark )
+void YDocMark::add(uint line, uint mark)
 {
-    if (marker.contains(line)) {
+    if(marker.contains(line)) {
         mark &= ~marker[line];
-        if (mark == 0)
+
+        if(mark == 0) {
             return ;
+        }
+
         marker[line] |= mark;
-    } else
+    } else {
         marker[line] = mark;
+    }
 }
 
-void YDocMark::del( uint line, uint mark )
+void YDocMark::del(uint line, uint mark)
 {
     mark &= marker[line];
-    if (mark == 0)
+
+    if(mark == 0) {
         return ;
+    }
+
     marker[line] &= ~mark;
-    if (marker[line] == 0)
+
+    if(marker[line] == 0) {
         marker.remove(line);
+    }
 }
 
-void YDocMark::del( uint line )
+void YDocMark::del(uint line)
 {
     marker.remove(line);
 }
 
-uint YDocMark::get( uint line ) const
-    {
-        return marker[line];
-    }
+uint YDocMark::get(uint line) const
+{
+    return marker[line];
+}

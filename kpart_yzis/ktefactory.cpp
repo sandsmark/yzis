@@ -24,7 +24,7 @@
 #include "kysession.h"
 
 KTEFactory::KTEFactory(QObject* parent)
-        : KTextEditor::Factory::Factory(parent)
+    : KTextEditor::Factory::Factory(parent)
 {
     KYSession::initDebug(0, 0);
     KYSession::createInstance();
@@ -43,6 +43,6 @@ KParts::Part* KTEFactory::createPartObject(QWidget*, QObject*, const char*, cons
     return doc;
 }
 
-K_EXPORT_COMPONENT_FACTORY( yzispart, KTEFactory );
+K_EXPORT_COMPONENT_FACTORY(yzispart, KTEFactory);
 
 #include "ktefactory.moc"

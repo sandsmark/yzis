@@ -40,21 +40,21 @@ public :
     YModeCompletion();
     virtual ~YModeCompletion();
 
-    virtual void leave( YView* mView );
-    virtual CmdState execCommand( YView* mView, const YKeySequence &keys, YKeySequence::const_iterator &parsePos);
+    virtual void leave(YView* mView);
+    virtual CmdState execCommand(YView* mView, const YKeySequence &keys, YKeySequence::const_iterator &parsePos);
 
 protected :
-    void doComplete( YView* mView, bool forward );
-    bool initCompletion( YView* mView, bool forward );
+    void doComplete(YView* mView, bool forward);
+    bool initCompletion(YView* mView, bool forward);
 
 private :
-    void completeFromBuffer( YBuffer *buffer, QStringList &proposed, bool elimDups = true, QList<YCursor> *cursors = NULL );
-    void completeFromCurrentBuffer( const YCursor cursor, bool forward, QStringList &proposed );
-    void completeFromOtherBuffers( YBuffer *skip, QStringList &proposed );
-    void completeFromIncludes( QStringList &proposed );
-    void completeFromTags( QStringList &proposed );
-    void completeFromDictionary( QStringList &proposed );
-    void completeFromFileNames( QStringList &proposed );
+    void completeFromBuffer(YBuffer *buffer, QStringList &proposed, bool elimDups = true, QList<YCursor> *cursors = NULL);
+    void completeFromCurrentBuffer(const YCursor cursor, bool forward, QStringList &proposed);
+    void completeFromOtherBuffers(YBuffer *skip, QStringList &proposed);
+    void completeFromIncludes(QStringList &proposed);
+    void completeFromTags(QStringList &proposed);
+    void completeFromDictionary(QStringList &proposed);
+    void completeFromFileNames(QStringList &proposed);
     QString mPrefix;
     YCursor mCompletionStart;
     YCursor mCompletionEnd;

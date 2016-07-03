@@ -33,10 +33,10 @@ YInfoJumpListRecord::YInfoJumpListRecord()
  * YInfoJumpListRecord::YInfoJumpListRecord
  */
 
-YInfoJumpListRecord::YInfoJumpListRecord( const QString & filename, const QPoint pos)
+YInfoJumpListRecord::YInfoJumpListRecord(const QString & filename, const QPoint pos)
 {
     mFilename = filename;
-    setPosition( pos );
+    setPosition(pos);
 }
 
 /**
@@ -50,21 +50,20 @@ YInfoJumpListRecord::~YInfoJumpListRecord()
  * YInfoJumpListRecord::YInfoJumpListRecord
  */
 
-YInfoJumpListRecord::YInfoJumpListRecord( const YInfoJumpListRecord & copy )
+YInfoJumpListRecord::YInfoJumpListRecord(const YInfoJumpListRecord & copy)
 {
     mFilename = copy.filename();
-    mPosition = YCursor( copy.position().x(), copy.position().y() );
+    mPosition = YCursor(copy.position().x(), copy.position().y());
 }
 
 /**
  * YInfoJumpListRecord::operator=
  */
 
-YInfoJumpListRecord & YInfoJumpListRecord::operator=( const YInfoJumpListRecord & copy )
+YInfoJumpListRecord & YInfoJumpListRecord::operator=(const YInfoJumpListRecord & copy)
 {
     mFilename = copy.filename();
-    mPosition = YCursor( copy.position().x(), copy.position().y() );
-
+    mPosition = YCursor(copy.position().x(), copy.position().y());
     return *this;
 }
 
@@ -109,13 +108,13 @@ const YCursor YInfoJumpListRecord::position() const
  */
 
 /*YCursor * YInfoJumpListRecord::previousSearchPosition() {
- 
+
  --mIndex;
- 
+
  if ( mIndex < 0 ) {
   mIndex = mCursorData.count() - 1;
  }
- 
+
  return mCursorData[mIndex];
 }*/
 
@@ -123,7 +122,7 @@ const YCursor YInfoJumpListRecord::position() const
  * YInfoJumpListRecord::setFilename
  */
 
-void YInfoJumpListRecord::setFilename( const QString & filename )
+void YInfoJumpListRecord::setFilename(const QString & filename)
 {
     mFilename = filename;
 }
@@ -132,7 +131,7 @@ void YInfoJumpListRecord::setFilename( const QString & filename )
  * YInfoJumpListRecord::setPosition
  */
 
-void YInfoJumpListRecord::setPosition( const QPoint pos )
+void YInfoJumpListRecord::setPosition(const QPoint pos)
 {
     mPosition = YCursor(pos);
 }

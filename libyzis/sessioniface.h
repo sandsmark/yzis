@@ -52,7 +52,7 @@ public:
 
     /** @brief Display the specified error/information message
      */
-    virtual void guiPopupMessage( const QString& message ) = 0;
+    virtual void guiPopupMessage(const QString& message) = 0;
 
     /** @brief Prompt a Yes/No question for the user and returns the answer.
      */
@@ -88,7 +88,7 @@ public:
 
     /** Set the text of the clipboard.
       */
-    virtual void guiSetClipboardText( const QString& text, Clipboard::Mode mode ) = 0;
+    virtual void guiSetClipboardText(const QString& text, Clipboard::Mode mode) = 0;
 
 
     //-------------------------------------------------------
@@ -97,11 +97,11 @@ public:
 
     /** @brief Create new views on an existing buffer.
       */
-    virtual YView * guiCreateView( YBuffer *buffer ) = 0;
+    virtual YView * guiCreateView(YBuffer *buffer) = 0;
 
     /** @brief Switch the current view.
      */
-    virtual void guiChangeCurrentView( YView* ) = 0;
+    virtual void guiChangeCurrentView(YView*) = 0;
 
     /** @brief Ask the frontend to delete the view.
       *
@@ -109,19 +109,25 @@ public:
      * after that call. The frontend should call delete on its
      * view instance.
       */
-    virtual void guiDeleteView ( YView *view ) = 0;
+    virtual void guiDeleteView(YView *view) = 0;
 
     /** @brief Inform the frontend of the buffer creation.
       *
       */
-    virtual void guiCreateBuffer( YBuffer * b ) { Q_UNUSED(b); }
+    virtual void guiCreateBuffer(YBuffer * b)
+    {
+        Q_UNUSED(b);
+    }
 
     /** @brief Inform the frontend that the given buffer is being removed.
            *
            * The buffer @arg b is still valid when the call is made but is not
-     * used afterward. 
+     * used afterward.
      */
-    virtual void guiRemoveBuffer( YBuffer *b ) { Q_UNUSED(b); }
+    virtual void guiRemoveBuffer(YBuffer *b)
+    {
+        Q_UNUSED(b);
+    }
 
 
     //-------------------------------------------------------
@@ -130,14 +136,14 @@ public:
 
     /** @brief Splits horizontally the mainwindow area to create a new view on the current buffer
      */
-    virtual void guiSplitHorizontally ( YView* ) = 0;
+    virtual void guiSplitHorizontally(YView*) = 0;
 
     /** @brief Splits the screen vertically showing the 2 given views
-     */ 
+     */
     //  virtual void splitHorizontallyWithViews( YView*, YView* ) = 0;
 
     /** @brief Splits the screen vertically to show the 2 given views
-     */ 
+     */
     //  virtual void splitVerticallyOnView( YView*, YView* ) = 0;
 
 

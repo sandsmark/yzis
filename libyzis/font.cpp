@@ -25,23 +25,23 @@
 YFont::YFont()
 {}
 
-void YFont::setWeight( int weight )
+void YFont::setWeight(int weight)
 {
     m_weight = weight;
 }
-void YFont::setItalic( bool enable )
+void YFont::setItalic(bool enable)
 {
     m_italic = enable;
 }
-void YFont::setUnderline( bool enable )
+void YFont::setUnderline(bool enable)
 {
     m_underline = enable;
 }
-void YFont::setOverline( bool enable )
+void YFont::setOverline(bool enable)
 {
     m_overline = enable;
 }
-void YFont::setStrikeOut( bool enable )
+void YFont::setStrikeOut(bool enable)
 {
     m_strikeOut = enable;
 }
@@ -71,23 +71,23 @@ bool YFont::strikeOut() const
     return m_strikeOut;
 }
 
-bool YFont::operator==( const YFont& font ) const
+bool YFont::operator==(const YFont& font) const
 {
-	return m_weight == font.m_weight && m_italic == font.m_italic && m_underline == font.m_underline &&
-					 m_overline == font.m_overline && m_strikeOut == font.m_strikeOut;
+    return m_weight == font.m_weight && m_italic == font.m_italic && m_underline == font.m_underline &&
+           m_overline == font.m_overline && m_strikeOut == font.m_strikeOut;
 }
-bool YFont::operator!=( const YFont& font ) const
+bool YFont::operator!=(const YFont& font) const
 {
     return !(*this == font);
 }
 
-YFont& YFont::operator=( const YFont& font )
+YFont& YFont::operator=(const YFont& font)
 {
-	m_weight = font.m_weight;
-	m_italic = font.m_italic;
-	m_underline = font.m_underline;
-	m_overline = font.m_overline;
-	m_strikeOut = font.m_strikeOut;
-	return *this;
+    m_weight = font.m_weight;
+    m_italic = font.m_italic;
+    m_underline = font.m_underline;
+    m_overline = font.m_overline;
+    m_strikeOut = font.m_strikeOut;
+    return *this;
 }
 

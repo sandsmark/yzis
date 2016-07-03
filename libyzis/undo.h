@@ -36,17 +36,16 @@ class YView;
 
 /** An individual operation on a buffer, that can be done or undone. */
 
-struct YBufferOperation
-{
+struct YBufferOperation {
     enum OperationType {
-		OpAddRegion, //!< insert a block of text at a given position
-		OpDelRegion, //!< delete a block of text inside a given interval
+        OpAddRegion, //!< insert a block of text at a given position
+        OpDelRegion, //!< delete a block of text inside a given interval
     };
 
     /**  Perform the buffer operation on the buffer passed in argument.
       *  If opposite is true, perform the opposite operation (used for undo)
       */
-    void performOperation( YView* pView, bool opposite = false );
+    void performOperation(YView* pView, bool opposite = false);
 
     OperationType type;
     YRawData data;
@@ -75,27 +74,27 @@ public:
 class YZIS_EXPORT YZUndoBuffer
 {
 public:
-    YZUndoBuffer( YBuffer * );
+    YZUndoBuffer(YBuffer *);
     virtual ~YZUndoBuffer();
 
     /*
      * * Store the previous undo item (if any) and start a new one
      */
-    void commitUndoItem( uint cursorX, uint cursorY );
+    void commitUndoItem(uint cursorX, uint cursorY);
 
-	void addBufferOperation( YBufferOperation::OperationType type, const YRawData& data, const YInterval& interval );
+    void addBufferOperation(YBufferOperation::OperationType type, const YRawData& data, const YInterval& interval);
 
     /**
      * Undo the last operations on the buffer, move backward in the undo list.
      * cursorX and cursorY will be set to the new cursor position
      */
-    void undo( YView* pView );
+    void undo(YView* pView);
 
     /**
      * Redo the current operation on the buffer, move forward in the undo list
      * cursorX and cursorY will be set to the new cursor position
      */
-    void redo( YView* pView );
+    void redo(YView* pView);
 
     /*! Return whether it is possibe to issue a redo */
     bool mayRedo() const;
@@ -107,7 +106,7 @@ public:
 
     /** Sets this while performing undo and redo, so that the operations
      * are not registered as new buffer commands */
-    void setInsideUndo( bool set )
+    void setInsideUndo(bool set)
     {
         mInsideUndo = set;
     }
@@ -137,7 +136,7 @@ protected:
     /** purge the undo list after the current item */
     void removeUndoItemAfterCurrent();
 
-    QString undoItemToString( UndoItem * item) const;
+    QString undoItemToString(UndoItem * item) const;
 
     YBuffer * mBuffer;
     UndoItem * mFutureUndoItem;

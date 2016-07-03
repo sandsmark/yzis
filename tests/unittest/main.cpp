@@ -13,14 +13,15 @@
   * both argc and argv are updated. There is no check on the size
   * of argv.
   */
-void toArgvArray( QStringList l, char ** argv, int * argc )
+void toArgvArray(QStringList l, char ** argv, int * argc)
 {
     *argc = 0;
-    foreach( QString s, l ) {
+
+    foreach(QString s, l) {
 #ifdef YZIS_WIN32_MSVC
-        argv[(*argc)++] = _strdup( qPrintable(s) );
+        argv[(*argc)++] = _strdup(qPrintable(s));
 #else
-        argv[(*argc)++] = strdup( qPrintable(s) );
+        argv[(*argc)++] = strdup(qPrintable(s));
 #endif
     }
 }
@@ -31,10 +32,10 @@ void toArgvArray( QStringList l, char ** argv, int * argc )
   * Run an individual class test: yzistest <TestClassName>
   * Run all unit tests: yzistest
   *
-  * To write a test, see the Qt documentation. 
+  * To write a test, see the Qt documentation.
   *
   */
-int main( int argc, char * argv[] )
+int main(int argc, char * argv[])
 {
     // If you want to add a new test, just ignore the stuff here until the end
     // of main.
@@ -44,18 +45,17 @@ int main( int argc, char * argv[] )
     bool runAll = false;
     int result = 0, fakeArgc = 1;
     char * fakeArgv[] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
-    QRegExp reTestName( "(\\w+)(::(\\w+))?(\\(\\))?" );
-
+    QRegExp reTestName("(\\w+)(::(\\w+))?(\\(\\))?");
     myArgv << "yzistest.exe";
 
-    if (argc == 1) {
+    if(argc == 1) {
         runAll = true;
     } else {
-        for ( int i = 1; i < argc; i++) {
+        for(int i = 1; i < argc; i++) {
             //qDebug("argv[%d] = '%s'", i, argv[i] );
-            if (argv[i][0] == '-') {
+            if(argv[i][0] == '-') {
                 myArgv << argv[i];
-            } else if (reTestName.exactMatch( argv[i] )) {
+            } else if(reTestName.exactMatch(argv[i])) {
                 //qDebug("match: %s", qPrintable( reTestName.capturedTexts().join(" , ") ) );
                 runMe[reTestName.cap(1)] = reTestName.cap(3);
             }
@@ -63,7 +63,6 @@ int main( int argc, char * argv[] )
     }
 
     QStringList myArgvBase = myArgv;
-
 #define RUN_MY_TEST( TestName ) \
     myArgv = myArgvBase; \
     if (runAll || runMe.contains( #TestName )) { \
@@ -81,21 +80,16 @@ int main( int argc, char * argv[] )
         result += QTest::qExec( & TestName##inst, fakeArgc, fakeArgv ); \
         printf("\n"); \
     }
-
     // ===============================================================
-
-
     // Add your test here. You need to include it first at the top of the
     // main.
-    RUN_MY_TEST( TestYDebugBackend )
-    RUN_MY_TEST( TestColor )
-    RUN_MY_TEST( TestResource )
+    RUN_MY_TEST(TestYDebugBackend)
+    RUN_MY_TEST(TestColor)
+    RUN_MY_TEST(TestResource)
     //RUN_MY_TEST( TestBufferChanges )
-	RUN_MY_TEST( TestDrawCell )
-	RUN_MY_TEST( TestDrawBuffer )
-
-    printf("Unittest status: %d failed tests\n", result );
-
+    RUN_MY_TEST(TestDrawCell)
+    RUN_MY_TEST(TestDrawBuffer)
+    printf("Unittest status: %d failed tests\n", result);
     return result;
 }
 

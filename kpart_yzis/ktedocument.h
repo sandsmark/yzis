@@ -33,16 +33,16 @@ class KTEDocument : public KTextEditor::Document
 {
     Q_OBJECT
 public:
-    KTEDocument( QObject* parent = 0 );
+    KTEDocument(QObject* parent = 0);
     virtual ~KTEDocument();
 
     virtual KTextEditor::Editor* editor();
-    virtual KTextEditor::View* createView( QWidget *parent );
+    virtual KTextEditor::View* createView(QWidget *parent);
     virtual KTextEditor::View* activeView() const;
     virtual const QList<KTextEditor::View*>& views() const;
     virtual const QString& documentName() const;
     virtual QString mimeType();
-    virtual bool setEncoding( const QString &encoding );
+    virtual bool setEncoding(const QString &encoding);
     virtual const QString& encoding() const;
     virtual bool documentReload();
 
@@ -52,29 +52,29 @@ public:
 
     virtual bool endEditing();
     virtual QString text() const;
-    virtual QString text( const KTextEditor::Range &range, bool block = false ) const;
-    virtual QChar character( const KTextEditor::Cursor &position ) const;
-    virtual QStringList textLines( const KTextEditor::Range &range, bool block = false ) const;
-    virtual QString line( int line ) const;
+    virtual QString text(const KTextEditor::Range &range, bool block = false) const;
+    virtual QChar character(const KTextEditor::Cursor &position) const;
+    virtual QStringList textLines(const KTextEditor::Range &range, bool block = false) const;
+    virtual QString line(int line) const;
     virtual int lines() const;
     virtual KTextEditor::Cursor documentEnd() const;
     virtual int totalCharacters() const;
-    virtual int lineLength( int line ) const;
-    virtual bool setText( const QString &text );
-    virtual bool setText( const QStringList &text );
+    virtual int lineLength(int line) const;
+    virtual bool setText(const QString &text);
+    virtual bool setText(const QStringList &text);
     virtual bool clear();
-    virtual bool insertText( const KTextEditor::Cursor &position, const QString &text, bool block = false );
-    virtual bool insertText( const KTextEditor::Cursor &position, const QStringList &text, bool block = false );
-    virtual bool removeText( const KTextEditor::Range &range, bool block = false );
-    virtual bool insertLine( int line, const QString &text );
-    virtual bool insertLines( int line, const QStringList &text );
-    virtual bool removeLine( int line );
+    virtual bool insertText(const KTextEditor::Cursor &position, const QString &text, bool block = false);
+    virtual bool insertText(const KTextEditor::Cursor &position, const QStringList &text, bool block = false);
+    virtual bool removeText(const KTextEditor::Range &range, bool block = false);
+    virtual bool insertLine(int line, const QString &text);
+    virtual bool insertLines(int line, const QStringList &text);
+    virtual bool removeLine(int line);
     virtual QString mode() const;
     virtual QString highlightingMode() const;
     virtual QStringList modes() const;
     virtual QStringList highlightingModes() const;
-    virtual bool setMode( const QString &name );
-    virtual bool setHighlightingMode( const QString &name );
+    virtual bool setMode(const QString &name);
+    virtual bool setHighlightingMode(const QString &name);
     virtual QString highlightingModeSection(int) const;
     virtual QString modeSection(int) const;
 
@@ -86,17 +86,17 @@ public:
         return m_buffer;
     }
 signals:
-    void viewCreated (KTextEditor::Document *document, KTextEditor::View *view);
-    void documentNameChanged (KTextEditor::Document *document);
-    void documentUrlChanged (KTextEditor::Document *document);
-    void modifiedChanged (KTextEditor::Document *document);
-    void textChanged (KTextEditor::Document *document);
-    void textInserted (KTextEditor::Document *document, const KTextEditor::Range &range);
-    void textRemoved (KTextEditor::Document *document, const KTextEditor::Range &range);
-    void textChanged (KTextEditor::Document *document, const KTextEditor::Range &oldRange, const KTextEditor::Range &newRange);
-    void aboutToClose (KTextEditor::Document *document);
-    void modeChanged (KTextEditor::Document *document);
-    void highlightingModeChanged (KTextEditor::Document *document);
+    void viewCreated(KTextEditor::Document *document, KTextEditor::View *view);
+    void documentNameChanged(KTextEditor::Document *document);
+    void documentUrlChanged(KTextEditor::Document *document);
+    void modifiedChanged(KTextEditor::Document *document);
+    void textChanged(KTextEditor::Document *document);
+    void textInserted(KTextEditor::Document *document, const KTextEditor::Range &range);
+    void textRemoved(KTextEditor::Document *document, const KTextEditor::Range &range);
+    void textChanged(KTextEditor::Document *document, const KTextEditor::Range &oldRange, const KTextEditor::Range &newRange);
+    void aboutToClose(KTextEditor::Document *document);
+    void modeChanged(KTextEditor::Document *document);
+    void highlightingModeChanged(KTextEditor::Document *document);
 
 private:
     QList<KTextEditor::View*> m_views;

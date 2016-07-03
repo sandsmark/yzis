@@ -39,15 +39,15 @@ public :
         CursorHidden,
     };
 
-    QYCursor( QYView * view, QYEdit* parent, CursorShape shape );
+    QYCursor(QYView * view, QYEdit* parent, CursorShape shape);
     virtual ~QYCursor();
 
-    void setCursorShape( CursorShape shape );
+    void setCursorShape(CursorShape shape);
     CursorShape shape() const;
 
 
 protected :
-    virtual void paintEvent( QPaintEvent* pe );
+    virtual void paintEvent(QPaintEvent* pe);
 
 private :
     CursorShape mCursorShape;
@@ -56,7 +56,7 @@ private :
 
 };
 
-YDebugStream& operator<<( YDebugStream& out, const QYCursor::CursorShape & shape );
+YDebugStream& operator<<(YDebugStream& out, const QYCursor::CursorShape & shape);
 
 #endif
 

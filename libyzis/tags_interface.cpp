@@ -51,30 +51,30 @@ static QList<QString> tagfilenames;
 // the last search.  Otherwise, the temporary gets destroyed and tagNext fails.
 static QString lastsearch;
 
-static bool tagFileAlreadyOpen( const QString& filename )
+static bool tagFileAlreadyOpen(const QString& filename)
 {
-    return tagfilenames.indexOf( filename ) != -1;
+    return tagfilenames.indexOf(filename) != -1;
 }
 
-static tagFile* doOpenTagFile( QString &filename )
+static tagFile* doOpenTagFile(QString &filename)
 {
     tagFile *tagfile = NULL;
-    YASSERT_MSG( !tagFileAlreadyOpen( filename ), "Tried to open the tag file again" );
+    YASSERT_MSG(!tagFileAlreadyOpen(filename), "Tried to open the tag file again");
 
     // first, if the filename starts with ./, replace the dot with
     // the current buffer's path
-    if ( filename.startsWith( QString(".") + QDir::separator() ) ) {
-        QFileInfo file( YSession::self()->currentView()->buffer()->fileName() );
-        filename.replace( 0, 1, file.absoluteDir().absolutePath() );
+    if(filename.startsWith(QString(".") + QDir::separator())) {
+        QFileInfo file(YSession::self()->currentView()->buffer()->fileName());
+        filename.replace(0, 1, file.absoluteDir().absolutePath());
     }
 
-    QFileInfo tagfilename( filename );
+    QFileInfo tagfilename(filename);
     bool found = tagfilename.exists();
 
     // if we found a tag file, open it
-    if ( found ) {
+    if(found) {
         tagFileInfo info;
-        tagfile = tagsOpen( filename.toUtf8().data(), &info );
+        tagfile = tagsOpen(filename.toUtf8().data(), &info);
     }
 
     return tagfile;
@@ -85,12 +85,13 @@ static bool openTagFile()
     QStringList tagsOption = YSession::self()->getOptions()->readListOption("tags", QStringList("tags"));
     bool foundATagFile = false;
 
-    for ( int i = 0; i < tagsOption.size(); ++i ) {
-        tagFile *tagfile = doOpenTagFile( tagsOption[i] );
-        if ( tagfile ) {
+    for(int i = 0; i < tagsOption.size(); ++i) {
+        tagFile *tagfile = doOpenTagFile(tagsOption[i]);
+
+        if(tagfile) {
             foundATagFile = true;
-            tagfilelist.push_back( tagfile );
-            tagfilenames.push_back( tagsOption[i] );
+            tagfilelist.push_back(tagfile);
+            tagfilenames.push_back(tagsOption[i]);
         }
     }
 
@@ -99,44 +100,43 @@ static bool openTagFile()
 
 static void closeTagFile()
 {
-    YASSERT_MSG( tagfilelist.size() > 0, "Tried to close an already closed tag file");
+    YASSERT_MSG(tagfilelist.size() > 0, "Tried to close an already closed tag file");
 
-    for ( int i = 0; i < tagfilelist.size(); ++i ) {
-        tagsClose( tagfilelist[i] );
+    for(int i = 0; i < tagfilelist.size(); ++i) {
+        tagsClose(tagfilelist[i]);
     }
 
     tagfilelist.clear();
     tagfilenames.clear();
 }
 
-static void switchToViewOfFilename( const QString &filename )
+static void switchToViewOfFilename(const QString &filename)
 {
-    YBuffer *buffer = YSession::self()->findBuffer( filename );
-    YView *view = YSession::self()->findViewByBuffer( buffer );
+    YBuffer *buffer = YSession::self()->findBuffer(filename);
+    YView *view = YSession::self()->findViewByBuffer(buffer);
 
-    if ( !buffer && !view ) {
-        view = YSession::self()->createBufferAndView( filename );
-    } else if ( !view ) {
-        view = YSession::self()->createView( buffer );
+    if(!buffer && !view) {
+        view = YSession::self()->createBufferAndView(filename);
+    } else if(!view) {
+        view = YSession::self()->createView(buffer);
     }
 
-    YSession::self()->setCurrentView( view );
+    YSession::self()->setCurrentView(view);
 }
 
-static void doJumpToTag ( const YTagStackItem &entry )
+static void doJumpToTag(const YTagStackItem &entry)
 {
     YBuffer * b = YSession::self()->currentView()->buffer();
-
-    QFileInfo file( entry.filename );
+    QFileInfo file(entry.filename);
     QString filepath = file.absoluteFilePath();
     QString pattern = entry.pattern;
 
     // if the tag is in a different file, we have to change buffers
-    if ( filepath != YSession::self()->currentView()->buffer()->fileName() ) {
-        switchToViewOfFilename( filepath );
+    if(filepath != YSession::self()->currentView()->buffer()->fileName()) {
+        switchToViewOfFilename(filepath);
     }
 
-    pattern = pattern.mid( 2, pattern.length() - 4 );
+    pattern = pattern.mid(2, pattern.length() - 4);
     yzDebug("doJumpToTag") << "mid = " << pattern << endl;
     pattern = pattern.replace("\\", "");
     pattern = pattern.replace("(", "\\(");
@@ -147,13 +147,12 @@ static void doJumpToTag ( const YTagStackItem &entry )
     pattern = pattern.replace("/", "\\/");
     yzDebug("doJumpToTag") << "After escaping = " << pattern << endl;
     QRegExp rx(pattern);
+    int lineCount = static_cast<int>(b->lineCount());
 
-    int lineCount = static_cast<int>( b->lineCount() );
-
-    for ( int i = 0; i < lineCount; i++ ) {
+    for(int i = 0; i < lineCount; i++) {
         int pos = rx.indexIn(b->textline(i));
 
-        if ( pos != -1 ) {
+        if(pos != -1) {
             YSession::self()->currentView()->scrollLineToCenter(i);
             YSession::self()->currentView()->gotoLinePosition(i , 0);
             YSession::self()->saveJumpPosition();
@@ -167,43 +166,43 @@ static bool jumpToJumpRecord(const YInfoJumpListRecord *record)
     YBuffer *buffer = YSession::self()->currentView()->buffer();
 
     // check to see if we have to change buffers before jumping
-    if ( record->filename() != buffer->fileName() ) {
+    if(record->filename() != buffer->fileName()) {
         // TODO: is this necessary?  It was in the old code, but it seems
         // like it just gets in the way when using kyzis (nyzis may be another matter)
-        if ( buffer->fileIsModified() ) {
-            YSession::self()->guiPopupMessage( _("File has been modified") );
+        if(buffer->fileIsModified()) {
+            YSession::self()->guiPopupMessage(_("File has been modified"));
             return false;
         }
 
-        switchToViewOfFilename( record->filename() );
+        switchToViewOfFilename(record->filename());
     }
 
     const YCursor &cursor = record->position();
     YSession::self()->currentView()->scrollLineToCenter(cursor.line());
     YSession::self()->currentView()->gotoLinePosition(cursor);
-
     return true;
 }
 
-static void readAllMatchingTags( const YTagStackItem &initialTag )
+static void readAllMatchingTags(const YTagStackItem &initialTag)
 {
     int tagResult;
     QVector<YTagStackItem> tags;
-    tags.push_back( initialTag );
+    tags.push_back(initialTag);
 
-    for ( int i = 0; i < tagfilelist.size(); ++i ) {
-        for ( ;; ) {
+    for(int i = 0; i < tagfilelist.size(); ++i) {
+        for(;;) {
             tagEntry entry;
-            tagResult = tagsFindNext( tagfilelist[i], &entry );
-            if ( tagResult == TagSuccess ) {
-                tags.push_back( YTagStackItem( entry.address.pattern, entry.file ) );
+            tagResult = tagsFindNext(tagfilelist[i], &entry);
+
+            if(tagResult == TagSuccess) {
+                tags.push_back(YTagStackItem(entry.address.pattern, entry.file));
             } else {
                 break;
             }
         }
     }
 
-    YSession::self()->getTagStack().storeMatchingTags( tags );
+    YSession::self()->getTagStack().storeMatchingTags(tags);
 }
 
 static void showNumMatches()
@@ -212,27 +211,27 @@ static void showNumMatches()
     unsigned int cur = stack.getNumCurMatchingTag() + 1; // +1 is because number is 0 based
     unsigned int max = stack.getNumMatchingTags();
 
-    if ( max > 1 ) {
+    if(max > 1) {
         // TODO: is this localized properly?  I doubt it.
         QString msg("Tag %1 of %2");
         YSession::self()->currentView()->displayInfo(msg.arg(cur).arg(max));
     }
 }
 
-void tagReset ()
+void tagReset()
 {
     closeTagFile();
 }
 
-bool tagJumpTo ( const QString &word )
+bool tagJumpTo(const QString &word)
 {
     // Guardian for empty tag search
-    if ( word.isNull() ) {
+    if(word.isNull()) {
         return true;
     }
 
-    if ( !openTagFile() ) {
-        YSession::self()->guiPopupMessage( _("Unable to find tag file") );
+    if(!openTagFile()) {
+        YSession::self()->guiPopupMessage(_("Unable to find tag file"));
         return true;
     }
 
@@ -242,19 +241,16 @@ bool tagJumpTo ( const QString &word )
 
     // look through each tag file in order for the tag
     // if we find one, don't search the rest of the tag files
-    for ( int i = 0; i < tagfilelist.size(); ++i) {
-        tagResult = tagsFind( tagfilelist[i], &entry, lastsearch.toUtf8(), TAG_FULLMATCH );
+    for(int i = 0; i < tagfilelist.size(); ++i) {
+        tagResult = tagsFind(tagfilelist[i], &entry, lastsearch.toUtf8(), TAG_FULLMATCH);
 
-        if ( tagResult == TagSuccess ) {
+        if(tagResult == TagSuccess) {
             YTagStack &stack = YSession::self()->getTagStack();
-            YTagStackItem item( entry.address.pattern, entry.file );
+            YTagStackItem item(entry.address.pattern, entry.file);
             stack.push();
-
-            doJumpToTag ( item );
-            readAllMatchingTags( item );
-
+            doJumpToTag(item);
+            readAllMatchingTags(item);
             showNumMatches();
-
             break;
         }
     }
@@ -263,66 +259,64 @@ bool tagJumpTo ( const QString &word )
     return (tagResult == TagSuccess) ? false : true;
 }
 
-void tagNext ()
+void tagNext()
 {
     YTagStack &stack = YSession::self()->getTagStack();
     const YTagStackItem *entry = stack.moveToNext();
 
-    if ( entry ) {
-        doJumpToTag( *entry );
-
+    if(entry) {
+        doJumpToTag(*entry);
         showNumMatches();
     } else {
         YSession::self()->currentView()->displayInfo(_("Could not find next tag"));
     }
 }
 
-void tagPrev ()
+void tagPrev()
 {
     YTagStack &stack = YSession::self()->getTagStack();
     const YTagStackItem *entry = stack.moveToPrevious();
 
-    if ( entry ) {
-        doJumpToTag( *entry );
-
+    if(entry) {
+        doJumpToTag(*entry);
         showNumMatches();
     } else {
         YSession::self()->currentView()->displayInfo(_("Could not find previous tag"));
     }
 }
 
-bool tagPop ()
+bool tagPop()
 {
     YTagStack &stack = YSession::self()->getTagStack();
 
-    if ( stack.empty() ) {
+    if(stack.empty()) {
         YSession::self()->currentView()->displayInfo(_("At bottom of tag stack"));
         return true;
     }
 
     const YInfoJumpListRecord *head = stack.getHead();
-    if ( jumpToJumpRecord( head ) ) {
-        stack.pop();
 
+    if(jumpToJumpRecord(head)) {
+        stack.pop();
         showNumMatches();
     }
+
     return false;
 }
 
 void tagStartsWith(const QString &prefix, QStringList &list)
 {
-    if ( !openTagFile() ) {
+    if(!openTagFile()) {
         return ;
     }
 
-    for ( int i = 0; i < tagfilelist.size(); ++i ) {
+    for(int i = 0; i < tagfilelist.size(); ++i) {
         tagEntry entry;
-        int tagResult = tagsFind( tagfilelist[i], &entry, prefix.toUtf8(), TAG_PARTIALMATCH );
+        int tagResult = tagsFind(tagfilelist[i], &entry, prefix.toUtf8(), TAG_PARTIALMATCH);
 
-        while ( tagResult == TagSuccess ) {
-            list.push_back( entry.name );
-
-            tagResult = tagsFindNext( tagfilelist[i], &entry );
+        while(tagResult == TagSuccess) {
+            list.push_back(entry.name);
+            tagResult = tagsFindNext(tagfilelist[i], &entry);
         }
     }
 

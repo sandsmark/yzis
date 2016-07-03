@@ -49,11 +49,11 @@ typedef QStringList YRawData;
 
 
 // misc functions
-QString tildeExpand( const QString& path );
+QString tildeExpand(const QString& path);
 
 /**
  * A buffer is the implementation of the content of a file.
- * 
+ *
  * A buffer can have multiple views. Every buffer is registered in a
  * @ref YSession
  * @short An abstract class to handle the content of a file.
@@ -88,28 +88,28 @@ public:
     // ----------------- Content Operations
     //-------------------------------------------------------
 
-	/*
-	 * Inserts data into the buffer at given position
-	 * @param begin : position where to insert data
-	 * @param data : data to insert, may start and end with YRawData_endline
-	 * @returns position of char after inserted data
-	 */
-	YCursor insertRegion(const YCursor& begin, const YRawData& data);
+    /*
+     * Inserts data into the buffer at given position
+     * @param begin : position where to insert data
+     * @param data : data to insert, may start and end with YRawData_endline
+     * @returns position of char after inserted data
+     */
+    YCursor insertRegion(const YCursor& begin, const YRawData& data);
 
-	/*
-	 * Remove data contained in the given interval
-	 * @param bi : interval to remove
-	 */
-	void deleteRegion(const YInterval& bi);
+    /*
+     * Remove data contained in the given interval
+     * @param bi : interval to remove
+     */
+    void deleteRegion(const YInterval& bi);
 
-	/*
-	 * Shortcut for deleteRegion + insertRegion
-	 * @param bi : interval to remove
-	 * @param data : data to insert, may start and end with YRawData_endline
-	 */
-	YCursor replaceRegion(const YInterval& bi, const YRawData& data);
+    /*
+     * Shortcut for deleteRegion + insertRegion
+     * @param bi : interval to remove
+     * @param data : data to insert, may start and end with YRawData_endline
+     */
+    YCursor replaceRegion(const YInterval& bi, const YRawData& data);
 
-	YRawData dataRegion( const YInterval& bi ) const;
+    YRawData dataRegion(const YInterval& bi) const;
 
 
     //-------------------------------------------------------
@@ -121,14 +121,14 @@ public:
      * @param pos : the position where to insert the character
      * @param c the character to add
      */
-    void insertChar (YCursor pos, const QString& c) YZIS_DEPRECATED;
+    void insertChar(YCursor pos, const QString& c) YZIS_DEPRECATED;
 
     /**
      * Deletes a character in the buffer
      * @param pos : the position where to insert the character
      * @param count number of characters to delete
      */
-    void delChar (YCursor pos, int count) YZIS_DEPRECATED;
+    void delChar(YCursor pos, int count) YZIS_DEPRECATED;
 
     //-------------------------------------------------------
     // ----------------- Line Operations
@@ -146,7 +146,7 @@ public:
      * a line of its own.
      * @param pos The position to add '\n' in.
      */
-    void insertNewLine( YCursor pos) YZIS_DEPRECATED;
+    void insertNewLine(YCursor pos) YZIS_DEPRECATED;
 
     /**
      * Deletes the given line
@@ -154,12 +154,12 @@ public:
      *
      * Note: the valid line numbers are between 0 and lineCount()-1
      */
-    void deleteLine( int line ) YZIS_DEPRECATED;
+    void deleteLine(int line) YZIS_DEPRECATED;
 
     /**
      * Replaces the line at @param line with the given string @param l
      */
-    void replaceLine( const QString& l, int line ) YZIS_DEPRECATED;
+    void replaceLine(const QString& l, int line) YZIS_DEPRECATED;
 
     /**
      * Finds the @ref YLine pointer for a line in the buffer
@@ -177,7 +177,7 @@ public:
      * Repeat the change on the line if @arg wholeline is true
      * @return true if a change was done
      */
-    bool substitute( const QString& what, const QString& with, bool wholeline, int line );
+    bool substitute(const QString& what, const QString& with, bool wholeline, int line);
 
     /**
      * Get the length of a line
@@ -200,12 +200,12 @@ public:
     /**
      * Return the column of the first non-blank character in the line
      */
-    int firstNonBlankChar( int line ) const;
+    int firstNonBlankChar(int line) const;
 
-    /** 
+    /**
      * Return the column of the last non-blank character in the line
      */
-    int lastNonBlankChar( int line) const;
+    int lastNonBlankChar(int line) const;
 
     //-------------------------------------------------------
     // ----------------- Buffer content
@@ -234,18 +234,18 @@ public:
      */
     void clearText();
 
-    void loadText( QString* content );
+    void loadText(QString* content);
 
 
     /**
      * Get the character at the given cursor position.
      */
-    QChar getCharAt( const YCursor at ) const;
+    QChar getCharAt(const YCursor at) const;
 
     /**
      * Get entire word at given cursor position. Currently behaves like '*' in vim
      */
-    QString getWordAt( const YCursor at ) const;
+    QString getWordAt(const YCursor at) const;
 
     /**
      * Number of lines in the buffer
@@ -284,10 +284,10 @@ public:
      */
     bool save();
 
-     /**
-     * Get the absolute filename of the buffer
-     * @return the filename
-     */
+    /**
+    * Get the absolute filename of the buffer
+    * @return the filename
+    */
     const QString& fileName() const;
 
     /**
@@ -300,7 +300,7 @@ public:
      * Changes the filename
      * @param _path the new filename ( and path )
      */
-    void setPath( const QString& _path );
+    void setPath(const QString& _path);
 
     /**
      * Called whenever the filename is changed
@@ -322,7 +322,7 @@ public:
      */
     void setChanged(bool v);
 
-    void setEncoding( const QString& name );
+    void setEncoding(const QString& name);
     const QString& encoding() const;
 
     /**
@@ -344,13 +344,13 @@ public:
      * Adds a new view to the buffer
      * @param v the view to be added
      */
-    void addView (YView *v);
+    void addView(YView *v);
 
     /**
      * Removes a view from this buffer
      * @param v the view to be removed
      */
-    void rmView (YView *v);
+    void rmView(YView *v);
 
     /**
      * The list of view for this buffer
@@ -398,16 +398,16 @@ public:
       * The highlighting mode is looked up using YzisHlManager::nameFind(). If
       * found, setHighLight( mode, true ) is called.
       */
-    void setHighLight( const QString& name );
+    void setHighLight(const QString& name);
 
-	/*
-	 * update highlight from given line
-	 * @param line : line number to start the HL update
-	 * @returns first line number not affected by the update
-	 */
+    /*
+     * update highlight from given line
+     * @param line : line number to start the HL update
+     * @returns first line number not affected by the update
+     */
     int updateHL(int line);
 
-    void initHL( int line );
+    void initHL(int line);
 
     /**
      * Notify GUIs that HL changed
@@ -428,43 +428,42 @@ public:
     /**
      * Retrieve an int option
      */
-    int getLocalIntegerOption( const QString& option ) const;
+    int getLocalIntegerOption(const QString& option) const;
 
     /**
      * Retrieve a bool option
      */
-    bool getLocalBooleanOption( const QString& option ) const;
+    bool getLocalBooleanOption(const QString& option) const;
 
     /**
      * Retrieve a string option
      */
-    QString getLocalStringOption( const QString& option ) const;
+    QString getLocalStringOption(const QString& option) const;
 
     /**
      * Retrieve a qstringlist option
      */
-    QStringList getLocalListOption( const QString& option ) const;
+    QStringList getLocalListOption(const QString& option) const;
 
     //-------------------------------------------------------
     // ------------ Buffer State
     //-------------------------------------------------------
 
-    enum BufferState
-    {
+    enum BufferState {
         BufferActive,
         BufferHidden,
         BufferInactive,
     };
 
-    void setState( BufferState state );
+    void setState(BufferState state);
     BufferState getState() const;
 
-    void saveYzisInfo( YView* view );
+    void saveYzisInfo(YView* view);
 
-        /*
-         * Checks if a file needs a recovery
-         */
-        bool checkRecover();
+    /*
+     * Checks if a file needs a recovery
+     */
+    bool checkRecover();
 
     //-------------------------------------------------------
     // ------------ Static
@@ -472,11 +471,11 @@ public:
 
     /** Parses a string containing filename and possibly line col information.
      *
-     * Input can be: 
+     * Input can be:
      * \li filename
      * \li filename:line
      * \li filename:line:col
-     * 
+     *
      * If not NULL, the @p gotoPos is adjusted to the target line,col or (0,0)
      * if there is no (line,col) information.
      *
@@ -485,13 +484,13 @@ public:
      * @param gotoPos a cursor that receives the line,col information if any
      * @return filename stripped from line,col information.
      */
-    static QString parseFilename( const QString& filename, YCursor* gotoPos = NULL );
+    static QString parseFilename(const QString& filename, YCursor* gotoPos = NULL);
 
 
     /** Get the cursor initial position for a filename.
      *
      * If @a parseFilename is true, the filename is first parsed with
-     * parseFilename() to look for format filename:line:col . 
+     * parseFilename() to look for format filename:line:col .
      *
      * If there is no line/col information in the filename string, the
      * function looks into YzisInfo for the last position in that file.
@@ -502,7 +501,7 @@ public:
      * position.
      * @return a cursor containing line:col that was found (if any).
      */
-    static YCursor getStartPosition( const QString& filename, bool parseFilename = true );
+    static YCursor getStartPosition(const QString& filename, bool parseFilename = true);
 
 protected:
     /**
@@ -510,7 +509,7 @@ protected:
      * @param line is between 0 and lineCount()-1
      * @param l may not contain '\n'
      */
-    void setTextline( int line, const QString & l );
+    void setTextline(int line, const QString & l);
 
 private:
     /**

@@ -93,7 +93,7 @@ class QStringList;
   *
   * By default, the debug framework will start with no areas, debug level set
   * to debug when compiled to debug (DEBUG symbol defined) or warning when
-  * compiled for release (DEBUG symbol not defined). 
+  * compiled for release (DEBUG symbol not defined).
   *
   * The default output is a file in the /tmp directory named yzisdebug.log on
   * windows and yzisdebug-[your_user_name].log on unix. On windows, the debug
@@ -158,13 +158,13 @@ public:
          * \param area  the area
          * \param data  the data to display
          */
-    void flush( int level, const QString& area, const char * data );
+    void flush(int level, const QString& area, const char * data);
 
     /** Set debugging level.
          *
          * \param level can YZ_DEBUG_LEVEL, YZ_ERROR_LEVEL or YZ_FATAL_LEVEL
       */
-    void setDebugLevel( int level )
+    void setDebugLevel(int level)
     {
         _level = level;
     }
@@ -176,12 +176,12 @@ public:
     }
 
     /** All debug will be logged to the file \p fileName
-	 *  \p fileName may be stdout or stderr.
+     *  \p fileName may be stdout or stderr.
      */
-    void setDebugOutputFilename( const QString& fileName);
+    void setDebugOutputFilename(const QString& fileName);
 
-	/** Temporary debug output
-	 */
+    /** Temporary debug output
+     */
     void setDebugOutputTemp();
 
 
@@ -210,7 +210,7 @@ public:
          *
          * You can remove an area level with removeArea()
          */
-    void setAreaLevel( const QString& area, int level );
+    void setAreaLevel(const QString& area, int level);
 
     /** Returns the debugging level of an \p area.
          *
@@ -218,7 +218,7 @@ public:
          * returns the upmost area matching the beginning of area or if non
          * matches, the global level.
          */
-    int areaLevel( const QString& area ) const;
+    int areaLevel(const QString& area) const;
 
     /** Remove the individual debugging level of this area.
       *
@@ -226,7 +226,7 @@ public:
       */
     void removeArea(const QString & area)
     {
-        _areaLevel.remove( area );
+        _areaLevel.remove(area);
     }
 
     /** Remove all debug areas.
@@ -258,7 +258,7 @@ public:
     /** Parses argv to check for debug directives.
       *
       * \p argv must be converted into a string list. The argument that
-      * are recognised are removed from the list so that further parsing by 
+      * are recognised are removed from the list so that further parsing by
       * other modules can happen.
       *
       * Allowed directives are:
@@ -269,7 +269,7 @@ public:
       * Example:
       * nyzis --level=warning --area-level=LuaEngine,debug --area-level=YSession,debug
       */
-    void parseArgv( QStringList & argv );
+    void parseArgv(QStringList & argv);
 
     /** Parses argc/argv to check for debug directives.
       *
@@ -287,19 +287,19 @@ public:
       * The messages of Qt are printed on yzis log system, in the area
       * Qt, with the appropriate debugging level.
       */
-    static void yzisMsgHandler( QtMsgType msgType, const QMessageLogContext &context, const QString &msg );
+    static void yzisMsgHandler(QtMsgType msgType, const QMessageLogContext &context, const QString &msg);
 
     /** Allocate memory for the object from libyzis.
       *
       * See \ref yzmalloc for details.
       */
-    void * operator new( size_t tSize );
+    void * operator new(size_t tSize);
 
     /** Free memory of the object from libyzis.
       *
       * See \ref yzmalloc for details.
       */
-    void operator delete( void* p );
+    void operator delete(void* p);
 
 private:
     /** Initialise the YDebugBackend(), set a few internal variables
@@ -307,16 +307,16 @@ private:
       */
     void init();
 
-	void closeOutput();
+    void closeOutput();
 
     /** Private constructors for a singleton */
     YDebugBackend();
 
     /** Private copy constructors for a singleton */
-    YDebugBackend( YDebugBackend & other);
+    YDebugBackend(YDebugBackend & other);
 
     /** Private copy assignment for a singleton */
-    YDebugBackend & operator=( YDebugBackend & other );
+    YDebugBackend & operator=(YDebugBackend & other);
 
     /** Private destructor for a singleton */
     ~YDebugBackend();
@@ -353,10 +353,10 @@ private:
   * too, some objects in libyzis have a new() and delete() operator declared.
   * Those new/delete will call yzmalloc() and yzfree().
   */
-void * yzmalloc( size_t tSize );
+void * yzmalloc(size_t tSize);
 
 /** Free memory allocated by yzmalloc(). */
-void yzfree( void * p );
+void yzfree(void * p);
 
 class YDebugStream;
 
@@ -371,9 +371,9 @@ typedef YDebugStream & (*YDBGFUNC)(YDebugStream &);
  *
  * This is the standard way of writing log statements in Yzis. The
  * YDebugStream supports printf like syntax with SPrintf(), or more classical
- * C++ stream. 
+ * C++ stream.
  *
- * The constructor specifies the area and level of logging. 
+ * The constructor specifies the area and level of logging.
  *
  * The
  * output is flushed to the log system each time a \\n is encountered, or
@@ -466,11 +466,11 @@ public:
             * f */
     YDebugStream& operator << (YDBGFUNC f)
     {
-        return ( *f )( *this );
+        return (*f)(*this);
     }
 
     /** Convenient SPrintf function on debug streams */
-    void SPrintf( const char * fmt, ... );
+    void SPrintf(const char * fmt, ...);
 
     /** Flushes the current debug text to the debug output.
       *
@@ -487,37 +487,39 @@ private:
 };
 
 /** Output a \\n */
-inline YDebugStream & endl( YDebugStream& s )
+inline YDebugStream & endl(YDebugStream& s)
 {
-    s << "\n"; return s;
+    s << "\n";
+    return s;
 }
 
 /** Flush the debug stream */
-inline YDebugStream& flush( YDebugStream& s )
+inline YDebugStream& flush(YDebugStream& s)
 {
-    s.flush(); return s;
+    s.flush();
+    return s;
 }
 
 /** Convenient function to build a debug stream.
   *
-  * To use with: 
+  * To use with:
   * \code
   * yzDebug("some_area") << some_debug << some_more_debug << endl;
   * \endcode
   */
-YZIS_EXPORT YDebugStream yzDeepDebug( const char * area = "" );
+YZIS_EXPORT YDebugStream yzDeepDebug(const char * area = "");
 
 /** Convenient function to build an deep debug stream. */
-YZIS_EXPORT YDebugStream yzDebug( const char * area = "" );
+YZIS_EXPORT YDebugStream yzDebug(const char * area = "");
 
 /** Convenient function to build a warning stream. */
-YZIS_EXPORT YDebugStream yzWarning( const char * area = "" );
+YZIS_EXPORT YDebugStream yzWarning(const char * area = "");
 
 /** Convenient function to build an error stream. */
-YZIS_EXPORT YDebugStream yzError( const char * area = "" );
+YZIS_EXPORT YDebugStream yzError(const char * area = "");
 
 /** Convenient function to build an fatal stream. */
-YZIS_EXPORT YDebugStream yzFatal( const char * area = "" );
+YZIS_EXPORT YDebugStream yzFatal(const char * area = "");
 
 
 //! \name Assertion macros
@@ -593,7 +595,7 @@ YZIS_EXPORT YDebugStream yzFatal( const char * area = "" );
   *
   * Example:
   * \code
-  * void f1() 
+  * void f1()
   * {
   *     dbg() << LOCATION() << endl;
   * }

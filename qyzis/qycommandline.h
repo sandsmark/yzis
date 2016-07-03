@@ -33,9 +33,9 @@ public :
     virtual ~QYCommandLine();
 
 protected:
-    void keyPressEvent (QKeyEvent *);
-    virtual void focusInEvent (QFocusEvent *);
-    virtual void focusOutEvent (QFocusEvent *);
+    void keyPressEvent(QKeyEvent *);
+    virtual void focusInEvent(QFocusEvent *);
+    virtual void focusOutEvent(QFocusEvent *);
 
 private :
     QYView *mView;

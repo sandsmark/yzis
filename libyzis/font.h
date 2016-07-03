@@ -41,11 +41,11 @@ public :
 
     YFont();
 
-    void setWeight( int weight );
-    void setItalic( bool enable );
-    void setUnderline( bool enable );
-    void setOverline( bool enable );
-    void setStrikeOut( bool enable );
+    void setWeight(int weight);
+    void setItalic(bool enable);
+    void setUnderline(bool enable);
+    void setOverline(bool enable);
+    void setStrikeOut(bool enable);
 
     bool bold() const;
     int weight() const;
@@ -54,10 +54,10 @@ public :
     bool overline() const;
     bool strikeOut() const;
 
-    bool operator!=( const YFont& color ) const;
-    bool operator==( const YFont& color ) const;
-	
-	YFont& operator=( const YFont& color );
+    bool operator!=(const YFont& color) const;
+    bool operator==(const YFont& color) const;
+
+    YFont& operator=(const YFont& color);
 
 private :
     int m_weight;

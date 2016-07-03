@@ -31,11 +31,11 @@ class QYNumberLabel : public QLabel
     Q_OBJECT
 
 public :
-    QYNumberLabel( const QFont& f );
+    QYNumberLabel(const QFont& f);
     virtual ~QYNumberLabel();
 
-    void setNumber( int n );
-    void setFont( const QFont& );
+    void setNumber(int n);
+    void setFont(const QFont&);
 };
 
 
@@ -44,16 +44,16 @@ class QYLineNumbers : public QWidget
     Q_OBJECT
 
 public :
-    QYLineNumbers( QYView* view );
+    QYLineNumbers(QYView* view);
     virtual ~QYLineNumbers();
 
-    void setLineNumber( int y, int h, int line );
-    void setMaxLineNumber( int line );
+    void setLineNumber(int y, int h, int line);
+    void setMaxLineNumber(int line);
 
-    void setFont( const QFont& f );
-    void scroll( int dy );
+    void setFont(const QFont& f);
+    void scroll(int dy);
 
-    void setLineCount( int lines );
+    void setLineCount(int lines);
 
 protected :
     QVBoxLayout* mRows;

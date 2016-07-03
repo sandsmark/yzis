@@ -35,22 +35,22 @@ public:
 
     static KTextEditor::Editor* self();
 
-    virtual KTextEditor::Document* createDocument( QObject *parent );
+    virtual KTextEditor::Document* createDocument(QObject *parent);
     virtual const QList<KTextEditor::Document*>& documents();
     virtual const KAboutData* aboutData() const;
-    virtual void readConfig( KConfig *config = 0 );
-    virtual void writeConfig( KConfig *config = 0 );
+    virtual void readConfig(KConfig *config = 0);
+    virtual void writeConfig(KConfig *config = 0);
 
     virtual bool configDialogSupported() const;
-    virtual void configDialog( QWidget *parent );
+    virtual void configDialog(QWidget *parent);
     virtual int configPages() const;
-    virtual KTextEditor::ConfigPage* configPage( int number, QWidget *parent );
-    virtual QString configPageName( int number ) const;
-    virtual QString configPageFullName( int number ) const;
-    virtual KIcon configPageIcon( int number ) const;
+    virtual KTextEditor::ConfigPage* configPage(int number, QWidget *parent);
+    virtual QString configPageName(int number) const;
+    virtual QString configPageFullName(int number) const;
+    virtual KIcon configPageIcon(int number) const;
 
 private:
-    KTEEditor (QObject *parent);
+    KTEEditor(QObject *parent);
 
     static KTEEditor* me;
     QList<KTextEditor::Document*> m_documents;

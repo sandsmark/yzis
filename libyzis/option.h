@@ -75,31 +75,31 @@ class YOptionValue
 public :
 
     /** Construct an option value linked to a YOption */
-    YOptionValue( YOption* o );
+    YOptionValue(YOption* o);
 
     /** Copy constructor */
-    YOptionValue( const YOptionValue& ov );
+    YOptionValue(const YOptionValue& ov);
 
     /** Destructor */
     ~YOptionValue();
 
     /** Assign option value from a boolean \p value */
-    void setBoolean( bool value );
+    void setBoolean(bool value);
 
     /** Assign option value from a string \p value */
-    void setString( const QString& value );
+    void setString(const QString& value);
 
     /** Assign option value from an int \p value */
-    void setInteger( int value );
+    void setInteger(int value);
 
     /** Assign option value from a list of string \p value */
-    void setList( const QStringList& value );
+    void setList(const QStringList& value);
 
     /** Assign option value from a dictionary \p value */
-    void setMap( const MapOption& value );
+    void setMap(const MapOption& value);
 
     /** Assign option value from a color \p value */
-    void setColor( const YColor& value );
+    void setColor(const YColor& value);
 
     bool boolean() const;           //!< boolean value of the option
     const QString& string() const;  //!< string value of the option
@@ -118,44 +118,44 @@ public :
 
     /** Convert a string into a boolen value.
       * Supported names are "true", "false", "on", "off", "yes", "no" */
-    static bool booleanFromString( bool* success, const QString& value );
+    static bool booleanFromString(bool* success, const QString& value);
     /** Convert a string into a string.
       * Does nothing but is here for consistency */
-    static QString stringFromString( bool* success, const QString& value );
+    static QString stringFromString(bool* success, const QString& value);
     /** Convert a string into an integer.
       * Note that decimals are not supported */
-    static int integerFromString( bool* success, const QString& value );
+    static int integerFromString(bool* success, const QString& value);
     /** Convert a string containing items separated by a comma into a list
       * of strings */
-    static QStringList listFromString( bool* success, const QString& value );
+    static QStringList listFromString(bool* success, const QString& value);
     /** Convert a dictionary containing items separated by a comma and
       * colon into a dictionary of strings */
-    static MapOption mapFromString( bool* success, const QString& value );
+    static MapOption mapFromString(bool* success, const QString& value);
     /** Convert a string into a color.
       * See YColor() for the ways of expressing a color with a string */
-    static YColor colorFromString( bool* success, const QString& value );
+    static YColor colorFromString(bool* success, const QString& value);
 
     /** Convert boolean into string.
       * \return true or false */
-    static QString booleanToString( bool value );
+    static QString booleanToString(bool value);
     /** Convert a string into a string.
       * Does actually nothing, is here only for consistency.
       * \return true or false */
-    static QString stringToString( const QString& value );
+    static QString stringToString(const QString& value);
     /** Convert an integer into a string.
       * See <a href="http://doc.trolltech.com/qt4/QString.html">QString
       * documentation</a> for the supported parameters. */
-    static QString integerToString( int value );
+    static QString integerToString(int value);
     /** Convert a list of strings into a string.
       * Separate each entry by a comma (",") */
-    static QString listToString( const QStringList& value );
+    static QString listToString(const QStringList& value);
     /** Convert a dictionary of strings into a string.
       * Separate each key-value pair by a comma (",") and each key
       * from its value by a colon (":") */
-    static QString mapToString( const MapOption& value );
+    static QString mapToString(const MapOption& value);
     /** Convert a color into a string.
       * See YColor() for the ways of expressing a color with a string */
-    static QString colorToString( const YColor& value );
+    static QString colorToString(const YColor& value);
 
 private :
     YOption* m_parent; //!< YOption() which stores this YOptionValue() */
@@ -170,7 +170,7 @@ private :
 
 /** A function that does something to a view or a buffer.
   * Used by YOption to apply an option action to an attached view or buffer */
-typedef void (*ApplyOptionMethod) ( YBuffer* b, YView* v );
+typedef void (*ApplyOptionMethod)(YBuffer* b, YView* v);
 
 /** Class holding a full option
   *
@@ -193,7 +193,7 @@ public :
       * \param m a method to apply different actions on an option
       * \param aliases a list of aliases
       */
-    YOption( const QString& name, yzis::OptContext ctx, yzis::OptScope scope, ApplyOptionMethod m, const QStringList& aliases );
+    YOption(const QString& name, yzis::OptContext ctx, yzis::OptScope scope, ApplyOptionMethod m, const QStringList& aliases);
 
     /** Destructor */
     virtual ~YOption();
@@ -211,20 +211,20 @@ public :
     YOptionValue* defaultValue();
 
     /**
-     * extract the option value from entry, if the value is correct, 
+     * extract the option value from entry, if the value is correct,
      * fill YOptionValue value with it and returns true, else returns false;
      */
-    virtual bool setValue( const QString& entry, YOptionValue* value ) = 0;
+    virtual bool setValue(const QString& entry, YOptionValue* value) = 0;
 
     /**
      * returns true if the entry match with our option
      */
-    virtual bool match( const QString& entry );
+    virtual bool match(const QString& entry);
 
     /** Apply the option.
       *
       * This calls the method that was defined in the constructor */
-    void apply( YBuffer* b = NULL, YView* v = NULL );
+    void apply(YBuffer* b = NULL, YView* v = NULL);
 
 private :
     QString m_name; //!< name of the option
@@ -237,7 +237,7 @@ protected :
     /**
            * Parse the text provided in entry and extract the action that is
            * contained in the option name and the value.
-           * 
+           *
            * Possible actions depending on entry are:
            * "myoption&"      --> reset the option myoption
            * "myoption+=data --> append data to myoption
@@ -251,7 +251,7 @@ protected :
            *
            * \return the value of the option (content of the option)
      */
-    QString readValue( const QString& entry, OptAction* action );
+    QString readValue(const QString& entry, OptAction* action);
 
     YOptionValue* v_default; //!< default value of the option
     QStringList m_allValues;  //!< XXX what is it for ?
@@ -264,20 +264,20 @@ class YOptionBoolean : public YOption
 public :
     /** Constructor.
       *
-      * \param name name of the option 
+      * \param name name of the option
       * \param v default value
       * \param ctx  context (session, buffer or view)
       * \param scope scope of the option (default, local, global)
       * \param m a method to apply different actions on an option
       * \param aliases a list of aliases
       */
-    YOptionBoolean( const QString& name, bool v, yzis::OptContext ctx, yzis::OptScope scope, ApplyOptionMethod m, const QStringList& aliases );
+    YOptionBoolean(const QString& name, bool v, yzis::OptContext ctx, yzis::OptScope scope, ApplyOptionMethod m, const QStringList& aliases);
 
     /** Destructor */
     virtual ~YOptionBoolean();
 
-    virtual bool match( const QString& entry );
-    virtual bool setValue( const QString& entry, YOptionValue* value );
+    virtual bool match(const QString& entry);
+    virtual bool setValue(const QString& entry, YOptionValue* value);
 };
 
 /** An option containing an integer */
@@ -286,7 +286,7 @@ class YOptionInteger : public YOption
 public :
     /** Constructor.
       *
-      * \param name name of the option 
+      * \param name name of the option
       * \param v default value
       * \param ctx  context (session, buffer or view)
       * \param scope scope of the option (default, local, global)
@@ -295,12 +295,12 @@ public :
       * \param min the mininum value taken by the option
       * \param max the maximum value taken by the option
       */
-    YOptionInteger( const QString& name, int v, yzis::OptContext ctx, yzis::OptScope scope, ApplyOptionMethod m, const QStringList& aliases, int min = INT_MIN, int max = INT_MAX );
+    YOptionInteger(const QString& name, int v, yzis::OptContext ctx, yzis::OptScope scope, ApplyOptionMethod m, const QStringList& aliases, int min = INT_MIN, int max = INT_MAX);
 
     /** Destructor */
     virtual ~YOptionInteger();
 
-    virtual bool setValue( const QString& entry, YOptionValue* value );
+    virtual bool setValue(const QString& entry, YOptionValue* value);
 
 private :
     int v_min; //!< the minimum value taken by the option
@@ -313,7 +313,7 @@ class YOptionString : public YOption
 public :
     /** Constructor.
       *
-      * \param name name of the option 
+      * \param name name of the option
       * \param v default value
       * \param ctx  context (session, buffer or view)
       * \param scope scope of the option (default, local, global)
@@ -321,11 +321,11 @@ public :
       * \param aliases a list of aliases
       * \param values XXX [not clear what it is used for]
       */
-    YOptionString( const QString& name, const QString& v, yzis::OptContext ctx, yzis::OptScope scope, ApplyOptionMethod m, const QStringList& aliases, const QStringList& values );
+    YOptionString(const QString& name, const QString& v, yzis::OptContext ctx, yzis::OptScope scope, ApplyOptionMethod m, const QStringList& aliases, const QStringList& values);
     /** Destructor */
     virtual ~YOptionString();
 
-    virtual bool setValue( const QString& entry, YOptionValue* value );
+    virtual bool setValue(const QString& entry, YOptionValue* value);
 };
 
 /** An option containing a list of strings */
@@ -334,7 +334,7 @@ class YOptionList : public YOption
 public :
     /** Constructor.
       *
-      * \param name name of the option 
+      * \param name name of the option
       * \param v default value
       * \param ctx  context (session, buffer or view)
       * \param scope scope of the option (default, local, global)
@@ -342,11 +342,11 @@ public :
       * \param aliases a list of aliases
       * \param values XXX [not clear what it is for]
       */
-    YOptionList( const QString& name, const QStringList& v, yzis::OptContext ctx, yzis::OptScope scope, ApplyOptionMethod m, const QStringList& aliases, const QStringList& values );
+    YOptionList(const QString& name, const QStringList& v, yzis::OptContext ctx, yzis::OptScope scope, ApplyOptionMethod m, const QStringList& aliases, const QStringList& values);
     /** Destructor */
     virtual ~YOptionList();
 
-    virtual bool setValue( const QString& entry, YOptionValue* value );
+    virtual bool setValue(const QString& entry, YOptionValue* value);
 };
 
 /** An option containing a dictionary with key and values being strings */
@@ -355,7 +355,7 @@ class YOptionMap : public YOption
 public :
     /** Constructor.
       *
-      * \param name name of the option 
+      * \param name name of the option
       * \param v default value
       * \param ctx  context (session, buffer or view)
       * \param scope scope of the option (default, local, global)
@@ -364,11 +364,11 @@ public :
       * \param keys [not clear what it is used for]
       * \param values [not clear what it is used for]
       */
-    YOptionMap( const QString& name, const MapOption& v, yzis::OptContext ctx, yzis::OptScope scope, ApplyOptionMethod m, const QStringList& aliases, QStringList keys, QStringList values );
+    YOptionMap(const QString& name, const MapOption& v, yzis::OptContext ctx, yzis::OptScope scope, ApplyOptionMethod m, const QStringList& aliases, QStringList keys, QStringList values);
     /** Destructor */
     virtual ~YOptionMap();
 
-    virtual bool setValue( const QString& entry, YOptionValue* value );
+    virtual bool setValue(const QString& entry, YOptionValue* value);
 private :
     QStringList m_allKeys; //!< XXX [not clear what it is used for]
 };
@@ -379,18 +379,18 @@ class YOptionColor : public YOption
 public :
     /** Constructor.
       *
-      * \param name name of the option 
+      * \param name name of the option
       * \param v default value
       * \param ctx  context (session, buffer or view)
       * \param scope scope of the option (default, local, global)
       * \param m a method to apply different actions on an option
       * \param aliases a list of aliases
       */
-    YOptionColor( const QString& name, const YColor& v, yzis::OptContext ctx, yzis::OptScope scope, ApplyOptionMethod m, const QStringList& aliases );
+    YOptionColor(const QString& name, const YColor& v, yzis::OptContext ctx, yzis::OptScope scope, ApplyOptionMethod m, const QStringList& aliases);
     /** Destructor */
     virtual ~YOptionColor();
 
-    virtual bool setValue( const QString& entry, YOptionValue* value );
+    virtual bool setValue(const QString& entry, YOptionValue* value);
 };
 
 #endif

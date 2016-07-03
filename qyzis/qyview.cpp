@@ -45,59 +45,51 @@
 #define dbg() yzDebug("QYView")
 #define err() yzError("QYView")
 
-QYView::QYView ( YBuffer* b, YSession * ysession)
-        : QWidget( ),
-          YView(b, ysession, 10, 10)
+QYView::QYView(YBuffer* b, YSession * ysession)
+    : QWidget(),
+      YView(b, ysession, 10, 10)
 {
-    mEdit = new QYEdit( this );
+    mEdit = new QYEdit(this);
     mStatusBar = new QYStatusBar(this);
-    mCommandLine = new QYCommandLine (this);
-    mVScroll = new QScrollBar( this);
-    connect( mVScroll, SIGNAL(sliderMoved(int)), this, SLOT(scrollView(int)) );
+    mCommandLine = new QYCommandLine(this);
+    mVScroll = new QScrollBar(this);
+    connect(mVScroll, SIGNAL(sliderMoved(int)), this, SLOT(scrollView(int)));
     //connect( mVScroll, SIGNAL(prevLine()), this, SLOT(scrollLineUp()) );
     //connect( mVScroll, SIGNAL(nextLine()), this, SLOT(scrollLineDown()) );
-
-    mStatusBar->setFocusProxy( mCommandLine );
-    mStatusBar->setFocusPolicy( Qt::ClickFocus );
-
+    mStatusBar->setFocusProxy(mCommandLine);
+    mStatusBar->setFocusPolicy(Qt::ClickFocus);
     mLineNumbers = new QYLineNumbers(this);
-
     QHBoxLayout* editorLayout = new QHBoxLayout();
     editorLayout->setMargin(0);
     editorLayout->setSpacing(0);
-    editorLayout->addWidget( mLineNumbers );
-    editorLayout->addWidget( mEdit );
-    editorLayout->addWidget( mVScroll );
-
-    QVBoxLayout* viewLayout = new QVBoxLayout( this );
+    editorLayout->addWidget(mLineNumbers);
+    editorLayout->addWidget(mEdit);
+    editorLayout->addWidget(mVScroll);
+    QVBoxLayout* viewLayout = new QVBoxLayout(this);
     viewLayout->setMargin(0);
     viewLayout->setSpacing(0);
-    viewLayout->addLayout( editorLayout );
-    viewLayout->addWidget( mCommandLine );
-    viewLayout->addWidget( mStatusBar );
-
+    viewLayout->addLayout(editorLayout);
+    viewLayout->addWidget(mCommandLine);
+    viewLayout->addWidget(mStatusBar);
     setupKeys();
-
-    mEdit->setSizePolicy( QSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding ) );
-
+    mEdit->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
     QSettings settings;
-    applyConfig( settings ); // XXX factory role
-
+    applyConfig(settings);   // XXX factory role
     mEdit->show();
     mStatusBar->show();
     mEdit->setFocus();
-    setFocusProxy( mEdit );
-    mVScroll->setMaximum( buffer()->lineCount() - 1 );
+    setFocusProxy(mEdit);
+    mVScroll->setMaximum(buffer()->lineCount() - 1);
 }
 
-QYView::~QYView ()
+QYView::~QYView()
 {
     dbg() << "~QYView() done" << endl;
 }
 
-void QYView::guiSetCommandLineText( const QString& text )
+void QYView::guiSetCommandLineText(const QString& text)
 {
-    mCommandLine->setText( text );
+    mCommandLine->setText(text);
 }
 
 QString QYView::guiGetCommandLineText() const
@@ -105,12 +97,12 @@ QString QYView::guiGetCommandLineText() const
     return mCommandLine->text();
 }
 
-void QYView::focusInEvent( QFocusEvent * )
+void QYView::focusInEvent(QFocusEvent *)
 {
     dbg() << "focusInEvent() for " << buffer()->fileNameShort() << endl;
 }
 
-void QYView::resizeEvent( QResizeEvent * )
+void QYView::resizeEvent(QResizeEvent *)
 {
     dbg() << "resizeEvent() for " << buffer()->fileNameShort() << endl;
 }
@@ -119,74 +111,77 @@ void QYView::guiSetFocusMainWindow()
 {
     dbg() << "setFocusMainWindow() for " << buffer()->fileNameShort() << endl;
     mEdit->setFocus();
-    mCommandLine->setEnabled( false );
+    mCommandLine->setEnabled(false);
 }
 
 void QYView::guiSetFocusCommandLine()
 {
     dbg() << "setFocusCommandLine()" << endl;
     mCommandLine->setFocus();
-    mCommandLine->setEnabled( true );
+    mCommandLine->setEnabled(true);
 }
 
-void QYView::guiScroll( int dx, int dy )
+void QYView::guiScroll(int dx, int dy)
 {
-	if ( dy >= getLinesVisible() ) {
-		guiPaintEvent(YSelection(YInterval(YCursor(0, 0), YCursor(getColumnsVisible()-1, getLinesVisible()-1))));
-	} else {
-		mEdit->scroll( dx, dy );
-		mLineNumbers->scroll( dy );
-		// TODO scroll QScrollBar
-	}
+    if(dy >= getLinesVisible()) {
+        guiPaintEvent(YSelection(YInterval(YCursor(0, 0), YCursor(getColumnsVisible() - 1, getLinesVisible() - 1))));
+    } else {
+        mEdit->scroll(dx, dy);
+        mLineNumbers->scroll(dy);
+        // TODO scroll QScrollBar
+    }
 }
 
-void QYView::setVisibleArea( int columns, int lines )
+void QYView::setVisibleArea(int columns, int lines)
 {
-    mLineNumbers->setLineCount( lines );
-    YView::setVisibleArea( columns, lines );
+    mLineNumbers->setLineCount(lines);
+    YView::setVisibleArea(columns, lines);
 }
 
 void QYView::guiSetup()
 {
     bool o_number = getLocalBooleanOption("number");
-    if ( o_number != mLineNumbers->isVisible() ) {
+
+    if(o_number != mLineNumbers->isVisible()) {
         mLineNumbers->setVisible(o_number);
     }
 }
 
-void QYView::guiNotifyContentChanged( const YSelection& s )
+void QYView::guiNotifyContentChanged(const YSelection& s)
 {
     dbg() << "guiNotifyContentChanged()" << endl;
     // content has changed, ask qt to repaint changed parts
-
     YSelectionMap m = s.map();
+
     // convert each interval to QWidget coordinates and update
-    for ( int i = 0; i < m.size(); ++i ) {
+    for(int i = 0; i < m.size(); ++i) {
         YInterval interval = m[i];
         QRect r;
-        if ( interval.fromPos().y() == interval.toPos().y() ) {
+
+        if(interval.fromPos().y() == interval.toPos().y()) {
             r = interval.boundingRect();
-            r.setBottom( r.bottom() + 1 );
-            r.setRight( r.right() + 1 );
+            r.setBottom(r.bottom() + 1);
+            r.setRight(r.right() + 1);
         } else {
             // XXX optimise : split into multiple qrect
-            r.setTop( interval.fromPos().y() );
-            r.setBottom( interval.toPos().y() + 1 );
-            r.setLeft( 0 );
-            r.setRight( getColumnsVisible() );
+            r.setTop(interval.fromPos().y());
+            r.setBottom(interval.toPos().y() + 1);
+            r.setLeft(0);
+            r.setRight(getColumnsVisible());
         }
+
         //  dbg() << "notifiyContentChanged: interval=" << interval.fromPos() << "," << interval.toPos()
         //     << ", r=" << r.topLeft() << "," << r.bottomRight();
-        r.setBottomRight( mEdit->translatePositionToReal( r.bottomRight() ) );
-        r.setTopLeft( mEdit->translatePositionToReal( r.topLeft() ) );
+        r.setBottomRight(mEdit->translatePositionToReal(r.bottomRight()));
+        r.setTopLeft(mEdit->translatePositionToReal(r.topLeft()));
         //  dbg() << " => " << r.topLeft() << "," << r.bottomRight() << endl;
-        mEdit->update( r );
+        mEdit->update(r);
     }
 }
 
 void QYView::guiPreparePaintEvent()
 {
-    mPainter = new QPainter( mEdit );
+    mPainter = new QPainter(mEdit);
 }
 void QYView::guiEndPaintEvent()
 {
@@ -194,76 +189,77 @@ void QYView::guiEndPaintEvent()
     mPainter = NULL;
 }
 
-void QYView::guiPaintEvent( const YSelection& s )
+void QYView::guiPaintEvent(const YSelection& s)
 {
-    YView::guiPaintEvent( s );
+    YView::guiPaintEvent(s);
 }
 
 /*
  * View painting methods
  */
-void QYView::guiDrawCell( YCursor pos, const YDrawCell& cell )
+void QYView::guiDrawCell(YCursor pos, const YDrawCell& cell)
 {
-    mEdit->guiDrawCell( pos, cell, mPainter );
+    mEdit->guiDrawCell(pos, cell, mPainter);
 }
-void QYView::guiDrawClearToEOL( YCursor pos, const YDrawCell& clearCell )
+void QYView::guiDrawClearToEOL(YCursor pos, const YDrawCell& clearCell)
 {
-    mEdit->guiDrawClearToEOL( pos, clearCell, mPainter );
+    mEdit->guiDrawClearToEOL(pos, clearCell, mPainter);
 }
-void QYView::guiDrawSetMaxLineNumber( int max )
+void QYView::guiDrawSetMaxLineNumber(int max)
 {
-    mVScroll->setMaximum( max );
-    mLineNumbers->setMaxLineNumber( max );
+    mVScroll->setMaximum(max);
+    mLineNumbers->setMaxLineNumber(max);
 }
-void QYView::guiDrawSetLineNumber( int y, int n, int h )
+void QYView::guiDrawSetLineNumber(int y, int n, int h)
 {
-    mLineNumbers->setLineNumber( y, h, n );
+    mLineNumbers->setLineNumber(y, h, n);
 }
 QChar QYView::currentChar() const
 {
     return buffer()->textline(viewCursor().line()).at(viewCursor().position());
 }
 
-void QYView::wheelEvent( QWheelEvent * e )
+void QYView::wheelEvent(QWheelEvent * e)
 {
-    if ( e->orientation() == Qt::Vertical ) {
-        int n = - ( e->delta() * mVScroll->singleStep() ) / 40; // WHEEL_DELTA(120) / 3 XXX
-        scrollView( topLine() + n );
+    if(e->orientation() == Qt::Vertical) {
+        int n = - (e->delta() * mVScroll->singleStep()) / 40;   // WHEEL_DELTA(120) / 3 XXX
+        scrollView(topLine() + n);
     } else {
         // TODO : scroll horizontally
     }
+
     e->accept();
 }
 
-void QYView::registerModifierKeys( const QString& keys )
+void QYView::registerModifierKeys(const QString& keys)
 {
-    mEdit->registerModifierKeys( keys );
+    mEdit->registerModifierKeys(keys);
 }
-void QYView::unregisterModifierKeys( const QString& keys )
+void QYView::unregisterModifierKeys(const QString& keys)
 {
-    mEdit->unregisterModifierKeys( keys );
+    mEdit->unregisterModifierKeys(keys);
 }
 
-void QYView::applyConfig( const QSettings& settings, bool refresh )
+void QYView::applyConfig(const QSettings& settings, bool refresh)
 {
-
     QFont defaultFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
     QFont user_font = settings.value("appearance/font", defaultFont).value<QFont>();
-    if ( !user_font.fixedPitch() ) {
+
+    if(!user_font.fixedPitch()) {
         user_font = defaultFont;
     }
-	YASSERT(user_font.fixedPitch());
-    mEdit->setFont( user_font );
-    mLineNumbers->setFont( user_font );
 
+    YASSERT(user_font.fixedPitch());
+    mEdit->setFont(user_font);
+    mLineNumbers->setFont(user_font);
     QPalette default_palette;
-    default_palette.setColor( QPalette::Window, Qt::black );
-    default_palette.setColor( QPalette::WindowText, Qt::white );
+    default_palette.setColor(QPalette::Window, Qt::black);
+    default_palette.setColor(QPalette::WindowText, Qt::white);
     QPalette my_palette = settings.value("appearance/palette", default_palette).value<QPalette>();
-    mEdit->setPalette( my_palette );
+    mEdit->setPalette(my_palette);
 
-    if ( refresh ) {
-        mEdit->updateArea( );
+    if(refresh) {
+        mEdit->updateArea();
     }
 }
 
@@ -274,18 +270,19 @@ void QYView::fileSave()
 
 void QYView::fileSaveAs()
 {
-    if ( guiPopupFileSaveAs() )
+    if(guiPopupFileSaveAs()) {
         buffer()->save();
+    }
 }
 
 void QYView::guiUpdateFileName()
 {
-    static_cast<QYSession*>(QYSession::self())->viewFilenameChanged( this, buffer()->fileNameShort() );
+    static_cast<QYSession*>(QYSession::self())->viewFilenameChanged(this, buffer()->fileNameShort());
 }
 
 void QYView::guiUpdateCursorPosition()
 {
-	int line_h = viewCursor().column() / getColumnsVisible();
+    int line_h = viewCursor().column() / getColumnsVisible();
     mEdit->setCursor(viewCursor().column() % getColumnsVisible(), viewCursor().line() + line_h);
 }
 
@@ -302,12 +299,16 @@ void QYView::guiHighlightingChanged()
 bool QYView::guiPopupFileSaveAs()
 {
     QString url = QFileDialog::getSaveFileName();
-    if ( url.isEmpty() ) return false; //canceled
 
-    if ( ! url.isEmpty() ) {
-        buffer()->setPath( url );
+    if(url.isEmpty()) {
+        return false;    //canceled
+    }
+
+    if(! url.isEmpty()) {
+        buffer()->setPath(url);
         return true;
     }
+
     return false;
 }
 
@@ -317,18 +318,21 @@ YStatusBarIface* QYView::guiStatusBar()
 }
 
 // scrolls the _view_ on a buffer and moves the cursor it scrolls off the screen
-void QYView::scrollView( int value )
+void QYView::scrollView(int value)
 {
-    if ( value < 0 ) value = 0;
-    else if ( value > buffer()->lineCount() - 1 )
+    if(value < 0) {
+        value = 0;
+    } else if(value > buffer()->lineCount() - 1) {
         value = buffer()->lineCount() - 1;
+    }
 
     // only redraw if the view actually moves
-    if (value != topLine()) {
+    if(value != topLine()) {
         scrollLineToTop(value);
-		gotoViewCursor(viewCursorFromScreen());
+        gotoViewCursor(viewCursorFromScreen());
 
-        if (!mVScroll->isSliderDown())
-            mVScroll->setValue( value );
+        if(!mVScroll->isSliderDown()) {
+            mVScroll->setValue(value);
+        }
     }
 }

@@ -91,7 +91,7 @@ public:
     /**
      * Notify GUIs that HL changed
      */
-    virtual void guiHighlightingChanged(void	) {} ;
+    virtual void guiHighlightingChanged(void) {} ;
 
     /** Notify GUIs that the selected text has changed (clipboard).
       *
@@ -103,7 +103,7 @@ public:
     /**
      * scroll dx to the right and dy downward
      */
-    virtual void guiScroll( int dx, int dy ) = 0;
+    virtual void guiScroll(int dx, int dy) = 0;
 
 
     //-------------------------------------------------------
@@ -117,7 +117,7 @@ public:
     /**
      * Sets the command line text
      */
-    virtual void guiSetCommandLineText( const QString& ) = 0;
+    virtual void guiSetCommandLineText(const QString&) = 0;
 
     /** Focus on the command line
      */
@@ -139,9 +139,9 @@ public:
     //-------------------------------------------------------
     //                  GUI Painting
     //-------------------------------------------------------
-	
-	/** setup user interface using options */
-	virtual void guiSetup() = 0;
+
+    /** setup user interface using options */
+    virtual void guiSetup() = 0;
 
     /** Notify gui that the following content has changed.
       *
@@ -149,7 +149,7 @@ public:
       *
       * XXX This needs more doc.
       */
-    virtual void guiNotifyContentChanged( const YSelection& s ) = 0;
+    virtual void guiNotifyContentChanged(const YSelection& s) = 0;
 
     /** Inform GUI that a paint event is going to arrive. */
     virtual void guiPreparePaintEvent() = 0;
@@ -158,13 +158,13 @@ public:
     virtual void guiEndPaintEvent() = 0;
 
     /** XXX to be written */
-    virtual void guiDrawCell( YCursor pos, const YDrawCell& cell ) = 0;
+    virtual void guiDrawCell(YCursor pos, const YDrawCell& cell) = 0;
 
     /** XXX to be written */
-    virtual void guiDrawClearToEOL( YCursor pos, const YDrawCell& clearCell ) = 0;
+    virtual void guiDrawClearToEOL(YCursor pos, const YDrawCell& clearCell) = 0;
 
     /** XXX to be written */
-    virtual void guiDrawSetMaxLineNumber( int max ) = 0;
+    virtual void guiDrawSetMaxLineNumber(int max) = 0;
 
     /*!
      * This method is called by libyzis to change the line
@@ -173,7 +173,7 @@ public:
      * @arg n the actual number to display
      * @arg h line height, starting at 0
      */
-    virtual void guiDrawSetLineNumber( int y, int n, int h ) = 0;
+    virtual void guiDrawSetLineNumber(int y, int n, int h) = 0;
 
     //-------------------------------------------------------
     // ----------------- Misc

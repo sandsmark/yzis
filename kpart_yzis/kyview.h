@@ -28,10 +28,10 @@ class KYView : public QYView
 {
     Q_OBJECT
 public:
-    KYView( YBuffer* doc);
+    KYView(YBuffer* doc);
     virtual ~KYView();
 
-	virtual void guiUpdateFileName();
+    virtual void guiUpdateFileName();
 };
 
 #endif // YZIS_PART_VIEW_H

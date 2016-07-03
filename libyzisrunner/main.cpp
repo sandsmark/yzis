@@ -30,19 +30,13 @@
 
 int main(int argc, char **argv)
 {
-    YSession::initDebug( argc, argv );
-
-    QCoreApplication *app = new QCoreApplication( argc, argv );
-
+    YSession::initDebug(argc, argv);
+    QCoreApplication *app = new QCoreApplication(argc, argv);
     NoGuiSession::createInstance();
-
-    YSession::self()->parseCommandLine( argc, argv );
-    QTimer::singleShot(0, static_cast<NoGuiSession*>( YSession::self() ), SLOT(frontendGuiReady()) );
-
+    YSession::self()->parseCommandLine(argc, argv);
+    QTimer::singleShot(0, static_cast<NoGuiSession*>(YSession::self()), SLOT(frontendGuiReady()));
     app->exec();
-
-    yzDebug("liyzisrunner::main() - app finished!" );
-
+    yzDebug("liyzisrunner::main() - app finished!");
     return 0;
 }
 

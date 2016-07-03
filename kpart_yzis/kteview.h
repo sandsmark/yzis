@@ -46,7 +46,7 @@ public:
     virtual QPoint cursorPositionCoordinates() const;
     virtual bool mouseTrackingEnabled() const;
     virtual bool setMouseTrackingEnabled(bool enable);
-    virtual bool setSelection ( const KTextEditor::Range &range );
+    virtual bool setSelection(const KTextEditor::Range &range);
     virtual bool selection() const;
     virtual const KTextEditor::Range& selectionRange() const;
     virtual QString selectionText() const;
@@ -55,18 +55,18 @@ public:
     virtual bool setBlockSelection(bool on);
     virtual bool blockSelection() const;
 signals:
-    void focusIn (KTextEditor::View *view);
-    void focusOut (KTextEditor::View *view);
-    void viewModeChanged (KTextEditor::View *view);
-    void viewEditModeChanged (KTextEditor::View *view, enum KTextEditor::View::EditMode mode);
-    void informationMessage (KTextEditor::View *view, const QString &message);
-    void textInserted (KTextEditor::View *view, const KTextEditor::Cursor &position, const QString &text);
-    void contextMenuAboutToShow (KTextEditor::View *view, QMenu *menu);
-    void cursorPositionChanged (KTextEditor::View *view, const KTextEditor::Cursor &newPosition);
-    void verticalScrollPositionChanged (KTextEditor::View *view, const KTextEditor::Cursor &newPos);
-    void horizontalScrollPositionChanged (KTextEditor::View *view);
-    void mousePositionChanged (KTextEditor::View *view, const KTextEditor::Cursor &newPosition);
-    void selectionChanged (KTextEditor::View *view);
+    void focusIn(KTextEditor::View *view);
+    void focusOut(KTextEditor::View *view);
+    void viewModeChanged(KTextEditor::View *view);
+    void viewEditModeChanged(KTextEditor::View *view, enum KTextEditor::View::EditMode mode);
+    void informationMessage(KTextEditor::View *view, const QString &message);
+    void textInserted(KTextEditor::View *view, const KTextEditor::Cursor &position, const QString &text);
+    void contextMenuAboutToShow(KTextEditor::View *view, QMenu *menu);
+    void cursorPositionChanged(KTextEditor::View *view, const KTextEditor::Cursor &newPosition);
+    void verticalScrollPositionChanged(KTextEditor::View *view, const KTextEditor::Cursor &newPos);
+    void horizontalScrollPositionChanged(KTextEditor::View *view);
+    void mousePositionChanged(KTextEditor::View *view, const KTextEditor::Cursor &newPosition);
+    void selectionChanged(KTextEditor::View *view);
 
 private:
     KTEDocument* m_doc;

@@ -39,24 +39,19 @@
 
 int main(int argc, char **argv)
 {
-    YSession::initDebug( argc, argv );
-
+    YSession::initDebug(argc, argv);
     // ==============[ Create application ]=============
     QApplication app(argc, argv);
     app.setOrganizationName("Yzis");
     app.setOrganizationDomain("yzis.org");
     app.setApplicationName("QYzis");
-
     // ==============[ create session ]=============
     QYSession * session = new QYSession();
     session->show();
-
-    YSession::self()->parseCommandLine( argc, argv );
+    YSession::self()->parseCommandLine(argc, argv);
     //YSession::self()->frontendGuiReady();
-    QTimer::singleShot(0, session, SLOT(slotFrontendGuiReady()) );
-
+    QTimer::singleShot(0, session, SLOT(slotFrontendGuiReady()));
     // ==============[ let's rock ]=============
-
     return app.exec();
 }
 

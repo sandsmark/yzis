@@ -62,7 +62,7 @@ public:
 
     /** \brief Create a regexp (based on QRegexp)
            *
-     * \b Arguments: 
+     * \b Arguments:
            * - string: the regexp expression
            *
      * \b Returns: a table that can be used as a regexp object.
@@ -78,7 +78,7 @@ public:
 
     /** \brief Match a regexp with a string.
            *
-     * \b Argument: 
+     * \b Argument:
            * - string: the string to match
            *
      * \b Returns: true if matched, false else
@@ -94,7 +94,7 @@ public:
 
     /** \brief Match a regexp with a string, return index
            *
-     * \b Arguments: 
+     * \b Arguments:
            * - string: the string to match
            *
            * \b Returns: the index of the match if any or -1 if there was no
@@ -111,11 +111,11 @@ public:
 
     /** \brief Return positions of the matches in the string.
            *
-     * \b Arguments: 
+     * \b Arguments:
            * - number: index of the match for which we want the position (0 is
            * for the whole Regexp).
            *
-     * \b Returns: The position of the regexp being matched, or -1 
+     * \b Returns: The position of the regexp being matched, or -1
            * if nothing matched at that position.
            *
            * <b>Lua code example</b>
@@ -146,7 +146,7 @@ public:
 
     /** \brief Returns the text captured by the regexp
            *
-     * \b Arguments: 
+     * \b Arguments:
            * - number: index of match (0 for the whole regexp)
            *
            * \b Returns: string, text matched at the index or empty string.
@@ -160,7 +160,7 @@ public:
            * assertEquals( re:captured(2),  'bb' )
            * assertEquals( re:captured(3),  'cc' )
            * assertEquals( re:captured(4),  '' )
-           * 
+           *
            * assertEquals( re:match( '  aacc  ' ), true )
            * assertEquals( re:captured(0),  'aacc' )
            * assertEquals( re:captured(1),  'aa' )
@@ -177,7 +177,7 @@ public:
     /** \brief Returns a string where the occurrences of Regexp have been
      * replaced by the provided string.
            *
-     * \b Arguments: 
+     * \b Arguments:
      * - string: text to be replaced
      * - string: a replacement string (which can use \\1)
            *
@@ -211,7 +211,7 @@ public:
 
     /** \brief Set regexp greediness
            *
-     * \b Arguments: 
+     * \b Arguments:
            * - bool: true will choose minimum greediness, false will choose
            * maximum greediness
            *
@@ -231,7 +231,7 @@ public:
 
     /** \brief Set regexp case sensitiveness
            *
-     * \b Arguments: 
+     * \b Arguments:
            * - bool: true for case sensitive regexp, false for non case
            * sensitive.
            *

@@ -50,27 +50,27 @@ public:
 
     /** Creates valid color from a rgb triplet.
       * \sa setRgb() */
-    YColor( QRgb rgb );
+    YColor(QRgb rgb);
 
-    YColor( Qt::GlobalColor color );
+    YColor(Qt::GlobalColor color);
 
     /** Creates color from a rgb triplet as a string
       * \sa setNamedColor() */
-    YColor( const QString &name )
+    YColor(const QString &name)
     {
-        setNamedColor( name );
+        setNamedColor(name);
     }
 
-    void setRgb( QRgb );
+    void setRgb(QRgb);
     /**
      * @arg name can take the form:
      * "#RGB" or "#RRGGBB"
-     * 
+     *
      * #123 yields the color #112233
            *
            * If the format is not correct, the color will remain invalid.
      */
-    void setNamedColor( const QString &name );
+    void setNamedColor(const QString &name);
 
     /** Return whether the color is valid.
       *
@@ -93,10 +93,10 @@ public:
     int green() const;
     int blue() const;
 
-    bool operator!=( const YColor& color ) const;
-    bool operator==( const YColor& color ) const;
-	
-	YColor& operator=( const YColor& color );
+    bool operator!=(const YColor& color) const;
+    bool operator==(const YColor& color) const;
+
+    YColor& operator=(const YColor& color);
 
 private:
 

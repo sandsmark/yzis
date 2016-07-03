@@ -59,15 +59,15 @@ public:
     // ===============[ GUI interface of Yzis ]===================
     bool guiQuit(int errorCode);
     void guiSplitHorizontally(YView *view);
-    void guiPopupMessage( const QString& message );
+    void guiPopupMessage(const QString& message);
     bool guiPromptYesNo(const QString& title, const QString& message);
     int guiPromptYesNoCancel(const QString& title, const QString& message);
-    virtual void guiSetClipboardText( const QString& text, Clipboard::Mode mode );
-    YView *guiCreateView( YBuffer* buffer );
-    void guiDeleteView( YView *view );
-    void guiChangeCurrentView( YView* );
+    virtual void guiSetClipboardText(const QString& text, Clipboard::Mode mode);
+    YView *guiCreateView(YBuffer* buffer);
+    void guiDeleteView(YView *view);
+    void guiChangeCurrentView(YView*);
 
-    void viewFilenameChanged( QYView * view, const QString & filename );
+    void viewFilenameChanged(QYView * view, const QString & filename);
 
 
 private slots:
@@ -82,8 +82,8 @@ private slots:
     */
     void slotFrontendGuiReady();
 
-protected: 
-    void openURL( const QString & );
+protected:
+    void openURL(const QString &);
     void setupActions();
     void applyConfig();
     void closeView();
@@ -93,10 +93,10 @@ protected:
 
 };
 
-YDebugStream& operator<<( YDebugStream& out, const Qt::KeyboardModifiers & v );
-YDebugStream& operator<<( YDebugStream& out, const QSize & sz );
-YDebugStream& operator<<( YDebugStream& out, const QResizeEvent & e );
-YDebugStream& operator<<( YDebugStream& out, const Qt::FocusReason & e );
+YDebugStream& operator<<(YDebugStream& out, const Qt::KeyboardModifiers & v);
+YDebugStream& operator<<(YDebugStream& out, const QSize & sz);
+YDebugStream& operator<<(YDebugStream& out, const QResizeEvent & e);
+YDebugStream& operator<<(YDebugStream& out, const Qt::FocusReason & e);
 
 
 #endif // QYZIS_H

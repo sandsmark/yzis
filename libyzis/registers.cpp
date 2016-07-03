@@ -26,13 +26,13 @@
 YRegisters::YRegisters()
 {}
 
-void YRegisters::setRegister( QChar c, const QStringList& value )
+void YRegisters::setRegister(QChar c, const QStringList& value)
 {
     mRegisters[ c ] = value;
-    dbg() << "setRegister : " << QString( c ) << " Value : " << value << endl;
+    dbg() << "setRegister : " << QString(c) << " Value : " << value << endl;
 }
 
-QStringList& YRegisters::getRegister( QChar c )
+QStringList& YRegisters::getRegister(QChar c)
 {
     return  /*( QStringList& )*/mRegisters[ c ];
 }

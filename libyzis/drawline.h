@@ -31,43 +31,50 @@
 class YDrawCell;
 
 
-class YZIS_EXPORT YDrawLine : public QList<YDrawCell> {
+class YZIS_EXPORT YDrawLine : public QList<YDrawCell>
+{
 public :
-	YDrawLine();
-	virtual ~YDrawLine();
+    YDrawLine();
+    virtual ~YDrawLine();
 
-    void setFont( const YFont& f );
-    void setColor( const YColor& c );
-    void setBackgroundColor( const YColor& c );
-	// TODO: setOutline
+    void setFont(const YFont& f);
+    void setColor(const YColor& c);
+    void setBackgroundColor(const YColor& c);
+    // TODO: setOutline
 
-	void clear();
+    void clear();
 
-    int step( const QString& c );
-	void flush();
+    int step(const QString& c);
+    void flush();
 
-	YDrawSection arrange( int columns ) const;
+    YDrawSection arrange(int columns) const;
 
-	inline int width() const { return mWidth; }
-	inline int length() const { return mLength; }
+    inline int width() const
+    {
+        return mWidth;
+    }
+    inline int length() const
+    {
+        return mLength;
+    }
 
 private:
 
-	/* current cell */
+    /* current cell */
     YDrawCell mCur;
     /* working cell */
     YDrawCell* mCell;
 
-	int mWidth;
-	int mLength;
+    int mWidth;
+    int mLength;
 
     bool changed;
 
-	friend class YDrawBuffer;
-	friend class YDrawBufferIterator;
-    friend YZIS_EXPORT YDebugStream& operator<< ( YDebugStream& out, const YDrawLine& dl );
+    friend class YDrawBuffer;
+    friend class YDrawBufferIterator;
+    friend YZIS_EXPORT YDebugStream& operator<< (YDebugStream& out, const YDrawLine& dl);
 };
-extern YZIS_EXPORT YDebugStream& operator<< ( YDebugStream& out, const YDrawLine& dl );
+extern YZIS_EXPORT YDebugStream& operator<< (YDebugStream& out, const YDrawLine& dl);
 
 
 #endif

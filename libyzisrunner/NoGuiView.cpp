@@ -25,9 +25,9 @@
 #define dbg() yzDebug("NoGuiView")
 
 NoGuiView::NoGuiView(YBuffer *buf, YSession *sess, int cols, int lines)
-        : YView(buf, sess, cols, lines)
+    : YView(buf, sess, cols, lines)
 {
-    dbg().SPrintf("NoGuiView( %s, cols=%d, lines=%d )", qp(buf->toString()), cols, lines );
+    dbg().SPrintf("NoGuiView( %s, cols=%d, lines=%d )", qp(buf->toString()), cols, lines);
 }
 
 uint NoGuiView::getCursorX()
@@ -56,7 +56,7 @@ uint NoGuiView::getCursorCol()
 
 // Reimplemented to please compilation
 
-void NoGuiView::guiSetCommandLineText( const QString& text)
+void NoGuiView::guiSetCommandLineText(const QString& text)
 {
     // dbg() << "NoGuiView::guiSetCommandLineText( text='" << text << "') \n";
     mCommandLine = text;
@@ -78,26 +78,26 @@ QString NoGuiView::guiGetCommandLineText() const
     return mCommandLine;
 }
 
-void NoGuiView::invalidateLine( unsigned int )
+void NoGuiView::invalidateLine(unsigned int)
 {
     dbg() << "NoGuiView::invalidateLine" << endl;
 }
 
-void NoGuiView::refreshScreen( )
+void NoGuiView::refreshScreen()
 {
     dbg() << "NoGuiView::refreshScreen" << endl;
 }
 
-void NoGuiView::paintEvent( unsigned int /*curx*/, unsigned int /*cury*/, unsigned int /*curw*/, unsigned int /*curh*/ )
+void NoGuiView::paintEvent(unsigned int /*curx*/, unsigned int /*cury*/, unsigned int /*curw*/, unsigned int /*curh*/)
 {
     dbg() << "NoGuiView::paintEvent" << endl;
 }
 
-void NoGuiView::scrollUp( int )
+void NoGuiView::scrollUp(int)
 {
     dbg() << "NoGuiView::scrollUp" << endl;
 }
-void NoGuiView::scrollDown( int )
+void NoGuiView::scrollDown(int)
 {
     dbg() << "NoGuiView::scrollDown" << endl;
 }
@@ -107,17 +107,17 @@ void NoGuiView::registerModifierKeys(const QString& s)
     return ;
 }
 
-void NoGuiView::paintEvent( const YSelection& )
+void NoGuiView::paintEvent(const YSelection&)
 {
     dbg() << "NoGuiView::paintEvent( )" << endl;
 }
 
-void NoGuiView::guiScroll( int dx, int dy )
+void NoGuiView::guiScroll(int dx, int dy)
 {
     dbg() << "NoGuiView::Scroll" << dx << dy << endl;
 }
 
-void NoGuiView::guiNotifyContentChanged( const YSelection& )
+void NoGuiView::guiNotifyContentChanged(const YSelection&)
 {
     dbg() << "NoGuiView::guiNotifyContentChanged" << endl;
 }
@@ -150,7 +150,7 @@ void NoGuiView::guiUpdateCursorPosition()
 {
     dbg() << HERE() << endl;
 }
-void NoGuiView::guiDisplayInfo( const QString& )
+void NoGuiView::guiDisplayInfo(const QString&)
 {
     dbg() << HERE() << endl;
 }

@@ -26,84 +26,89 @@
 
 // ====================[ QYNumberLabel ]=====================
 
-QYNumberLabel::QYNumberLabel( const QFont& f ) : QLabel()
+QYNumberLabel::QYNumberLabel(const QFont& f) : QLabel()
 {
-    setAlignment( Qt::AlignVCenter | Qt::AlignRight );
+    setAlignment(Qt::AlignVCenter | Qt::AlignRight);
     setAutoFillBackground(true);
     QPalette p = palette();
-    p.setColor( QPalette::Window, Qt::black );
-    p.setColor( QPalette::WindowText, Qt::yellow );
+    p.setColor(QPalette::Window, Qt::black);
+    p.setColor(QPalette::WindowText, Qt::yellow);
     setPalette(p);
     setFont(f);
 }
 QYNumberLabel::~QYNumberLabel()
 {}
-void QYNumberLabel::setNumber( int n )
+void QYNumberLabel::setNumber(int n)
 {
-    setText( ' ' + QString::number(n) + ' ' );
+    setText(' ' + QString::number(n) + ' ');
 }
-void QYNumberLabel::setFont( const QFont& f )
+void QYNumberLabel::setFont(const QFont& f)
 {
-    setFixedHeight( QFontMetrics(f).lineSpacing() );
-    QLabel::setFont( f );
+    setFixedHeight(QFontMetrics(f).lineSpacing());
+    QLabel::setFont(f);
 }
 
 // ====================[ QYLineNumbers ]=====================
 
-QYLineNumbers::QYLineNumbers( QYView* view )
-        : QWidget( view )
+QYLineNumbers::QYLineNumbers(QYView* view)
+    : QWidget(view)
 {
     setAutoFillBackground(true);
     QPalette p = palette();
-    p.setColor( QPalette::Window, Qt::black );
-    p.setColor( QPalette::WindowText, Qt::yellow );
+    p.setColor(QPalette::Window, Qt::black);
+    p.setColor(QPalette::WindowText, Qt::yellow);
     setPalette(p);
-    mRows = new QVBoxLayout( this );
+    mRows = new QVBoxLayout(this);
     mRows->setSpacing(0);
     mRows->setMargin(0);
-	setVisible(false);
+    setVisible(false);
 }
 QYLineNumbers::~QYLineNumbers()
 {}
 
-void QYLineNumbers::setLineCount( int lines )
+void QYLineNumbers::setLineCount(int lines)
 {
     setUpdatesEnabled(false);
-    if ( mRows->count() > lines ) {
+
+    if(mRows->count() > lines) {
         QLayoutItem* row;
-        while ( (row = mRows->takeAt(lines)) ) {
+
+        while((row = mRows->takeAt(lines))) {
             delete row;
         }
     } else {
-        for ( int i = mRows->count(); i < lines; ++i ) {
-            mRows->addWidget( new QYNumberLabel( font() ) );
+        for(int i = mRows->count(); i < lines; ++i) {
+            mRows->addWidget(new QYNumberLabel(font()));
         }
     }
+
     setUpdatesEnabled(true);
 }
 
-void QYLineNumbers::setFont( const QFont& f )
+void QYLineNumbers::setFont(const QFont& f)
 {
-    QWidget::setFont( f );
-    for ( int i = 0; i < mRows->count(); ++i ) {
+    QWidget::setFont(f);
+
+    for(int i = 0; i < mRows->count(); ++i) {
         static_cast<QYNumberLabel*>(mRows->itemAt(i)->widget())->setFont(f);
     }
 }
 
-void QYLineNumbers::scroll( int dy )
+void QYLineNumbers::scroll(int dy)
 {
     setUpdatesEnabled(false);
-    if ( dy < 0 ) {
-        for ( int i = dy; i < 0; ++i ) {
+
+    if(dy < 0) {
+        for(int i = dy; i < 0; ++i) {
             // remove top
             QWidget* w = mRows->itemAt(0)->widget();
             mRows->removeWidget(w);
             delete w;
             // add empty bot
-            mRows->addWidget( new QYNumberLabel( font() ) );
+            mRows->addWidget(new QYNumberLabel(font()));
         }
-    } else if ( dy > 0 ) {
-        for ( int i = 0; i < dy; ++i ) {
+    } else if(dy > 0) {
+        for(int i = 0; i < dy; ++i) {
             // remove bot
             QWidget* w = mRows->itemAt(mRows->count() - 1)->widget();
             mRows->removeWidget(w);
@@ -112,20 +117,22 @@ void QYLineNumbers::scroll( int dy )
             mRows->insertWidget(0, new QYNumberLabel(font()));
         }
     }
+
     setUpdatesEnabled(true);
 }
 
-void QYLineNumbers::setLineNumber( int y, int h, int line )
+void QYLineNumbers::setLineNumber(int y, int h, int line)
 {
     QYNumberLabel* n = static_cast<QYNumberLabel*>(mRows->itemAt(y)->widget());
-    if ( h == 0 && line > 0 ) {
-        n->setNumber( line );
+
+    if(h == 0 && line > 0) {
+        n->setNumber(line);
     } else {
         n->clear();
     }
 }
 
-void QYLineNumbers::setMaxLineNumber( int line )
+void QYLineNumbers::setMaxLineNumber(int line)
 {
-    setFixedWidth( fontMetrics().width( ' ' + QString::number(line) + ' ' ) );
+    setFixedWidth(fontMetrics().width(' ' + QString::number(line) + ' '));
 }

@@ -17,18 +17,18 @@ Copyright (c) 2004-2005 Mickael Marchand <marchand@kde.org>
 */
 
 #ifndef NYZ_VIEW_H
-#define NYZ_VIEW_H 
+#define NYZ_VIEW_H
 /**
  * ncurses-based GUI for yzis
  */
 
 /* Std */
-// This define is needed on Macinotsh. Else the ncurses wide char API 
+// This define is needed on Macinotsh. Else the ncurses wide char API
 // is not exported
 #ifndef _XOPEN_SOURCE_EXTENDED
 #define _XOPEN_SOURCE_EXTENDED
 #endif
-#include <ncurses.h> 
+#include <ncurses.h>
 // This is an ugly hack preventing the compiler to choke on scroll (used in
 // both Qt API and (as a macro!) in ncurses
 #define curses_scroll scroll
@@ -64,24 +64,24 @@ public:
     {
         return commandline;
     }
-    virtual void guiSetCommandLineText( const QString& );
+    virtual void guiSetCommandLineText(const QString&);
     virtual void guiSetup();
-    virtual void guiPaintEvent( const YSelection& drawMap );
+    virtual void guiPaintEvent(const YSelection& drawMap);
 
-    void guiScroll( int dx, int dy );
+    void guiScroll(int dx, int dy);
 
     /**
       * Used when this view becomes viewable, that
       * is on front of others
       */
-    void map( void );
+    void map(void);
     /**
       * This view is not the front one anymore, hide it
       */
-    void unmap( void );
-    virtual void registerModifierKeys( const QString& )
+    void unmap(void);
+    virtual void registerModifierKeys(const QString&)
     { }
-    virtual void unregisterModifierKeys( const QString& )
+    virtual void unregisterModifierKeys(const QString&)
     { }
 
     bool guiPopupFileSaveAs();
@@ -103,15 +103,15 @@ protected :
 public slots:
 
 protected :
-    virtual void guiDrawCell( YCursor pos, const YDrawCell& cell );
+    virtual void guiDrawCell(YCursor pos, const YDrawCell& cell);
 
-    virtual void guiNotifyContentChanged( const YSelection& s );
+    virtual void guiNotifyContentChanged(const YSelection& s);
 
     void guiPreparePaintEvent();
     void guiEndPaintEvent();
-    virtual void guiDrawClearToEOL( YCursor pos, const YDrawCell& cell );
-    virtual void guiDrawSetMaxLineNumber( int max );
-    virtual void guiDrawSetLineNumber( int y, int n, int h );
+    virtual void guiDrawClearToEOL(YCursor pos, const YDrawCell& cell);
+    virtual void guiDrawSetMaxLineNumber(int max);
+    virtual void guiDrawSetLineNumber(int y, int n, int h);
 
     bool fakeLine; /* true if current line is a fake one (eg: ~) */
 

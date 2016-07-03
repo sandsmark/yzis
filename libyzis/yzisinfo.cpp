@@ -54,7 +54,7 @@ class YInfoCursor;
 YInfo::YInfo()
 {
     dbg() << HERE() << endl;
-    mYzisinfo.setFileName( resourceMgr()->findResource( WritableConfigResource, "yzisinfo" ) );
+    mYzisinfo.setFileName(resourceMgr()->findResource(WritableConfigResource, "yzisinfo"));
     mYzisinfoInitialized = false;
 }
 
@@ -62,10 +62,10 @@ YInfo::YInfo()
  * Constructor
  */
 
-YInfo::YInfo( const QString & path )
+YInfo::YInfo(const QString & path)
 {
     dbg() << HERE() << endl;
-    mYzisinfo.setFileName( path );
+    mYzisinfo.setFileName(path);
 }
 
 /**
@@ -85,27 +85,27 @@ void YInfo::read(void)
 {
     dbg() << HERE() << endl;
 
-    if ( mYzisinfoInitialized ) {
+    if(mYzisinfoInitialized) {
         return ;
     }
 
-    if ( mYzisinfo.open( QIODevice::ReadOnly ) ) {
-        QTextStream stream( &mYzisinfo );
+    if(mYzisinfo.open(QIODevice::ReadOnly)) {
+        QTextStream stream(&mYzisinfo);
         QString line;
 
-        while ( !stream.atEnd() ) {
+        while(!stream.atEnd()) {
             line = stream.readLine(); // line of text excluding '\n'
             line = line.trimmed();
 
             // Ignore empty lines
 
-            if ( line.isEmpty() ) {
+            if(line.isEmpty()) {
                 continue;
             }
 
             // Ignore comment lines
 
-            if ( line.startsWith("#") ) {
+            if(line.startsWith("#")) {
                 continue;
             }
 
@@ -113,52 +113,48 @@ void YInfo::read(void)
             // a) Not a comment
             // b) Not empty
             // So split it into a list using whitespace as the separator
+            QStringList list = line.split(QRegExp("\\s"));
 
-            QStringList list = line.split( QRegExp( "\\s" ));
-
-            if ( list[0] == "hlsearch" ) {
-                bool on = (list[1] == "on" );
-                YSession::self()->getOptions()->setOptionFromString( &on, "hlsearch" );
+            if(list[0] == "hlsearch") {
+                bool on = (list[1] == "on");
+                YSession::self()->getOptions()->setOptionFromString(&on, "hlsearch");
             }
 
-            if ( list[0].startsWith(":") || list[0] == "command_list" ) {
+            if(list[0].startsWith(":") || list[0] == "command_list") {
                 YModeEx *ex = YSession::self()->getExPool();
                 YZHistory *history = ex->getHistory();
-
-                history->addEntry( (list.join(" ")).remove(0, 1) );
+                history->addEntry((list.join(" ")).remove(0, 1));
             }
 
-            if ( list[0].startsWith("?") || list[0] == "search_list" ) {
+            if(list[0].startsWith("?") || list[0] == "search_list") {
                 YModeSearch *search = dynamic_cast<YModeSearch*>(YSession::self()->getModes()[ YMode::ModeSearch ]);
                 YZHistory *history = search->getHistory();
-
-                history->addEntry( (list.join(" ")).remove(0, 1) );
+                history->addEntry((list.join(" ")).remove(0, 1));
             }
 
-            if ( list[0].startsWith(">") || list[0] == "start_position" ) {
-                mStartPosition.push_back( new YInfoStartPositionRecord( list[3], YCursor(list[1].toInt(), list[2].toInt())) );
+            if(list[0].startsWith(">") || list[0] == "start_position") {
+                mStartPosition.push_back(new YInfoStartPositionRecord(list[3], YCursor(list[1].toInt(), list[2].toInt())));
             }
 
-            if ( list[0].startsWith("_") || list[0] == "search_history" ) {
-                mJumpList.push_back( new YInfoJumpListRecord( list[3], QPoint (list[1].toInt(), list[2].toInt())) );
+            if(list[0].startsWith("_") || list[0] == "search_history") {
+                mJumpList.push_back(new YInfoJumpListRecord(list[3], QPoint(list[1].toInt(), list[2].toInt())));
                 mCurrentJumpListItem++;
             }
 
-            if ( list[0].startsWith("\"") ) {
+            if(list[0].startsWith("\"")) {
                 QChar key = list[0].at(1);
-
                 QString line;
                 QStringList contents;
                 int length = list[3].toInt();
 
-                if ( list[1] == "CHAR" ) {
-                    for ( int i = 0; i < length; ++i ) {
+                if(list[1] == "CHAR") {
+                    for(int i = 0; i < length; ++i) {
                         contents << stream.readLine();
                     }
                 } else {
                     contents << QString::null;
 
-                    for ( int i = 0; i < length; ++i ) {
+                    for(int i = 0; i < length; ++i) {
                         contents << stream.readLine();
                     }
 
@@ -167,11 +163,12 @@ void YInfo::read(void)
 
                 dbg() << "Key:<" << key << ">" << endl;
                 dbg() << "Length:<" << contents.size() << ">" << endl;
-                for ( int i = 0; i < contents.size(); ++i ) {
+
+                for(int i = 0; i < contents.size(); ++i) {
                     dbg() << "<" << contents.at(i) << ">" << endl;
                 }
 
-                YSession::self()->setRegister( key, contents );
+                YSession::self()->setRegister(key, contents);
             }
         }
 
@@ -187,21 +184,21 @@ void YInfo::read(void)
  * YInfo::updateStartPosition
  */
 
-void YInfo::updateStartPosition( const YBuffer *buffer, const YCursor cursor)
+void YInfo::updateStartPosition(const YBuffer *buffer, const YCursor cursor)
 {
     bool found = false;
 
-    for ( StartPositionVector::Iterator it = mStartPosition.begin(); it != mStartPosition.end(); ++it ) {
-        if ( (*it)->filename() == buffer->fileName() ) {
+    for(StartPositionVector::Iterator it = mStartPosition.begin(); it != mStartPosition.end(); ++it) {
+        if((*it)->filename() == buffer->fileName()) {
             found = true;
             mStartPosition.erase(it);
-            mStartPosition.push_back( new YInfoStartPositionRecord( buffer->fileName(), cursor ) );
+            mStartPosition.push_back(new YInfoStartPositionRecord(buffer->fileName(), cursor));
             return ;
         }
     }
 
-    if ( ! found ) {
-        mStartPosition.push_back( new YInfoStartPositionRecord( buffer->fileName(), cursor ) );
+    if(! found) {
+        mStartPosition.push_back(new YInfoStartPositionRecord(buffer->fileName(), cursor));
     }
 
     return ;
@@ -211,21 +208,21 @@ void YInfo::updateStartPosition( const YBuffer *buffer, const YCursor cursor)
  * YInfo::updateJumpList
  */
 
-void YInfo::updateJumpList( const YBuffer *buffer, const QPoint pos )
+void YInfo::updateJumpList(const YBuffer *buffer, const QPoint pos)
 {
     bool found = false;
 
-    for ( JumpListVector::Iterator it = mJumpList.begin(); it != mJumpList.end(); ++it ) {
-        if ( (*it)->filename() == buffer->fileName() ) {
-            if ( (*it)->position() == pos) {
+    for(JumpListVector::Iterator it = mJumpList.begin(); it != mJumpList.end(); ++it) {
+        if((*it)->filename() == buffer->fileName()) {
+            if((*it)->position() == pos) {
                 found = true;
                 break;
             }
         }
     }
 
-    if ( ! found ) {
-        mJumpList.push_back( new YInfoJumpListRecord( buffer->fileName(), pos ) );
+    if(! found) {
+        mJumpList.push_back(new YInfoJumpListRecord(buffer->fileName(), pos));
     }
 
     return ;
@@ -238,46 +235,40 @@ void YInfo::updateJumpList( const YBuffer *buffer, const QPoint pos )
 void YInfo::write()
 {
     dbg() << HERE() << endl;
-    if ( mYzisinfo.open( QIODevice::WriteOnly ) ) {
-        QTextStream write( &mYzisinfo );
-        write.setCodec( QTextCodec::codecForName("utf8"));
-        // Write header
 
+    if(mYzisinfo.open(QIODevice::WriteOnly)) {
+        QTextStream write(&mYzisinfo);
+        write.setCodec(QTextCodec::codecForName("utf8"));
+        // Write header
         write << "# This yzisinfo file was generated by Yzis " << VERSION_CHAR << "." << endl;
         write << "# You may edit it if you're careful!" << endl;
         write << endl;
-
         // Write whether hlsearch is on or off
-
         write << "# Set hlsearch on or off:" << endl;
         write << "hlsearch ";
-        if ( YSession::self()->getBooleanOption( "hlsearch") ) {
+
+        if(YSession::self()->getBooleanOption("hlsearch")) {
             write << "on" << endl;
         } else {
             write << "off" << endl;
         }
-        write << endl;
 
+        write << endl;
         write << "# Command Line History (oldest to newest):" << endl;
-        saveExHistory( write );
+        saveExHistory(write);
         write << endl;
-
         write << "# Search String History (oldest to newest):" << endl;
-        saveSearchHistory( write );
+        saveSearchHistory(write);
         write << endl;
-
         write << "# Position to start at when opening file (oldest to newest):" << endl;
-        saveStartPosition( write );
+        saveStartPosition(write);
         write << endl;
-
         write << "# Jump list (oldest to newest):" << endl;
-        saveJumpList( write );
+        saveJumpList(write);
         write << endl;
-
         write << "# Registers:" << endl;
-        saveRegistersList( write );
+        saveRegistersList(write);
         write << endl;
-
         mYzisinfo.close();
     }
 }
@@ -286,41 +277,40 @@ void YInfo::write()
  * YInfo::saveExHistory
  */
 
-void YInfo::saveExHistory( QTextStream & write )
+void YInfo::saveExHistory(QTextStream & write)
 {
     dbg() << HERE() << endl;
     YZHistory *history = YSession::self()->getExPool()->getHistory();
-    history->writeToStream( write );
+    history->writeToStream(write);
 }
 
 /**
  * YInfo::saveSearchHistory
  */
 
-void YInfo::saveSearchHistory( QTextStream & write )
+void YInfo::saveSearchHistory(QTextStream & write)
 {
     dbg() << HERE() << endl;
-    YModeSearch *search = dynamic_cast<YModeSearch*>(YSession::self()->getModes()[ YMode::ModeSearch ] );
+    YModeSearch *search = dynamic_cast<YModeSearch*>(YSession::self()->getModes()[ YMode::ModeSearch ]);
     YZHistory *history = search->getHistory();
-    history->writeToStream( write );
+    history->writeToStream(write);
 }
 
 /**
  * YInfo::saveStartPosition
  */
 
-void YInfo::saveStartPosition( QTextStream & write )
+void YInfo::saveStartPosition(QTextStream & write)
 {
     dbg() << HERE() << endl;
-
     int start = 0;
     int end = mStartPosition.count();
 
-    if ( end > 100 ) {
+    if(end > 100) {
         start = end - 100;
     }
 
-    for ( int i = start; i < end; ++i ) {
+    for(int i = start; i < end; ++i) {
         write << "> ";
         dbg() << (mStartPosition[i])->position().x();
         write << (mStartPosition[i])->position().x();
@@ -337,18 +327,17 @@ void YInfo::saveStartPosition( QTextStream & write )
  * YZYsisinfo::saveJumpList
  */
 
-void YInfo::saveJumpList( QTextStream & write )
+void YInfo::saveJumpList(QTextStream & write)
 {
     dbg() << HERE() << endl;
-
     int start = 0;
     int end = mJumpList.count();
 
-    if ( end > 100 ) {
+    if(end > 100) {
         start = end - 100;
     }
 
-    for ( int i = start; i < end; ++i ) {
+    for(int i = start; i < end; ++i) {
         write << "_" << " ";
         write << mJumpList[i]->position().x();
         write << " ";
@@ -362,25 +351,23 @@ void YInfo::saveJumpList( QTextStream & write )
  * YInfo::saveRegisters
  */
 
-void YInfo::saveRegistersList( QTextStream & write )
+void YInfo::saveRegistersList(QTextStream & write)
 {
     dbg() << HERE() << endl;
-
     QList<QChar> list = YSession::self()->getRegisters();
 
-    for ( int i = 0; i < list.size(); ++i ) {
-        QStringList contents = YSession::self()->getRegister( list.at(i) );
-
+    for(int i = 0; i < list.size(); ++i) {
+        QStringList contents = YSession::self()->getRegister(list.at(i));
         write << "\"" << list.at(i) << " ";
 
-        if ( contents.size() >= 3 ) {
+        if(contents.size() >= 3) {
             write << "LINE  " << contents.size() - 2 << endl;
         } else {
             write << "CHAR  " << contents.size() << endl;
         }
 
-        for ( int j = 0; j < contents.size(); ++j ) {
-            if ( ( contents.at(j) ).isNull() ) {
+        for(int j = 0; j < contents.size(); ++j) {
+            if((contents.at(j)).isNull()) {
                 continue;
             }
 
@@ -393,30 +380,28 @@ void YInfo::saveRegistersList( QTextStream & write )
  * YInfo::startPosition
  */
 
-YCursor YInfo::startPosition( const QString& filename ) const
+YCursor YInfo::startPosition(const QString& filename) const
 {
-
-    for ( StartPositionVector::ConstIterator it = mStartPosition.begin(); it != mStartPosition.end(); ++it ) {
-        if ( (*it)->filename() == filename ) {
+    for(StartPositionVector::ConstIterator it = mStartPosition.begin(); it != mStartPosition.end(); ++it) {
+        if((*it)->filename() == filename) {
             return (*it)->position();
         }
     }
 
     return YCursor(0, 0);
 }
-YCursor YInfo::startPosition( const YBuffer *buffer ) const
+YCursor YInfo::startPosition(const YBuffer *buffer) const
 {
-    return startPosition( buffer->fileName() );
+    return startPosition(buffer->fileName());
 }
 
 /**
  * YInfo::searchPosition
  */
 
-YCursor YInfo::searchPosition( const YBuffer * )
+YCursor YInfo::searchPosition(const YBuffer *)
 {
-
-    for ( JumpListVector::Iterator it = mJumpList.begin(); it != mJumpList.end(); ++it ) {
+    for(JumpListVector::Iterator it = mJumpList.begin(); it != mJumpList.end(); ++it) {
         /*if ( (*it)->filename() == buffer->fileName() ) {
          return (*it)->previousSearchPosition();
         }*/
@@ -427,14 +412,13 @@ YCursor YInfo::searchPosition( const YBuffer * )
 
 const YCursor YInfo::previousJumpPosition()
 {
-
     bool found = false;
     bool repeating = false;
 
-    while ( true ) {
-        if ( mCurrentJumpListItem == 0 ) {
+    while(true) {
+        if(mCurrentJumpListItem == 0) {
             // Make sure we don't end up in a endless loop
-            if ( repeating ) {
+            if(repeating) {
                 break;
             }
 
@@ -444,13 +428,13 @@ const YCursor YInfo::previousJumpPosition()
 
         --mCurrentJumpListItem;
 
-        if ( mJumpList[mCurrentJumpListItem]->filename() == YSession::self()->currentView()->buffer()->fileName() ) {
+        if(mJumpList[mCurrentJumpListItem]->filename() == YSession::self()->currentView()->buffer()->fileName()) {
             found = true;
             break;
         }
     }
 
-    if ( found ) {
+    if(found) {
         return mJumpList[mCurrentJumpListItem]->position();
     } else {
         return YSession::self()->currentView()->getRowColumnCursor();

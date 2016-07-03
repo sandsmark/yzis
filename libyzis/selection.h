@@ -25,7 +25,7 @@
 #include <QString>
 #include <QRect>
 
-#include "cursor.h" 
+#include "cursor.h"
 /**
  * Boundary of an interval that either belongs to it or not
  *
@@ -36,25 +36,25 @@
  * many methods (copy, paste, selections, rendering, etc...), the 'from' and 'to'
  * positions are sometimes included and sometimes excluded.  Using an YBound make
  * it explicit.
- 
+
  * Another use is, by example, in visual mode : [(0,0), (0,1)[ will select line 0
  * entirely without have to calculate line length.
  */
 class YZIS_EXPORT YBound
 {
 public:
-    YBound( const YBound& bound ) : mPos( bound.pos() )
+    YBound(const YBound& bound) : mPos(bound.pos())
     {
         mOpen = bound.opened();
     }
-    explicit YBound( const YCursor pos, bool open = false ) : mPos( pos )
+    explicit YBound(const YCursor pos, bool open = false) : mPos(pos)
     {
         mOpen = open;
     }
     YBound()
     {}
 
-    void setPos( const YCursor pos )
+    void setPos(const YCursor pos)
     {
         mPos = pos;
     }
@@ -69,16 +69,16 @@ private:
     bool mOpen;
 };
 
-bool operator==( const YBound& left, const YBound& right );
-bool operator>( const YBound& left, const YBound& right );
-bool operator<( const YBound& left, const YBound& right );
-bool operator>=( const YBound& left, const YBound& right );
-bool operator<=( const YBound& left, const YBound& right );
-bool operator>=( const YBound& left, const YCursor right );
-bool operator<=( const YBound& left, const YCursor right );
-bool operator>=( const YCursor left, const YBound& right );
-bool operator<=( const YCursor left, const YBound& right );
-const YBound operator-( const YBound& left, const YCursor right );
+bool operator==(const YBound& left, const YBound& right);
+bool operator>(const YBound& left, const YBound& right);
+bool operator<(const YBound& left, const YBound& right);
+bool operator>=(const YBound& left, const YBound& right);
+bool operator<=(const YBound& left, const YBound& right);
+bool operator>=(const YBound& left, const YCursor right);
+bool operator<=(const YBound& left, const YCursor right);
+bool operator>=(const YCursor left, const YBound& right);
+bool operator<=(const YCursor left, const YBound& right);
+const YBound operator-(const YBound& left, const YCursor right);
 
 /**
  * An interval between two @ref YBound "YBounds"
@@ -88,58 +88,58 @@ const YBound operator-( const YBound& left, const YCursor right );
 class YZIS_EXPORT YInterval
 {
 
-    friend YDebugStream& operator<<( YDebugStream& out, const YInterval& i );
+    friend YDebugStream& operator<<(YDebugStream& out, const YInterval& i);
 
 public:
-    YInterval( const YBound& from, const YBound& to ) : mFrom( from ), mTo( to )
+    YInterval(const YBound& from, const YBound& to) : mFrom(from), mTo(to)
     {}
-    YInterval( const YCursor from, const YCursor to ) : mFrom( from ), mTo( to )
+    YInterval(const YCursor from, const YCursor to) : mFrom(from), mTo(to)
     {}
-    YInterval( const YBound& from, const YCursor to ) : mFrom( from ), mTo( to )
+    YInterval(const YBound& from, const YCursor to) : mFrom(from), mTo(to)
     {}
-    YInterval( const YCursor from, const YBound& to ) : mFrom( from ), mTo( to )
+    YInterval(const YCursor from, const YBound& to) : mFrom(from), mTo(to)
     {}
-    YInterval( const QRect& r ) : mFrom( YCursor(r.left(), r.top()) ), mTo( YCursor(r.right(), r.bottom()) )
+    YInterval(const QRect& r) : mFrom(YCursor(r.left(), r.top())), mTo(YCursor(r.right(), r.bottom()))
     {}
-    YInterval() : mFrom(YCursor(0,0)), mTo(YCursor(0,0),true)
+    YInterval() : mFrom(YCursor(0, 0)), mTo(YCursor(0, 0), true)
     {}
 
-    void setFrom( const YBound& bound );
-    void setTo( const YBound& bound );
+    void setFrom(const YBound& bound);
+    void setTo(const YBound& bound);
     const YBound& from() const;
     const YBound& to() const;
 
-    void setFromPos( const YCursor pos );
-    void setToPos( const YCursor pos );
+    void setFromPos(const YCursor pos);
+    void setToPos(const YCursor pos);
     const YCursor fromPos() const;
     const YCursor toPos() const;
 
-    bool contains( const YCursor pos ) const;
-    bool contains( const YBound& pos ) const;
-    bool contains( const YInterval& i ) const;
+    bool contains(const YCursor pos) const;
+    bool contains(const YBound& pos) const;
+    bool contains(const YInterval& i) const;
 
-	YCursor closedStartCursor() const;
-	YCursor closedEndCursor( int column_max ) const;
-	YCursor openedEndCursor() const;
+    YCursor closedStartCursor() const;
+    YCursor closedEndCursor(int column_max) const;
+    YCursor openedEndCursor() const;
 
-	/*
-	 * @param i : interval to check with
-	 * @returns true if there is common part between the two intervals
-	 */
-	bool overlap( const YInterval& i ) const;
+    /*
+     * @param i : interval to check with
+     * @returns true if there is common part between the two intervals
+     */
+    bool overlap(const YInterval& i) const;
 
-	YInterval intersection( const YInterval& i ) const;
-	bool valid() const;
+    YInterval intersection(const YInterval& i) const;
+    bool valid() const;
 
     QRect boundingRect() const;
 
-	QString toString() const;
+    QString toString() const;
 
 private:
     YBound mFrom;
     YBound mTo;
 };
-YZIS_EXPORT const YInterval operator-( const YInterval& l, const YCursor r );
+YZIS_EXPORT const YInterval operator-(const YInterval& l, const YCursor r);
 
 typedef QMap<unsigned int, YInterval> YSelectionMap;
 
@@ -149,26 +149,26 @@ typedef QMap<unsigned int, YInterval> YSelectionMap;
 class YZIS_EXPORT YSelection
 {
 
-    friend YZIS_EXPORT YDebugStream& operator<<( YDebugStream& out, const YSelection& s );
+    friend YZIS_EXPORT YDebugStream& operator<<(YDebugStream& out, const YSelection& s);
 
 public:
     YSelection();
-    YSelection( const QString& name );
-    YSelection( const YInterval& i );
+    YSelection(const QString& name);
+    YSelection(const YInterval& i);
 
     YSelectionMap map() const;
-    void setMap( const YSelectionMap& m );
+    void setMap(const YSelectionMap& m);
 
-    void addMap( const YSelectionMap& m );
-    void addInterval( const YInterval& i );
-    void delInterval( const YInterval& i );
-    bool contains( const YCursor pos ) const;
+    void addMap(const YSelectionMap& m);
+    void addInterval(const YInterval& i);
+    void delInterval(const YInterval& i);
+    bool contains(const YCursor pos) const;
 
     bool isEmpty() const;
 
     void clear();
 
-    YSelection clip( const YInterval& bound ) const;
+    YSelection clip(const YInterval& bound) const;
 
     QRect boundingRect() const;
 
@@ -176,14 +176,14 @@ public:
      * operators
      */
     /* shift the entier selection */
-    const YSelection operator-( const YCursor pos ) const;
+    const YSelection operator-(const YCursor pos) const;
 
-    static YSelection diff( const YSelection& _m1, const YSelection& _m2 );
+    static YSelection diff(const YSelection& _m1, const YSelection& _m2);
 
 private:
-    void insertInterval( unsigned int pos, const YInterval& interval );
-    void removeInterval( unsigned int pos, unsigned int len );
-    int locatePosition( const YBound& pos, bool* isSelected ) const;
+    void insertInterval(unsigned int pos, const YInterval& interval);
+    void removeInterval(unsigned int pos, unsigned int len);
+    int locatePosition(const YBound& pos, bool* isSelected) const;
 
     QString mName;
     YSelectionMap mMap;

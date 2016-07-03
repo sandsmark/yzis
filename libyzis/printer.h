@@ -32,14 +32,14 @@ class YZPrinter /*: public QPrinter*/
 {
 
 public:
-    YZPrinter( YView *view );
+    YZPrinter(YView *view);
 
-    void printToFile( const QString& path );
-    void run( );
+    void printToFile(const QString& path);
+    void run();
 
 private:
     /* methods */
-    void doPrint( );
+    void doPrint();
     void convertColor(const QColor& c, double &r, double &g, double &b);
 
     /* members */

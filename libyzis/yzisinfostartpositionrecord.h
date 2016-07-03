@@ -25,8 +25,8 @@
 
 /**
  * Class YInfoStartPositionRecord
- * 
- * Class that holds the details about where to position the cursor in a 
+ *
+ * Class that holds the details about where to position the cursor in a
  * given file when opening it.
  */
 
@@ -41,12 +41,12 @@ public:
 
     /**
      * Constructor
-     * 
+     *
      * @param filename The filename of the current file
-     * @param c The cursor for the start position in the current file 
+     * @param c The cursor for the start position in the current file
      */
 
-    YInfoStartPositionRecord( const QString & filename, const YCursor c );
+    YInfoStartPositionRecord(const QString & filename, const YCursor c);
 
 
 
@@ -60,16 +60,16 @@ public:
      * The copy constructor
      */
 
-    YInfoStartPositionRecord( YInfoStartPositionRecord & copy );
+    YInfoStartPositionRecord(YInfoStartPositionRecord & copy);
 
     /**
      * Assignment operator
-     * 
+     *
      * @param copy The YInfoStartPositionRecord instance to use for the
      *             assignment
      */
 
-    YInfoStartPositionRecord & operator=( YInfoStartPositionRecord & copy );
+    YInfoStartPositionRecord & operator=(YInfoStartPositionRecord & copy);
 
     /**
      * Returns the current filename
@@ -85,19 +85,19 @@ public:
 
     /**
      * Sets the current filename
-     * 
+     *
      * @param filename The name of the current file
      */
 
-    void setFilename( const QString & filename );
+    void setFilename(const QString & filename);
 
     /**
      * Sets the current position in the current file
-     * 
-     * @param c The cursor position 
+     *
+     * @param c The cursor position
      */
 
-    void setPosition( const YCursor c)
+    void setPosition(const YCursor c)
     {
         mPosition = c ;
     }

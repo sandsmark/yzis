@@ -54,7 +54,7 @@ enum CmdState {
     CmdQuit,
 };
 
-YZIS_EXPORT YDebugStream& operator<<( YDebugStream& out, const CmdState & state );
+YZIS_EXPORT YDebugStream& operator<<(YDebugStream& out, const CmdState & state);
 
 /**
  * Abstract class for modes
@@ -81,18 +81,18 @@ public:
 
     virtual void init();
     virtual void initModifierKeys();
-    virtual void enter( YView* mView );
-    virtual void leave( YView* mView );
-    virtual CmdState execCommand( YView* mView, const YKeySequence & keys, 
-                                  YKeySequence::const_iterator &parsePos ) = 0;
+    virtual void enter(YView* mView);
+    virtual void leave(YView* mView);
+    virtual CmdState execCommand(YView* mView, const YKeySequence & keys,
+                                 YKeySequence::const_iterator &parsePos) = 0;
 
-    virtual void cursorMoved( YView* mView );
+    virtual void cursorMoved(YView* mView);
 
     ModeType modeType() const;
     const QString& toString() const;
     yzis::MapMode mapMode() const;
     bool registered() const;
-    void setRegistered( bool registered );
+    void setRegistered(bool registered);
     QStringList modifierKeys() const;
 
 
@@ -131,9 +131,9 @@ public:
     /**
      * Input Method
      */
-    virtual void imBegin( YView* mView );
-    virtual void imCompose( YView* mView, const QString& entry );
-    virtual void imEnd( YView* mView, const QString& entry );
+    virtual void imBegin(YView* mView);
+    virtual void imCompose(YView* mView, const QString& entry);
+    virtual void imEnd(YView* mView, const QString& entry);
 
 protected:
     ModeType mType;
@@ -147,7 +147,7 @@ protected:
     bool mRegistered;
 };
 
-YZIS_EXPORT YDebugStream& operator<<( YDebugStream& out, const YMode::ModeType & type );
+YZIS_EXPORT YDebugStream& operator<<(YDebugStream& out, const YMode::ModeType & type);
 
 
 /**
@@ -159,9 +159,9 @@ public:
     YModeIntro();
     virtual ~YModeIntro() {}
 
-    void enter( YView* mView );
-    void leave( YView* mView );
-    CmdState execCommand( YView* mView, const YKeySequence& key, YKeySequence::const_iterator &parsePos );
+    void enter(YView* mView);
+    void leave(YView* mView);
+    CmdState execCommand(YView* mView, const YKeySequence& key, YKeySequence::const_iterator &parsePos);
 
 };
 

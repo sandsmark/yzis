@@ -1,6 +1,6 @@
 /*  This file is part of the Yzis libraries
 *  Copyright (C) 2004 Loic Pauleve <panard@inzenet.org>
-*  Copyright (C) 2004-2005 Mickael Marchand <mikmak@yzis.org> 
+*  Copyright (C) 2004-2005 Mickael Marchand <mikmak@yzis.org>
 *
 *  This library is free software; you can redistribute it and/or
 *  modify it under the terms of the GNU Library General Public
@@ -45,19 +45,19 @@ class YZIS_EXPORT YDocMark
 {
 
 public:
-    YDocMark( )
+    YDocMark()
     {}
 
-    void clear( )
+    void clear()
     {
         marker.clear();
     }
 
-    void add( uint line, uint mark );
-    void del( uint line, uint mark );
-    void del( uint line );
+    void add(uint line, uint mark);
+    void del(uint line, uint mark);
+    void del(uint line);
 
-    uint get( uint line ) const;
+    uint get(uint line) const;
 
     const YDocMarker &getMarker() const
     {

@@ -50,24 +50,28 @@ void YResourceMgr::initConfig()
     QString yzisSuffix = ".yzis";
     bool isTmpDir = false;
     mYzisUserDir = QDir::homePath() + "/" + yzisSuffix + "/";
-    QDir yzisUserDir( mYzisUserDir );
-    if (! yzisUserDir.exists() ) {
-        dbg().SPrintf("User dir does not exist, creating it: %s", qp(mYzisUserDir) );
+    QDir yzisUserDir(mYzisUserDir);
+
+    if(! yzisUserDir.exists()) {
+        dbg().SPrintf("User dir does not exist, creating it: %s", qp(mYzisUserDir));
         yzisUserDir.cdUp();
-        if (! yzisUserDir.mkdir( yzisSuffix )) {
+
+        if(! yzisUserDir.mkdir(yzisSuffix)) {
             isTmpDir = true;
             mYzisUserDir = QDir::tempPath() + "/";
             err() << "initConfig(): could not create yzis user directory, falling back on " << mYzisUserDir;
         }
     }
-    yzisUserDir.setPath( mYzisUserDir );
-    if ( (!QFileInfo(mYzisUserDir).isWritable()) && (!isTmpDir) ) {
+
+    yzisUserDir.setPath(mYzisUserDir);
+
+    if((!QFileInfo(mYzisUserDir).isWritable()) && (!isTmpDir)) {
         mYzisUserDir = QDir::tempPath() + "/";
         err() << "initConfig(): yzis user directory is not writable, falling back on " << mYzisUserDir;
         isTmpDir = true;
     }
 
-    if ((! QFileInfo(mYzisUserDir).isWritable() )) {
+    if((! QFileInfo(mYzisUserDir).isWritable())) {
         err() << "initConfig(): yzis user directory " << mYzisUserDir << " is not writable, falling back on " << mYzisUserDir;
         err() << "initConfig(): Yzis will not function properly" << endl;
     }
@@ -75,39 +79,46 @@ void YResourceMgr::initConfig()
     dbg() << "initConfig(): yzis user directory set to " << mYzisUserDir << endl;
 }
 
-QString YResourceMgr::findResource( ResourceType type, const QString & fname )
+QString YResourceMgr::findResource(ResourceType type, const QString & fname)
 {
     QString resource;
     QStringList dirCandidates;
-
     dbg() << "findResource(" << type << ", " << fname << ")" << endl;
 
     // Writable config is always in the config subdir
-    if (type == WritableConfigResource) {
+    if(type == WritableConfigResource) {
         resource = mYzisUserDir + fname;
         return resource;
     }
 
     // UserScriptResource may be an absolute path
-    if (QFileInfo(fname).isAbsolute()) {
+    if(QFileInfo(fname).isAbsolute()) {
         dbg() << "findResource(): looking up absolute path: " << fname << endl;
-        if (QFile::exists( fname )) return fname;
+
+        if(QFile::exists(fname)) {
+            return fname;
+        }
+
         return QString();
     }
 
     // look up in the different directories
-    dirCandidates = resourceDirList( type );
+    dirCandidates = resourceDirList(type);
 
-    foreach( QString candidate, dirCandidates ) {
+    foreach(QString candidate, dirCandidates) {
         resource = candidate + fname;
         dbg() << "findResource(): looking up " << resource << endl;
-        if (QFile::exists( resource )) {
+
+        if(QFile::exists(resource)) {
             dbg() << "findResource(): Found at " << resource << endl;
             return resource;
         }
-        if ( !resource.endsWith(".lua") )
+
+        if(!resource.endsWith(".lua")) {
             resource += ".lua";
-        if (QFile::exists( resource )) {
+        }
+
+        if(QFile::exists(resource)) {
             dbg() << "findResource(): Found at " << resource << endl;
             return resource;
         }
@@ -117,50 +128,78 @@ QString YResourceMgr::findResource( ResourceType type, const QString & fname )
     return QString();
 }
 
-QStringList YResourceMgr::resourceDirList( ResourceType type )
+QStringList YResourceMgr::resourceDirList(ResourceType type)
 {
     QStringList dirCandidates;
-
     QString subdir;
-    switch ( type ) {
+
+    switch(type) {
     case IndentResource:
         subdir = "/scripts/indent/";
         break;
+
     case SyntaxHlResource:
         subdir = "/syntax/";
         break;
+
     case ConfigScriptResource:
     case UserScriptResource:
         subdir = "/scripts/";
         break;
+
     case ConfigResource:
     case WritableConfigResource:
         subdir = "/";
         break;
+
     default:
-        err().SPrintf( "Unknown resource type requested: %d\n", (int) type );
+        err().SPrintf("Unknown resource type requested: %d\n", (int) type);
         return dirCandidates;
     }
 
-    if (type == UserScriptResource) dirCandidates << "./";
+    if(type == UserScriptResource) {
+        dirCandidates << "./";
+    }
+
     dirCandidates << mYzisUserDir + subdir;
     char * s = getenv("YZISHOME");
-    if (s != NULL) dirCandidates << (s + subdir);
-    dirCandidates << QString( PREFIX ) + "/share/yzis/" + subdir;
 
+    if(s != NULL) {
+        dirCandidates << (s + subdir);
+    }
+
+    dirCandidates << QString(PREFIX) + "/share/yzis/" + subdir;
     return dirCandidates;
 }
 
-YDebugStream& operator<<( YDebugStream& out, const ResourceType & type )
+YDebugStream& operator<<(YDebugStream& out, const ResourceType & type)
 {
-    switch ( type ) {
-    case IndentResource: out << "IndentResource"; break;
-    case SyntaxHlResource: out << "SyntaxHlResource"; break;
-    case ConfigScriptResource: out << "ConfigScriptResource"; break;
-    case UserScriptResource: out << "UserScriptResource"; break;
-    case ConfigResource: out << "ConfigResource"; break;
-    case WritableConfigResource: out << "WritableConfigResource"; break;
+    switch(type) {
+    case IndentResource:
+        out << "IndentResource";
+        break;
+
+    case SyntaxHlResource:
+        out << "SyntaxHlResource";
+        break;
+
+    case ConfigScriptResource:
+        out << "ConfigScriptResource";
+        break;
+
+    case UserScriptResource:
+        out << "UserScriptResource";
+        break;
+
+    case ConfigResource:
+        out << "ConfigResource";
+        break;
+
+    case WritableConfigResource:
+        out << "WritableConfigResource";
+        break;
     }
+
     return out;
 }
 

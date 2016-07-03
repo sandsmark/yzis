@@ -24,7 +24,7 @@
 
 #include <libyzis/buffer.h>
 
-KTEDocument::KTEDocument( QObject* /*parent*/ )
+KTEDocument::KTEDocument(QObject* /*parent*/)
 {
     m_buffer = KYSession::self()->createBuffer();
 }
@@ -39,10 +39,10 @@ KTextEditor::Editor* KTEDocument::editor()
     return KTEEditor::self();
 }
 
-KTextEditor::View* KTEDocument::createView( QWidget* parent )
+KTextEditor::View* KTEDocument::createView(QWidget* parent)
 {
-    KTEView* view = new KTEView( this, parent );
-    emit viewCreated( this, view );
+    KTEView* view = new KTEView(this, parent);
+    emit viewCreated(this, view);
     return view;
 }
 
@@ -60,10 +60,10 @@ const QList<KTextEditor::View*>& KTEDocument::views() const
 bool KTEDocument::openFile()
 {
     m_buffer->clearText();
-    emit textRemoved( this, documentRange() );
-    m_buffer->load( localFilePath() );
-    emit textInserted( this, documentRange() );
-    emit documentUrlChanged( this );
+    emit textRemoved(this, documentRange());
+    m_buffer->load(localFilePath());
+    emit textInserted(this, documentRange());
+    emit documentUrlChanged(this);
     return true;
 }
 
@@ -84,7 +84,7 @@ QString KTEDocument::mimeType()
     return QString();
 }
 
-bool KTEDocument::setEncoding( const QString& encoding )
+bool KTEDocument::setEncoding(const QString& encoding)
 {
     m_buffer->setEncoding(encoding);
     return true;
@@ -129,27 +129,27 @@ QString KTEDocument::text() const
     return m_buffer->getWholeText();
 }
 
-QString KTEDocument::text( const KTextEditor::Range& /*range*/, bool /*block*/ ) const
+QString KTEDocument::text(const KTextEditor::Range& /*range*/, bool /*block*/) const
 {
     // TODO: implement
     return QString();
 }
 
-QChar KTEDocument::character( const KTextEditor::Cursor& /*position*/ ) const
+QChar KTEDocument::character(const KTextEditor::Cursor& /*position*/) const
 {
     // TODO: implement
     return QChar();
 }
 
-QStringList KTEDocument::textLines( const KTextEditor::Range& /*range*/, bool /*block*/ ) const
+QStringList KTEDocument::textLines(const KTextEditor::Range& /*range*/, bool /*block*/) const
 {
     // TODO: implement
     return QStringList();
 }
 
-QString KTEDocument::line( int line ) const
+QString KTEDocument::line(int line) const
 {
-    return m_buffer->textline( line );
+    return m_buffer->textline(line);
 }
 
 int KTEDocument::lines() const
@@ -169,23 +169,23 @@ int KTEDocument::totalCharacters() const
     return 0;
 }
 
-int KTEDocument::lineLength( int line ) const
+int KTEDocument::lineLength(int line) const
 {
     return m_buffer->getLineLength(line);
 }
 
-bool KTEDocument::setText( const QString& text )
+bool KTEDocument::setText(const QString& text)
 {
     QString content = text;
-    m_buffer->loadText( &content );
+    m_buffer->loadText(&content);
     return false;
 }
 
-bool KTEDocument::setText( const QStringList& text )
+bool KTEDocument::setText(const QStringList& text)
 {
-    for ( int i = 0; i < text.size(); ++i ) {
+    for(int i = 0; i < text.size(); ++i) {
         QString content = text.at(i);
-        m_buffer->loadText( &content );
+        m_buffer->loadText(&content);
     }
 
     return true;
@@ -197,40 +197,41 @@ bool KTEDocument::clear()
     return true;
 }
 
-bool KTEDocument::insertText( const KTextEditor::Cursor& /*position*/, const QString& /*text*/, bool /*block*/ )
+bool KTEDocument::insertText(const KTextEditor::Cursor& /*position*/, const QString& /*text*/, bool /*block*/)
 {
     // TODO: implement
     return false;
 }
 
-bool KTEDocument::insertText( const KTextEditor::Cursor& /*position*/, const QStringList& /*text*/, bool /*block*/ )
+bool KTEDocument::insertText(const KTextEditor::Cursor& /*position*/, const QStringList& /*text*/, bool /*block*/)
 {
     // TODO: implement
     return false;
 }
 
-bool KTEDocument::removeText( const KTextEditor::Range& /*range*/, bool /*block*/ )
+bool KTEDocument::removeText(const KTextEditor::Range& /*range*/, bool /*block*/)
 {
     // TODO: implement
     return false;
 }
 
-bool KTEDocument::insertLine( int line, const QString& text )
+bool KTEDocument::insertLine(int line, const QString& text)
 {
     m_buffer->insertLine(text, line);
     return true;
 }
 
-bool KTEDocument::insertLines( int line, const QStringList& text )
+bool KTEDocument::insertLines(int line, const QStringList& text)
 {
-    for ( int i = 0; i < text.size(); ++i ) {
+    for(int i = 0; i < text.size(); ++i) {
         m_buffer->insertLine(text.at(i), line);
         ++line;
     }
+
     return true;
 }
 
-bool KTEDocument::removeLine( int line )
+bool KTEDocument::removeLine(int line)
 {
     m_buffer->deleteLine(line);
     return true;
@@ -260,13 +261,13 @@ QStringList KTEDocument::highlightingModes() const
     return QStringList();
 }
 
-bool KTEDocument::setMode( const QString& /*name*/ )
+bool KTEDocument::setMode(const QString& /*name*/)
 {
     // TODO: implement
     return false;
 }
 
-bool KTEDocument::setHighlightingMode( const QString& /*name*/ )
+bool KTEDocument::setHighlightingMode(const QString& /*name*/)
 {
     // TODO: implement
     return false;

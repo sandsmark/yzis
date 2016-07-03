@@ -31,7 +31,7 @@
 /**
  * class YLineSearch
  */
-YLineSearch::YLineSearch( const YView *_view )
+YLineSearch::YLineSearch(const YView *_view)
 {
     dbg() << "YLineSearch Constructor" << endl;
     mView = _view;
@@ -44,97 +44,125 @@ YLineSearch::~YLineSearch()
     //        dbg() << "YLineSearch Destructor" << endl;
 }
 
-YCursor YLineSearch::forward( const QString& ch, bool& found, unsigned int times )
+YCursor YLineSearch::forward(const QString& ch, bool& found, unsigned int times)
 {
     YCursor cur = mView->getLineColumnCursor();
     int x = cur.x() + 1; // Start search after cursor pos
     int y = cur.y();
-    const QString& current = mView->buffer()->textline( y );
+    const QString& current = mView->buffer()->textline(y);
     int index = 0;
     unsigned int nfound = 0;
-    while ( nfound < times && x < current.length() ) {
-        index = current.indexOf( ch, x );
-        if ( index < 0 )
+
+    while(nfound < times && x < current.length()) {
+        index = current.indexOf(ch, x);
+
+        if(index < 0) {
             break;
+        }
+
         x = index + 1;
         nfound++;
     }
+
     YCursor pos;
-    found = ( nfound == times );
-    if ( found ) {
-        pos.setX( x - 1 );
-        pos.setY( y );
+    found = (nfound == times);
+
+    if(found) {
+        pos.setX(x - 1);
+        pos.setY(y);
     }
-    updateHistory( ch, SearchForward );
+
+    updateHistory(ch, SearchForward);
     return pos;
 }
 
-YCursor YLineSearch::forwardBefore( const QString& ch, bool& found, unsigned int times )
+YCursor YLineSearch::forwardBefore(const QString& ch, bool& found, unsigned int times)
 {
-    YCursor pos = forward( ch, found, times );
-    if ( found ) {
-        pos.setX( pos.x() - 1 );
+    YCursor pos = forward(ch, found, times);
+
+    if(found) {
+        pos.setX(pos.x() - 1);
     }
-    updateHistory( ch, SearchForwardBefore );
+
+    updateHistory(ch, SearchForwardBefore);
     return pos;
 }
 
-YCursor YLineSearch::reverse( const QString& ch, bool& found, unsigned int times )
+YCursor YLineSearch::reverse(const QString& ch, bool& found, unsigned int times)
 {
     YCursor cur = mView->getLineColumnCursor();
     unsigned int x = cur.x();
     unsigned int y = cur.y();
-    if ( x ) x--; // Start search before current cursor
-    const QString& current = mView->buffer()->textline( y );
+
+    if(x) {
+        x--;    // Start search before current cursor
+    }
+
+    const QString& current = mView->buffer()->textline(y);
     int index = 0;
     unsigned int nfound = 0;
-    while ( nfound < times && x > 0 ) {
-        index = current.lastIndexOf( ch, x );
-        if ( index < 0 )
+
+    while(nfound < times && x > 0) {
+        index = current.lastIndexOf(ch, x);
+
+        if(index < 0) {
             break;
+        }
+
         x = index - 1;
         nfound++;
     }
+
     YCursor pos;
-    found = ( nfound == times );
-    if ( found ) {
-        pos.setX( x + 1 );
-        pos.setY( y );
+    found = (nfound == times);
+
+    if(found) {
+        pos.setX(x + 1);
+        pos.setY(y);
     }
-    updateHistory( ch, SearchBackward );
+
+    updateHistory(ch, SearchBackward);
     return pos;
 }
 
-YCursor YLineSearch::reverseAfter( const QString& ch, bool& found, unsigned int times )
+YCursor YLineSearch::reverseAfter(const QString& ch, bool& found, unsigned int times)
 {
-    YCursor pos = reverse( ch, found, times );
-    if ( found ) {
-        pos.setX( pos.x() + 1 );
+    YCursor pos = reverse(ch, found, times);
+
+    if(found) {
+        pos.setX(pos.x() + 1);
     }
-    updateHistory( ch, SearchBackwardAfter );
+
+    updateHistory(ch, SearchBackwardAfter);
     return pos;
 }
 
-YCursor YLineSearch::searchAgain( bool &found, unsigned int times )
+YCursor YLineSearch::searchAgain(bool &found, unsigned int times)
 {
     YCursor garbage;
     found = false;
-    if ( mFirstTime ) {
+
+    if(mFirstTime) {
         // Can't search again if we haven't searched a first time...
         dbg() << "Haven't searched before" << endl;
         return garbage;
     }
 
     dbg() << "Searching for: " << mPrevSearched << endl;
-    switch ( mType ) {
+
+    switch(mType) {
     case SearchForward:
-        return forward( mPrevSearched, found, times );
+        return forward(mPrevSearched, found, times);
+
     case SearchForwardBefore:
-        return forwardBefore( mPrevSearched, found, times );
+        return forwardBefore(mPrevSearched, found, times);
+
     case SearchBackward:
-        return reverse( mPrevSearched, found, times );
+        return reverse(mPrevSearched, found, times);
+
     case SearchBackwardAfter:
-        return reverseAfter( mPrevSearched, found, times );
+        return reverseAfter(mPrevSearched, found, times);
+
     default:
         /* Can't happen */
         dbg() << "Invalid line search type" << endl;
@@ -142,27 +170,31 @@ YCursor YLineSearch::searchAgain( bool &found, unsigned int times )
     }
 }
 
-YCursor YLineSearch::searchAgainOpposite( bool &found, unsigned int times )
+YCursor YLineSearch::searchAgainOpposite(bool &found, unsigned int times)
 {
-    switch ( mType ) {
+    switch(mType) {
     case SearchForward:
         mType = SearchBackward;
         break;
+
     case SearchForwardBefore:
         mType = SearchBackwardAfter;
         break;
+
     case SearchBackward:
         mType = SearchForward;
         break;
+
     case SearchBackwardAfter:
         mType = SearchForwardBefore;
         break;
     }
-    return searchAgain( found, times );
+
+    return searchAgain(found, times);
 }
 
 /* PRIVATE */
-void YLineSearch::updateHistory( const QString& newch, SearchType type )
+void YLineSearch::updateHistory(const QString& newch, SearchType type)
 {
     mPrevSearched = newch;
     mType = type;

@@ -35,39 +35,66 @@ class YZIS_EXPORT YDrawCell
 {
 public:
     YDrawCell();
-    YDrawCell( const YDrawCell& cell );
+    YDrawCell(const YDrawCell& cell);
     ~YDrawCell();
 
     /* change properties for the whole cell */
-    void addSelection( yzis::SelectionType selType );
-    void delSelection( yzis::SelectionType selType );
-    void setForegroundColor( const YColor& color );
-    void setBackgroundColor( const YColor& color );
-    void setFont( const YFont& font );
+    void addSelection(yzis::SelectionType selType);
+    void delSelection(yzis::SelectionType selType);
+    void setForegroundColor(const YColor& color);
+    void setBackgroundColor(const YColor& color);
+    void setFont(const YFont& font);
     void clear();
 
-    int step( const QString& data );
+    int step(const QString& data);
 
     /* properties accessors */
-    inline bool hasSelection( yzis::SelectionType selType ) const { return mSelections & selType; }
-    inline YColor backgroundColor() const { return mColorBackground; }
-    inline YColor foregroundColor() const { return mColorForeground; }
-    inline YFont font() const { return mFont; }
-    inline QString content() const { return mContent; }
-    inline int width() const { return mContent.length(); }
-    int widthForLength( int length ) const;
-    int lengthForWidth( int width ) const;
-    inline int length() const { return mSteps.count(); }
+    inline bool hasSelection(yzis::SelectionType selType) const
+    {
+        return mSelections & selType;
+    }
+    inline YColor backgroundColor() const
+    {
+        return mColorBackground;
+    }
+    inline YColor foregroundColor() const
+    {
+        return mColorForeground;
+    }
+    inline YFont font() const
+    {
+        return mFont;
+    }
+    inline QString content() const
+    {
+        return mContent;
+    }
+    inline int width() const
+    {
+        return mContent.length();
+    }
+    int widthForLength(int length) const;
+    int lengthForWidth(int width) const;
+    inline int length() const
+    {
+        return mSteps.count();
+    }
 
     /* steps (buffer <-> draw) */
-    inline const QList<int> steps() const { return mSteps; }
-    inline int stepsShift() const { return mStepsShift; }
+    inline const QList<int> steps() const
+    {
+        return mSteps;
+    }
+    inline int stepsShift() const
+    {
+        return mStepsShift;
+    }
 
     /* splitters */
-    YDrawCell left( int column ) const;
-    YDrawCell mid( int column ) const;
-    YDrawCell left_steps( int steps ) const;
-    YDrawCell mid_steps( int steps ) const;
+    YDrawCell left(int column) const;
+    YDrawCell mid(int column) const;
+    YDrawCell left_steps(int steps) const;
+    YDrawCell mid_steps(int steps) const;
 
     YZIS_DUMMY_COMPARISON_OPERATOR(YDrawCell)
 

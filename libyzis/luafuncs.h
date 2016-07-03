@@ -50,7 +50,7 @@ public:
     /** \brief Replacement of lua print.
          *
          * Override print to catch print statements in yzis.
-      * 
+      *
          * \b Arguments:
          * - string, text to print
       */
@@ -63,7 +63,7 @@ public:
      * - int, the line number
      *
         * \b Returns:
-        * - string: the content of the line 
+        * - string: the content of the line
      */
     static int line(lua_State *L);
 
@@ -73,7 +73,7 @@ public:
      * \b Arguments:
      * - int, the line number
         * - string, the text to set
-        * 
+        *
         * \b Returns: nothing
      */
     static int setline(lua_State *L);
@@ -99,7 +99,7 @@ public:
         * - int, the number of characters to remove
         *
         * XXX check if can remove endline ?
-        * 
+        *
         * \b Returns: nothing
      */
     static int remove(lua_State *L);
@@ -132,7 +132,7 @@ public:
         *
      * \b Arguments:
      * - int, starting column
-        * - int, starting line 
+        * - int, starting line
         * - string, new text of the line
      *
         * \b Returns: nothing
@@ -162,7 +162,7 @@ public:
         *
      * \b Arguments: None
      *
-        * \b Returns: 
+        * \b Returns:
         * - int, current column of the cursor of the view
         * - int, current line of the cursor of the view
      */
@@ -171,9 +171,9 @@ public:
     /** \brief
      * Moves the cursor to the given position
         *
-     * \b Arguments: 
+     * \b Arguments:
         * - int, destination column
-        * - int, destination line 
+        * - int, destination line
      *
      * Note: the underscore is necessary because the name "goto" is already
      * reserved in C/C++ but the lua function is really named "goto".
@@ -203,9 +203,9 @@ public:
     /** \brief
      * Moves the cursor to the given position on screen
         *
-     * \b Arguments: 
+     * \b Arguments:
         * - int, destination column
-        * - int, destination line 
+        * - int, destination line
         *
         * \b Returns: nothing
      */
@@ -238,7 +238,7 @@ public:
     /** \brief
      * Return current syntax highlighting color for given column,line
         *
-     * \b Arguments: 
+     * \b Arguments:
         * - int, target column
         * - int, target line
         *
@@ -284,11 +284,11 @@ public:
     /** \brief
      * Command to customize syntax highlighting settings
         *
-     * \b Arguments : 
+     * \b Arguments :
         * - string, style
         * - string, type
         * - more strings
-        * 
+        *
         * \b Returns: nothing
      */
     static int highlight(lua_State *L);
@@ -298,8 +298,8 @@ public:
         *
         * This is the main entry point for plugins.
         *
-     * \b Arguments : 
-        * - string, the event name, 
+     * \b Arguments :
+        * - string, the event name,
         * - string, the name of the lua function to call
         *
         * \b Returns: nothing
@@ -360,10 +360,10 @@ public:
      * Create a new option
         *
      * \b Arguments:
-        * - string, option name, 
-        * - string, group name, 
-        * - string, default value, 
-        * - string, value, 
+        * - string, option name,
+        * - string, group name,
+        * - string, default value,
+        * - string, value,
         * - int, visibility
         * - int, type
      *
@@ -580,7 +580,7 @@ public:
         *
      * \b Arguments: nothing
      *
-        * \b Returns: 
+        * \b Returns:
         * - string,  a string describing the current view.
         *
         * XXX needs more doc
@@ -605,7 +605,7 @@ public:
          *
          * \b Returns: nothing
      */
-    static int loadplugin(lua_State *L );
+    static int loadplugin(lua_State *L);
 
     /* \brief
      * Set the script return value for Yzis.
@@ -624,7 +624,7 @@ public:
          *
          * \b Returns: nothing
      */
-    static int setLuaReturnValue(lua_State *L );
+    static int setLuaReturnValue(lua_State *L);
 };
 
 #endif // YZLUASCRIPTING

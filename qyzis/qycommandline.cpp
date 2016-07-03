@@ -34,50 +34,50 @@
 #define err() yzError("QYCommandLine")
 
 QYCommandLine::QYCommandLine(QYView * view)
-        : QLineEdit( view )
+    : QLineEdit(view)
 {
     mView = view;
-    setFocusPolicy( Qt::ClickFocus );
+    setFocusPolicy(Qt::ClickFocus);
 }
 
 QYCommandLine::~QYCommandLine()
 {}
 
-void QYCommandLine::keyPressEvent ( QKeyEvent * e )
+void QYCommandLine::keyPressEvent(QKeyEvent * e)
 {
     dbg() << "keyPressEvent( modifier=" << e->modifiers() << ", key=" << e->key() << ", ascii=" << e->text().toLatin1().constData() << ", unicode=" << e->text() << ")" << endl;
-    if ( e->key() == Qt::Key_Return
-            || e->key() == Qt::Key_Enter
-            || e->key() == Qt::Key_Up
-            || e->key() == Qt::Key_Down
-            || e->key() == Qt::Key_Escape) {
+
+    if(e->key() == Qt::Key_Return
+       || e->key() == Qt::Key_Enter
+       || e->key() == Qt::Key_Up
+       || e->key() == Qt::Key_Down
+       || e->key() == Qt::Key_Escape) {
         dbg() << "keyPressEvent: sending to Session" << endl;
-        YSession::self()->sendKey( static_cast< YView * >( mView ), YKey(e->key()) ) ;
+        YSession::self()->sendKey(static_cast< YView * >(mView), YKey(e->key())) ;
         e->accept();
-    } else if ( ( e->QInputEvent::modifiers() & Qt::ControlModifier ) && e->key() == Qt::Key_C ) { // handle CTRL-C
+    } else if((e->QInputEvent::modifiers() & Qt::ControlModifier) && e->key() == Qt::Key_C) {      // handle CTRL-C
         dbg() << "keyPressEvent: sending CONTROL-C to Session" << endl;
-        YSession::self()->sendKey( static_cast< YView * >( mView ), YKey(Qt::Key_C,  e->modifiers()) ) ;
+        YSession::self()->sendKey(static_cast< YView * >(mView), YKey(Qt::Key_C,  e->modifiers())) ;
         e->accept();
     } else {
         dbg() << "keyPressEvent: sending to QLineEdit" << endl;
-        QLineEdit::keyPressEvent( e );
+        QLineEdit::keyPressEvent(e);
     }
 }
 
-void QYCommandLine::focusInEvent (QFocusEvent * e)
+void QYCommandLine::focusInEvent(QFocusEvent * e)
 {
     dbg() << "focusInEvent() for " << mView->buffer()->fileNameShort() << ", reason=" << e->reason() << endl;
-
     //e->accept();
     QLineEdit::focusInEvent(e);
 }
 
-void QYCommandLine::focusOutEvent (QFocusEvent *e)
+void QYCommandLine::focusOutEvent(QFocusEvent *e)
 {
     dbg() << "focusOutEvent() for " << mView->buffer()->fileNameShort() << " ,reason=" << e->reason() << endl;
     /*
-    if ( mView->modePool()->currentType() != YMode::ModeEx 
-    && mView->modePool()->currentType() != YMode::ModeSearch 
+    if ( mView->modePool()->currentType() != YMode::ModeEx
+    && mView->modePool()->currentType() != YMode::ModeSearch
     && mView->modePool()->currentType() != YMode::ModeSearchBackward )
     return;
     */

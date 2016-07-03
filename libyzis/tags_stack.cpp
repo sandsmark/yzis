@@ -38,7 +38,7 @@ static YInfoJumpListRecord getRecord()
 {
     YBuffer *buffer = YSession::self()->currentView()->buffer();
     const YCursor &cursor = YSession::self()->currentView()->getRowColumnCursor();
-    return YInfoJumpListRecord( buffer->fileName(), cursor);
+    return YInfoJumpListRecord(buffer->fileName(), cursor);
 }
 
 #define dbg()    yzDebug("YTagStack")
@@ -58,7 +58,7 @@ void YTagStack::push()
 
 const YInfoJumpListRecord *YTagStack::getHead() const
 {
-    if ( !mStack.empty() ) {
+    if(!mStack.empty()) {
         return &mStack.back();
     } else {
         return NULL;
@@ -70,7 +70,7 @@ const YTagStackItem *YTagStack::moveToNext()
     const YTagStackItem *result = NULL;
     MatchingStackItem &pair = mCurrentTags.back();
 
-    if ( pair.second < ( unsigned )pair.first.size() - 1 ) {
+    if(pair.second < (unsigned)pair.first.size() - 1) {
         ++pair.second;
         result = &pair.first[ pair.second ];
     }
@@ -83,7 +83,7 @@ const YTagStackItem *YTagStack::moveToPrevious()
     const YTagStackItem *result = NULL;
     MatchingStackItem &pair = mCurrentTags.back();
 
-    if ( pair.second != 0 ) {
+    if(pair.second != 0) {
         --pair.second ;
         result = &pair.first[ pair.second ];
     }
@@ -111,7 +111,7 @@ void YTagStack::storeMatchingTags(const QVector<YTagStackItem> &tags)
 
 unsigned int YTagStack::getNumMatchingTags() const
 {
-    if ( !mCurrentTags.empty() ) {
+    if(!mCurrentTags.empty()) {
         const MatchingStackItem &pair = mCurrentTags.back();
         return pair.first.size();
     } else {
@@ -121,7 +121,7 @@ unsigned int YTagStack::getNumMatchingTags() const
 
 unsigned int YTagStack::getNumCurMatchingTag() const
 {
-    if ( !mCurrentTags.empty() ) {
+    if(!mCurrentTags.empty()) {
         const MatchingStackItem &pair = mCurrentTags.back();
         return pair.second;
     } else {

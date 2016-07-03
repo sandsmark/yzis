@@ -24,8 +24,8 @@
 #include "document.h"
 
 class View:
-            public Gtk::VBox,
-            public Bakery::View<Document>
+    public Gtk::VBox,
+    public Bakery::View<Document>
 {
 
 public:

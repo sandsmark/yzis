@@ -29,7 +29,7 @@
 #define err()    yzError("YLine")
 
 YLine::YLine(const QString &l) :
-        m_flags( YLine::FlagVisible )
+    m_flags(YLine::FlagVisible)
 {
     setData(l);
     m_initialized = false;
@@ -37,7 +37,7 @@ YLine::YLine(const QString &l) :
 
 YLine::YLine()
 {
-    setData( "" );
+    setData("");
     m_initialized = false;
 }
 
@@ -48,10 +48,16 @@ void YLine::setData(const QString &data)
 {
     mData = data;
     uint len = data.length();
-    if ( len == 0 ) len++; //make sure to return a non empty array ... (that sucks)
-    mAttributes.resize( len );
-    for ( uint i = 0; i < len; i++ )
+
+    if(len == 0) {
+        len++;    //make sure to return a non empty array ... (that sucks)
+    }
+
+    mAttributes.resize(len);
+
+    for(uint i = 0; i < len; i++) {
         mAttributes.data()[ i ] = 0;
+    }
 }
 
 int YLine::firstChar() const
@@ -67,34 +73,41 @@ int YLine::lastChar() const
 int YLine::nextNonSpaceChar(uint pos) const
 {
     int length = (int)mData.length();
-    for (int i = pos; i < length; ++i) {
-        if (!mData[i].isSpace())
+
+    for(int i = pos; i < length; ++i) {
+        if(!mData[i].isSpace()) {
             return i;
+        }
     }
+
     return -1;
 }
 
 int YLine::previousNonSpaceChar(uint pos) const
 {
-    if (pos >= ( uint )mData.length())
+    if(pos >= (uint)mData.length()) {
         pos = mData.length() - 1;
-    for (int i = pos; i >= 0; --i) {
-        if (!mData[i].isSpace())
-            return i;
     }
+
+    for(int i = pos; i >= 0; --i) {
+        if(!mData[i].isSpace()) {
+            return i;
+        }
+    }
+
     return -1;
 }
 
-void YLine::addAttribute ( int start, int length, int attribute )
+void YLine::addAttribute(int start, int length, int attribute)
 {
-    if ((mAttributesList.size() > 2) && (mAttributesList[mAttributesList.size() - 1] == attribute)
-            && (mAttributesList[mAttributesList.size() - 3] + mAttributesList[mAttributesList.size() - 2]
-                == start)) {
+    if((mAttributesList.size() > 2) && (mAttributesList[mAttributesList.size() - 1] == attribute)
+       && (mAttributesList[mAttributesList.size() - 3] + mAttributesList[mAttributesList.size() - 2]
+           == start)) {
         mAttributesList[mAttributesList.size() - 2] += length;
         return ;
     }
 
-    mAttributesList.resize (mAttributesList.size() + 3);
+    mAttributesList.resize(mAttributesList.size() + 3);
     mAttributesList[mAttributesList.size() - 3] = start;
     mAttributesList[mAttributesList.size() - 2] = length;
     mAttributesList[mAttributesList.size() - 1] = attribute;

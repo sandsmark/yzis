@@ -54,14 +54,14 @@ public :
     virtual ~QYEdit();
 
     //erase all text, and set new text
-    void setText (const QString& );
+    void setText(const QString&);
 
     //append text
-    void append ( const QString& );
+    void append(const QString&);
 
     //move cursor to position column, line relative to viewport
     void setCursor(int c, int l);
-    void scroll( int dx, int dy );
+    void scroll(int dx, int dy);
 
     /** Return a cursor shape according to the current mode and focus */
     QYCursor::CursorShape cursorShape();
@@ -77,31 +77,31 @@ public :
      */
     void modeChanged();
     // update text area
-    void updateArea( );
+    void updateArea();
 
     unsigned int spaceWidth;
 
-    void registerModifierKeys( const QString& keys );
-    void unregisterModifierKeys( const QString& keys );
+    void registerModifierKeys(const QString& keys);
+    void unregisterModifierKeys(const QString& keys);
 
-    QPoint translatePositionToReal( const YCursor& c ) const;
-    YCursor translateRealToPosition( const QPoint& p, bool ceil = false ) const;
-    YCursor translateRealToAbsolutePosition( const QPoint& p, bool ceil = false ) const;
+    QPoint translatePositionToReal(const YCursor& c) const;
+    YCursor translateRealToPosition(const QPoint& p, bool ceil = false) const;
+    YCursor translateRealToAbsolutePosition(const QPoint& p, bool ceil = false) const;
 
-    QVariant inputMethodQuery ( Qt::InputMethodQuery query ) const;
+    QVariant inputMethodQuery(Qt::InputMethodQuery query) const;
 
     QYView* view() const;
-    
+
     int charWidth() const;
 
 public slots :
-    void sendMappedKey( const QString& keys );
+    void sendMappedKey(const QString& keys);
 
 
 protected:
-    void guiPaintEvent( const YSelection& drawMap );
-    void guiDrawCell( YCursor pos, const YDrawCell& cell, QPainter* p );
-    void guiDrawClearToEOL( YCursor pos, const YDrawCell& clearCell, QPainter* p );
+    void guiPaintEvent(const YSelection& drawMap);
+    void guiDrawCell(YCursor pos, const YDrawCell& cell, QPainter* p);
+    void guiDrawClearToEOL(YCursor pos, const YDrawCell& clearCell, QPainter* p);
 
     //intercept tabs
     virtual bool event(QEvent*);
@@ -110,13 +110,13 @@ protected:
     void paintEvent(QPaintEvent*);
 
     //normal keypressEvents processing
-    void keyPressEvent (QKeyEvent *);
+    void keyPressEvent(QKeyEvent *);
 
     //mouse events
-    void mousePressEvent (QMouseEvent *);
+    void mousePressEvent(QMouseEvent *);
 
     //mouse move event
-    void mouseMoveEvent( QMouseEvent *);
+    void mouseMoveEvent(QMouseEvent *);
 
     // mousebutton released
     //  void mouseReleaseEvent( QMouseEvent *);
@@ -128,17 +128,17 @@ protected:
     void insertCharAt(QChar, int);
 
     //replace a char at idx on line ....
-    void replaceCharAt( QChar, int );
+    void replaceCharAt(QChar, int);
 
-    virtual void focusInEvent( QFocusEvent * );
-    virtual void focusOutEvent( QFocusEvent * );
+    virtual void focusInEvent(QFocusEvent *);
+    virtual void focusOutEvent(QFocusEvent *);
 
     // for InputMethod
-    void inputMethodEvent ( QInputMethodEvent * );
+    void inputMethodEvent(QInputMethodEvent *);
 
 private :
     QSignalMapper signalMapper;
-    QString keysToShortcut( const QString& keys );
+    QString keysToShortcut(const QString& keys);
 
     /* area to use */
     QRect mUseArea;

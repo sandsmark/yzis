@@ -19,7 +19,7 @@
 **/
 
 #ifndef YZIS_H
-#define YZIS_H 
+#define YZIS_H
 /**
  * yzis.h
  *
@@ -45,11 +45,11 @@
 #define VERSION_CHAR "1.0-alpha2"
 #define VERSION_CHAR_LONG "Yzis " VERSION_CHAR
 
-// either 
+// either
 
 //#define VERSION_CHAR_ST "(stable release)"
 //#define VERSION_CHAR_ST "(development release - Use for testing only)"
-#define VERSION_CHAR_ST "(preview release - Use for testing only)" 
+#define VERSION_CHAR_ST "(preview release - Use for testing only)"
 
 // if defined, will be displayed in the "Intro" Mode
 #define VERSION_CHAR_DATE "mercurial>2008-12-08"
@@ -109,15 +109,15 @@ enum MapMode {
 
 /** Different selection types */
 enum SelectionType {
-	SelectionAny = 0x100, //!< any
-	SelectionSearch = 0x108, //!< hlsearch
-	SelectionVisual = 0x110, //!< visual mode
+    SelectionAny = 0x100, //!< any
+    SelectionSearch = 0x108, //!< hlsearch
+    SelectionVisual = 0x110, //!< visual mode
 };
 
 /** YInterval types */
 enum IntervalType {
-	BufferInterval,
-	ScreenInterval
+    BufferInterval,
+    ScreenInterval
 };
 };
 

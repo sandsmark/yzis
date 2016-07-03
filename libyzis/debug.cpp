@@ -50,7 +50,7 @@
 #include <QDir>
 #include <QTemporaryFile>
 
-#ifdef YZIS_WIN32_GCC 
+#ifdef YZIS_WIN32_GCC
 // to use OutputDebugString
 #include <windows.h>
 #endif
@@ -73,16 +73,16 @@ YDebugBackend * YDebugBackend::me = NULL;
 
 YDebugBackend::YDebugBackend()
 {
-	_output = NULL;
+    _output = NULL;
 }
 
-YDebugBackend::YDebugBackend( YDebugBackend & )
-        : boost::noncopyable()
+YDebugBackend::YDebugBackend(YDebugBackend &)
+    : boost::noncopyable()
 {
     qFatal("YDebugBackend copy constructor used %s", HERE());
 }
 
-YDebugBackend & YDebugBackend::operator=( YDebugBackend & )
+YDebugBackend & YDebugBackend::operator=(YDebugBackend &)
 {
     qFatal("YDebugBackend operator = used %s", HERE());
     return *this;
@@ -91,7 +91,7 @@ YDebugBackend & YDebugBackend::operator=( YDebugBackend & )
 YDebugBackend::~YDebugBackend()
 {
     dbg() << "~YDebugBackend()" << endl;
-	closeOutput();
+    closeOutput();
 }
 
 void YDebugBackend::init()
@@ -102,149 +102,165 @@ void YDebugBackend::init()
     _levelByName["warning"] = YZ_WARNING_LEVEL;
     _levelByName["error"] = YZ_ERROR_LEVEL;
     _levelByName["fatal"] = YZ_FATAL_LEVEL;
-
     _nameByLevel[YZ_DEEPDEBUG_LEVEL] = "deepdebug";
     _nameByLevel[YZ_DEBUG_LEVEL] = "debug";
     _nameByLevel[YZ_WARNING_LEVEL] = "warning";
     _nameByLevel[YZ_ERROR_LEVEL] = "error";
     _nameByLevel[YZ_FATAL_LEVEL] = "fatal";
-
 #ifdef DEBUG
     _level = YZ_DEBUG_LEVEL;
-	setDebugOutputTemp();
+    setDebugOutputTemp();
 #else
     _level = YZ_WARNING_LEVEL;
 #endif
-
     // our message handler does not manage to display all messages. So,
     // it is better left off disabled at the moment. The last one gets lost
     // and the last one is the most interesting one.
-
-//    qInstallMessageHandler( yzisMsgHandler );
-
+    //    qInstallMessageHandler( yzisMsgHandler );
 }
 
 YDebugBackend * YDebugBackend::self()
 {
-    DBG_SELF( printf("YDebugBackend::self() me = %p\n", YDebugBackend::me ); )
-    if (YDebugBackend::me == NULL) {
+    DBG_SELF(printf("YDebugBackend::self() me = %p\n", YDebugBackend::me);)
+
+    if(YDebugBackend::me == NULL) {
         me = new YDebugBackend();
-        DBG_SELF( printf("YDebugBackend::self() me set to %p\n", me ); )
+        DBG_SELF(printf("YDebugBackend::self() me set to %p\n", me);)
         me->init();
     }
+
     return me;
 }
 
-void YDebugBackend::closeOutput() {
-	if ( _output != NULL ) {
-		if ( _output->isOpen() ) {
-			_output->close();
-		}
-		delete _output;
-	}
+void YDebugBackend::closeOutput()
+{
+    if(_output != NULL) {
+        if(_output->isOpen()) {
+            _output->close();
+        }
+
+        delete _output;
+    }
 }
 
-void YDebugBackend::setDebugOutputFilename( const QString& fileName )
+void YDebugBackend::setDebugOutputFilename(const QString& fileName)
 {
-	closeOutput();
+    closeOutput();
+    _output = new QFile(fileName);
 
-	_output = new QFile(fileName);
-    if (fileName == "stdout") {
+    if(fileName == "stdout") {
         dbg() << "Debug output set to stdout" << endl;
-		_output->open(stdout, QIODevice::WriteOnly);
-    } else if (fileName == "stderr") {
+        _output->open(stdout, QIODevice::WriteOnly);
+    } else if(fileName == "stderr") {
         dbg() << "Debug output set to stderr" << endl;
-		_output->open(stderr, QIODevice::WriteOnly);
+        _output->open(stderr, QIODevice::WriteOnly);
     } else {
-		if ( !_output->exists() || _output->remove() ) {
-			_output->open(QIODevice::WriteOnly);
-			_output->setPermissions(QFile::ReadOwner|QFile::WriteOwner);
-		}
-	}
+        if(!_output->exists() || _output->remove()) {
+            _output->open(QIODevice::WriteOnly);
+            _output->setPermissions(QFile::ReadOwner | QFile::WriteOwner);
+        }
+    }
 }
 
 void YDebugBackend::setDebugOutputTemp()
 {
-	closeOutput();
-
+    closeOutput();
 #ifndef YZIS_WIN32
-	QString tmpname = "yzis-"+QString(getpwuid(geteuid())->pw_name)+"-XXXXXX.log";
+    QString tmpname = "yzis-" + QString(getpwuid(geteuid())->pw_name) + "-XXXXXX.log";
 #else
-	QString tmpname = "yzis-XXXXXX.log";
+    QString tmpname = "yzis-XXXXXX.log";
 #endif
-	QTemporaryFile* tmp = new QTemporaryFile(QDir::tempPath()+"/"+tmpname);
-	tmp->setAutoRemove(false);
-	if ( tmp->open() ) {
-		_output = tmp;
-		dbg() << "temp debug:" << tmp->fileName() << endl;
-	} else {
-		delete tmp;
-	}
+    QTemporaryFile* tmp = new QTemporaryFile(QDir::tempPath() + "/" + tmpname);
+    tmp->setAutoRemove(false);
+
+    if(tmp->open()) {
+        _output = tmp;
+        dbg() << "temp debug:" << tmp->fileName() << endl;
+    } else {
+        delete tmp;
+    }
 }
 
-void YDebugBackend::flush( int level, const QString& area, const char * data )
+void YDebugBackend::flush(int level, const QString& area, const char * data)
 {
-    DBG_FLUSH( printf("flush(): output=%p arealevel=%d, level=%d, area=%s, data='%s'\n", _output, areaLevel(area), level, qp(area), data ); )
-    DBG_FLUSH( printf("flush(): this=%p _output=%p stdout=%p stderr=%p \n", this, _output, stdout, stderr ); )
-    if (level < areaLevel(area)) {
-        DBG_FLUSH( printf("flush(): no flush!\n"); )
+    DBG_FLUSH(printf("flush(): output=%p arealevel=%d, level=%d, area=%s, data='%s'\n", _output, areaLevel(area), level, qp(area), data);)
+    DBG_FLUSH(printf("flush(): this=%p _output=%p stdout=%p stderr=%p \n", this, _output, stdout, stderr);)
+
+    if(level < areaLevel(area)) {
+        DBG_FLUSH(printf("flush(): no flush!\n");)
         return ;
     }
+
 #ifdef YZIS_WIN32_GCC
     _flushall();
-    OutputDebugString( data );
+    OutputDebugString(data);
 #else
-	if ( _output != NULL && _output->isOpen() ) {
-		_output->write(QByteArray(data));
-		_output->write("\n");
-		_output->flush();
-	}
-	DBG_FLUSH( printf("flush(): done\n"); )
+
+    if(_output != NULL && _output->isOpen()) {
+        _output->write(QByteArray(data));
+        _output->write("\n");
+        _output->flush();
+    }
+
+    DBG_FLUSH(printf("flush(): done\n");)
 #endif
 }
 
 void YDebugBackend::parseRcfile(const char * filename)
 {
-    dbg().SPrintf("parseRcfile(%s)\n", filename );
-    QFile f( filename );
-    if (f.open( QIODevice::ReadOnly ) == false) {
+    dbg().SPrintf("parseRcfile(%s)\n", filename);
+    QFile f(filename);
+
+    if(f.open(QIODevice::ReadOnly) == false) {
         err() << "Could not open rcfile '" << filename << "'" << endl;
         return ;
     }
-    QTextStream ts(&f);
 
+    QTextStream ts(&f);
     /* One can imagine more control of the output, like whether to use a file
      * or not, which is the default debug level.
      */
-    QRegExp lineRe( "^\\s*(\\w+)\\s*:\\s*(\\w+)\\s*$" );
-
+    QRegExp lineRe("^\\s*(\\w+)\\s*:\\s*(\\w+)\\s*$");
     QString l, area;
-    while ( ts.atEnd() == false) {
+
+    while(ts.atEnd() == false) {
         l = ts.readLine();
         dbg() << "l='" << l << "'" << endl;
-        if (l.isEmpty()) continue;
-        if (l.at(0) == (char) '#' ) continue;
-        if (!lineRe.exactMatch(l)) continue;
+
+        if(l.isEmpty()) {
+            continue;
+        }
+
+        if(l.at(0) == (char) '#') {
+            continue;
+        }
+
+        if(!lineRe.exactMatch(l)) {
+            continue;
+        }
+
         QString keyword = lineRe.cap(1).trimmed();
         QString action = lineRe.cap(2).trimmed();
-        if (keyword == "output") {
-            setDebugOutputFilename( action );
-        } else if (keyword == "level") {
-            if (! _levelByName.contains(action)) {
+
+        if(keyword == "output") {
+            setDebugOutputFilename(action);
+        } else if(keyword == "level") {
+            if(! _levelByName.contains(action)) {
                 err() << "Unknown debug level in " << filename << ": " << action << endl;
             } else {
-                setDebugLevel( _levelByName[action] );
+                setDebugLevel(_levelByName[action]);
             }
         } else { // keyword is area
-            if (! _levelByName.contains(action)) {
+            if(! _levelByName.contains(action)) {
                 err() << "Unknown debug level in " << filename << "for area " << keyword << ": " << action << endl;
             } else {
-                setAreaLevel( keyword, _levelByName[action] );
+                setAreaLevel(keyword, _levelByName[action]);
             }
         }
     }
+
     f.close();
-    dbg().SPrintf("Parsing done for %s\n", filename );
+    dbg().SPrintf("Parsing done for %s\n", filename);
     dbg() << toString();
 }
 
@@ -252,72 +268,82 @@ void YDebugBackend::parseRcfile(const char * filename)
 void YDebugBackend::parseArgv(int argc, const char * const * argv)
 {
     QStringList argvSl;
-    for ( int i = 0; i < argc; i++) {
+
+    for(int i = 0; i < argc; i++) {
         argvSl << argv[i];
     }
-    parseArgv( argvSl );
+
+    parseArgv(argvSl);
 }
 
-void YDebugBackend::parseArgv( QStringList & argv )
+void YDebugBackend::parseArgv(QStringList & argv)
 {
     QRegExp reLevelOpt("--level=(\\w+)");
     QRegExp reAreaOpt("--area-level=(\\w+),(\\w+)");
     QRegExp reDebugOutput("--debug-output=([\\w-/\\.]+)");
     dbg() << "argv='" << argv << "'" << endl;
-    for (int i = argv.count() - 1; i >= 1; i--) {
+
+    for(int i = argv.count() - 1; i >= 1; i--) {
         dbg() << "argv[i]='" << argv[i] << "'" << endl;
         QString myargv = QString(argv[i]).trimmed();
-        if (reLevelOpt.exactMatch(myargv)) {
+
+        if(reLevelOpt.exactMatch(myargv)) {
             QString sLevel = reLevelOpt.cap(1);
             dbg() << "sLevel='" << sLevel << "'" << endl;
-            argv.removeAt( i );
-            if ( _levelByName.contains(sLevel) == false) {
+            argv.removeAt(i);
+
+            if(_levelByName.contains(sLevel) == false) {
                 err().SPrintf("global debug level unrecognised: %s", qp(sLevel));
             } else {
-                setDebugLevel( _levelByName[sLevel] );
+                setDebugLevel(_levelByName[sLevel]);
             }
-        } else if (reAreaOpt.exactMatch(myargv)) {
+        } else if(reAreaOpt.exactMatch(myargv)) {
             QString sArea = reAreaOpt.cap(1);
             QString sLevel = reAreaOpt.cap(2);
             dbg() << "sLevel='" << sLevel << "'" << endl;
             dbg() << "sArea='" << sArea << "'" << endl;
-            argv.removeAt( i );
-            if ( _levelByName.contains(sLevel) == false) {
+            argv.removeAt(i);
+
+            if(_levelByName.contains(sLevel) == false) {
                 yzError("YDebugBackend").SPrintf("debug level unrecognised for area %s: %s", qp(sArea), qp(sLevel));
             } else {
-                setAreaLevel( sArea, _levelByName[sLevel] );
+                setAreaLevel(sArea, _levelByName[sLevel]);
             }
-        } else if (reDebugOutput.exactMatch(myargv)) {
+        } else if(reDebugOutput.exactMatch(myargv)) {
             QString sFilename = reDebugOutput.cap(1);
             dbg() << "sFilename='" << sFilename << "'" << endl;
-            argv.removeAt( i );
-			setDebugOutputFilename( sFilename );
+            argv.removeAt(i);
+            setDebugOutputFilename(sFilename);
         }
     }
+
     dbg() << toString();
 }
-void YDebugBackend::setAreaLevel( const QString& area, int level )
+void YDebugBackend::setAreaLevel(const QString& area, int level)
 {
     dbg() << "setAreaLevel(" << area << ", " << _nameByLevel[level] << ")" << endl;
     _areaLevel[area] = level;
 }
 
-int YDebugBackend::areaLevel( const QString& area ) const
+int YDebugBackend::areaLevel(const QString& area) const
 {
     // you can not debug here with dbg(), else there is a recursive loop
     QString found;
     int areaLevel = debugLevel();
-    foreach( QString itArea, _areaLevel.keys() ) {
-        DBG_AREALEVEL( printf("areaLevel(): Checking area %s with debug area %s\n", qp(area), qp(itArea) ); )
-        if (area.startsWith( itArea )
-                && found.length() < itArea.length() ) {
+
+    foreach(QString itArea, _areaLevel.keys()) {
+        DBG_AREALEVEL(printf("areaLevel(): Checking area %s with debug area %s\n", qp(area), qp(itArea));)
+
+        if(area.startsWith(itArea)
+           && found.length() < itArea.length()) {
             // found a better matching area
             found = itArea;
             areaLevel = _areaLevel[itArea];
-            DBG_AREALEVEL( printf("areaLevel(): Found new area level for %s, matching with %s: %d\n", qp(area), qp(itArea), areaLevel ); )
+            DBG_AREALEVEL(printf("areaLevel(): Found new area level for %s, matching with %s: %d\n", qp(area), qp(itArea), areaLevel);)
         }
     }
-    DBG_AREALEVEL( printf("areaLevel(): returning %d\n", areaLevel ); )
+
+    DBG_AREALEVEL(printf("areaLevel(): returning %d\n", areaLevel);)
     return areaLevel;
 }
 
@@ -325,17 +351,18 @@ int YDebugBackend::areaLevel( const QString& area ) const
 QString YDebugBackend::toString()
 {
     QString s;
-
     s += QString("YDebugBackend content:\n");
     s += QString("level: %1\n").arg(_nameByLevel[ debugLevel() ]);
-    s += QString("output: %1\n").arg(_output != NULL ? _output->fileName(): "NULL");
-    foreach( QString area, _areaLevel.keys() ) {
+    s += QString("output: %1\n").arg(_output != NULL ? _output->fileName() : "NULL");
+
+    foreach(QString area, _areaLevel.keys()) {
         s += QString("%1:%2\n").arg(area).arg(_nameByLevel[_areaLevel.value(area)]);
     }
+
     return s;
 }
 
-void YDebugBackend::yzisMsgHandler( QtMsgType msgType, const QMessageLogContext &context, const QString &msg )
+void YDebugBackend::yzisMsgHandler(QtMsgType msgType, const QMessageLogContext &context, const QString &msg)
 {
     // It does not seem to be working. We do not display the last message
     // send by Qt when a qFatal() or Q_ASSERT() failure occurs.
@@ -347,44 +374,48 @@ void YDebugBackend::yzisMsgHandler( QtMsgType msgType, const QMessageLogContext 
     DBG_SELF( printf("========== msg %s\n", msg ); )
     dbg() << HERE() << msg << endl;
     */
-    switch (msgType) {
+    switch(msgType) {
     case QtDebugMsg:
         yzDebug("Qt") << msg << endl;
         break;
+
     case QtWarningMsg:
         yzWarning("Qt") << msg << endl;
         break;
+
     case QtCriticalMsg:
         yzError("Qt") << msg << endl;
         break;
+
     case QtFatalMsg:
         yzFatal("Qt") << msg << endl;
         break;
+
     default:
         yzDebug("Qt") << msg << endl;
         break;
     }
 }
 
-void * yzmalloc( size_t tSize )
+void * yzmalloc(size_t tSize)
 {
-    return malloc( tSize );
+    return malloc(tSize);
 }
 
-void yzfree( void * p )
+void yzfree(void * p)
 {
     free(p);
 }
 
-void * YDebugBackend::operator new( size_t tSize )
+void * YDebugBackend::operator new(size_t tSize)
 {
-    DBG_SELF( printf("YDebugBackend::new( %ld )\n", long(tSize)); )
-    return yzmalloc( tSize );
+    DBG_SELF(printf("YDebugBackend::new( %ld )\n", long(tSize));)
+    return yzmalloc(tSize);
 }
 
-void YDebugBackend::operator delete( void *p )
+void YDebugBackend::operator delete(void *p)
 {
-    DBG_SELF( printf("YDebugBackend::delete %p\n", p ); )
+    DBG_SELF(printf("YDebugBackend::delete %p\n", p);)
     yzfree(p);
 }
 
@@ -395,26 +426,29 @@ void YDebugBackend::operator delete( void *p )
 //
 // ================================================================
 
-YDebugStream::YDebugStream( const char * _area, int _level )
+YDebugStream::YDebugStream(const char * _area, int _level)
 {
     area = _area;
     level = _level;
-    if (strlen(_area)) output = QString(_area) + ':';
+
+    if(strlen(_area)) {
+        output = QString(_area) + ':';
+    }
 }
 
 YDebugStream::~YDebugStream()
 {
-    if ( !output.isEmpty() )
-        *this << "\n"; //flush
+    if(!output.isEmpty()) {
+        *this << "\n";    //flush
+    }
 }
 
-void YDebugStream::SPrintf( const char * fmt, ... )
+void YDebugStream::SPrintf(const char * fmt, ...)
 {
     static char buf[1024];
-
     va_list ap;
-    va_start( ap, fmt );
-    vsnprintf( buf, 1024, fmt, ap );
+    va_start(ap, fmt);
+    vsnprintf(buf, 1024, fmt, ap);
     va_end(ap);
     buf[1023] = '\0';
     output += buf;
@@ -424,27 +458,31 @@ void YDebugStream::SPrintf( const char * fmt, ... )
 YDebugStream& YDebugStream::operator << (const QString& string)
 {
     output += string;
-    if ( output.endsWith("\n") ) {
+
+    if(output.endsWith("\n")) {
         flush();
     }
+
     return *this;
 }
 
 YDebugStream& YDebugStream::operator << (const char* string)
 {
-    output += QString::fromUtf8( string );
-    if ( output.at( output.length() - 1 ) == '\n' ) {
+    output += QString::fromUtf8(string);
+
+    if(output.at(output.length() - 1) == '\n') {
         flush();
     } else {
         // output += " ";
     }
+
     return *this;
 }
 
 YDebugStream& YDebugStream::operator << (const QStringList& string)
 {
     *this << "(";
-    *this << string.join( "," );
+    *this << string.join(",");
     *this << ") ";
     return *this;
 }
@@ -457,13 +495,18 @@ YDebugStream& YDebugStream::operator << (bool i)
 
 YDebugStream& YDebugStream::operator << (char i)
 {
-    if ( isprint( i ) ) {
-        output += "\\x" + QString::number(static_cast<uint>( i ) + 0x100, 16 ).right( 2 );
+    if(isprint(i)) {
+        output += "\\x" + QString::number(static_cast<uint>(i) + 0x100, 16).right(2);
     } else {
         output += i;
     }
-    if ( i == '\n' ) flush();
-    else output += ' ';
+
+    if(i == '\n') {
+        flush();
+    } else {
+        output += ' ';
+    }
+
     return *this;
 }
 
@@ -475,7 +518,7 @@ YDebugStream& YDebugStream::operator << (unsigned char i)
 YDebugStream& YDebugStream::operator << (unsigned short i)
 {
     QString tmp;
-    tmp.setNum( i );
+    tmp.setNum(i);
     output += tmp + ' ';
     return *this;
 }
@@ -483,7 +526,7 @@ YDebugStream& YDebugStream::operator << (unsigned short i)
 YDebugStream& YDebugStream::operator << (short i)
 {
     QString tmp;
-    tmp.setNum( i );
+    tmp.setNum(i);
     output += tmp + ' ';
     return *this;
 }
@@ -491,7 +534,7 @@ YDebugStream& YDebugStream::operator << (short i)
 YDebugStream& YDebugStream::operator << (unsigned int i)
 {
     QString tmp;
-    tmp.setNum( i );
+    tmp.setNum(i);
     output += tmp + ' ';
     return *this;
 }
@@ -499,7 +542,7 @@ YDebugStream& YDebugStream::operator << (unsigned int i)
 YDebugStream& YDebugStream::operator << (int i)
 {
     QString tmp;
-    tmp.setNum( i );
+    tmp.setNum(i);
     output += tmp + ' ';
     return *this;
 }
@@ -507,7 +550,7 @@ YDebugStream& YDebugStream::operator << (int i)
 YDebugStream& YDebugStream::operator << (unsigned long i)
 {
     QString tmp;
-    tmp.setNum( i );
+    tmp.setNum(i);
     output += tmp + ' ';
     return *this;
 }
@@ -515,7 +558,7 @@ YDebugStream& YDebugStream::operator << (unsigned long i)
 YDebugStream& YDebugStream::operator << (long i)
 {
     QString tmp;
-    tmp.setNum( i );
+    tmp.setNum(i);
     output += tmp + ' ';
     return *this;
 }
@@ -523,37 +566,43 @@ YDebugStream& YDebugStream::operator << (long i)
 YDebugStream& YDebugStream::operator << (double d)
 {
     QString tmp;
-    tmp.setNum( d );
+    tmp.setNum(d);
     output += tmp + ' ';
     return *this;
 }
 
 void YDebugStream::flush()
 {
-    if ( output.right(1) == "\n" ) output = output.left( output.length() - 1 );
-    if ( output.isEmpty() ) return ;
+    if(output.right(1) == "\n") {
+        output = output.left(output.length() - 1);
+    }
+
+    if(output.isEmpty()) {
+        return ;
+    }
+
     YDebugBackend::self()->flush(level, area, output.toUtf8());
     output.clear();
 }
 
-YDebugStream yzDeepDebug( const char * area )
+YDebugStream yzDeepDebug(const char * area)
 {
-    return YDebugStream( area, YZ_DEEPDEBUG_LEVEL );
+    return YDebugStream(area, YZ_DEEPDEBUG_LEVEL);
 }
-YDebugStream yzDebug( const char * area )
+YDebugStream yzDebug(const char * area)
 {
-    return YDebugStream( area, YZ_DEBUG_LEVEL );
+    return YDebugStream(area, YZ_DEBUG_LEVEL);
 }
-YDebugStream yzWarning( const char * area )
+YDebugStream yzWarning(const char * area)
 {
-    return YDebugStream( area, YZ_WARNING_LEVEL );
+    return YDebugStream(area, YZ_WARNING_LEVEL);
 }
-YDebugStream yzError( const char * area )
+YDebugStream yzError(const char * area)
 {
-    return YDebugStream( area, YZ_ERROR_LEVEL );
+    return YDebugStream(area, YZ_ERROR_LEVEL);
 }
-YDebugStream yzFatal( const char * area )
+YDebugStream yzFatal(const char * area)
 {
-    return YDebugStream( area, YZ_FATAL_LEVEL );
+    return YDebugStream(area, YZ_FATAL_LEVEL);
 }
 
