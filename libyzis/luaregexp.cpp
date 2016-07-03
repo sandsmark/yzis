@@ -125,9 +125,10 @@ int YLuaRegexp::Regexp_create(lua_State *L)
     // stack: table, "qregexp*", userdata, table
     lua_pushstring( L, "__gc" );
     // stack: table, "qregexp*", ud, table, "__gc"
-    lua_pushstring(L, "Regexp_userdata_finalize");
+//    lua_pushstring(L, "Regexp_userdata_finalize");
     // stack: table, "qregexp*",ud, table, "__gc", "Regexp_userdata_finalize"
-    lua_gettable(L, LUA_GLOBALSINDEX);
+//    lua_gettable(L, LUA_GLOBALSINDEX);
+    lua_getglobal(L, "Regexp_userdata_finalize");
     // stack: table, "qregexp*",ud, table, "__gc", function
     lua_rawset(L, -3 );
     // stack: table, "qregexp*",ud, table
@@ -137,9 +138,10 @@ int YLuaRegexp::Regexp_create(lua_State *L)
     // stack: table
 
     // set Regexp_mt as metatable
-    lua_pushstring(L, "Regexp_Object_mt" );
+//    lua_pushstring(L, "Regexp_Object_mt" );
     // stack: table, "Regexp_mt"
-    lua_gettable( L, LUA_GLOBALSINDEX );
+//    lua_gettable( L, LUA_GLOBALSINDEX );
+    lua_getglobal(L, "Regexp_Object_mt" );
     // stack: table, table Regexp_mt
     lua_setmetatable(L, -2);
     // stack: table

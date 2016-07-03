@@ -278,8 +278,9 @@ QString YLuaEngine::source( const QString& filename )
     luaReturnValue = "";
 
     lua_pushstring(L, "return");
-    lua_pushstring(L, "dofile");
-    lua_gettable(L, LUA_GLOBALSINDEX);
+//    lua_pushstring(L, "dofile");
+//    lua_gettable(L, LUA_GLOBALSINDEX);
+    lua_getglobal(L, "dofile");
     lua_pushstring(L, filename.toUtf8());
     /*bool success = */ yzpcall(1, 1, _("Lua error when running file %1:\n").arg(filename) );
     cleanLuaStack( L ); // in case sourcing the file left something on the stack
@@ -289,8 +290,9 @@ QString YLuaEngine::source( const QString& filename )
 int YLuaEngine::execInLua( const QString & luacode )
 {
     deepdbg().SPrintf("execInLua( %s )", qp(luacode) );
-    lua_pushstring(L, "loadstring" );
-    lua_gettable(L, LUA_GLOBALSINDEX);
+//    lua_pushstring(L, "loadstring" );
+//    lua_gettable(L, LUA_GLOBALSINDEX);
+    lua_getglobal(L, "loadstring" );
     lua_pushstring(L, luacode.toUtf8() );
 
     // print_lua_stack(L, "loadstring step 0");

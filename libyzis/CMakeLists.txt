@@ -67,10 +67,7 @@ qt5_wrap_cpp(yzis_LIB_MOC_SRCS ${yzis_LIB_MOCS})
 
 add_library(yzis SHARED ${yzis_LIB_SRCS} ${yzis_LIB_MOC_SRCS} )
 
-message( LIBLUA_LIBRARIES = ${LIBLUA_LIBRARIES} )
-message( LIBLUA51_LIBRARIES = ${LIBLUA51_LIBRARIES} )
-
-target_link_libraries(yzis Qt5::Core Qt5::Xml ${LIBLUA_LIBRARIES} ${MAGIC_LIBRARIES} ${GETTEXT_LIBRARIES})
+target_link_libraries(yzis Qt5::Core Qt5::Xml ${LUA_LIBRARIES} ${MAGIC_LIBRARIES} ${GETTEXT_LIBRARIES})
 
 set_target_properties(yzis PROPERTIES VERSION 0.0.0 SOVERSION 0 )
 
