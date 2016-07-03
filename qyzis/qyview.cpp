@@ -40,7 +40,7 @@
 #include <QLabel>
 #include <QMenu>
 #include <QSettings>
-#include <qapplication.h>
+#include <QFontDatabase>
 
 #define dbg() yzDebug("QYView")
 #define err() yzError("QYView")
@@ -247,12 +247,10 @@ void QYView::unregisterModifierKeys( const QString& keys )
 void QYView::applyConfig( const QSettings& settings, bool refresh )
 {
 
-    QFont default_font;
-    default_font.setStyleHint(QFont::TypeWriter);
-    default_font.setFamily("fixed");
-    QFont user_font = settings.value("appearance/font", default_font).value<QFont>();
+    QFont defaultFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
+    QFont user_font = settings.value("appearance/font", defaultFont).value<QFont>();
     if ( !user_font.fixedPitch() ) {
-        user_font = default_font;
+        user_font = defaultFont;
     }
 	YASSERT(user_font.fixedPitch());
     mEdit->setFont( user_font );
