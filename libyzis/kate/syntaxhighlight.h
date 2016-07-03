@@ -382,9 +382,9 @@ class YZIS_EXPORT YzisHlManager
     QString hlSection(int n);
     bool hlHidden(int n);
 
-    void incDynamicCtxs() { ++dynamicCtxsCount; };
-    uint countDynamicCtxs() { return dynamicCtxsCount; };
-    void setForceNoDCReset(bool b) { forceNoDCReset = b; };
+    void incDynamicCtxs() { ++dynamicCtxsCount; }
+    uint countDynamicCtxs() { return dynamicCtxsCount; }
+    void setForceNoDCReset(bool b) { forceNoDCReset = b; }
 
     // be carefull: all documents hl should be invalidated after having successfully called this method!
     bool resetDynamicCtxs();
