@@ -10,7 +10,7 @@ NYStatusBar::NYStatusBar(NYView *view)
 {
     dbg().SPrintf("NStatusBar( nyview=%s )\n", qp(view->toString()));
     m_view = view;
-    m_bar = NULL;
+    m_bar = nullptr;
 
     m_currentMode = QString();
     m_currentMessage = QString();
@@ -28,8 +28,10 @@ NYStatusBar::~NYStatusBar()
 void NYStatusBar::setup( WINDOW* mainwin, int line )
 {
     dbg() << QString().sprintf("setup( mainwin = %p )", mainwin) << endl;
-    if (m_bar)
+
+    if (m_bar) {
         delwin(m_bar);
+    }
 
     m_bar = subwin(mainwin, 1, 0, line, 0); YASSERT(m_bar);
     wattrset(m_bar, A_REVERSE);
@@ -62,6 +64,10 @@ void NYStatusBar::refresh()
         central.remove(0, -freespace); // make room for the lineinfo
     else
         spaceforlineinfo += (freespace > 10) ? 5 : freespace / 2;
+
+    if (!m_bar) {
+        return;
+    }
 
     werase(m_bar);
 
