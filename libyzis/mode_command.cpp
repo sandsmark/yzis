@@ -40,6 +40,7 @@
 #include "viewcursor.h"
 
 #include <QRegExp>
+#include <QRegularExpression>
 
 
 #define dbg()    yzDebug("YModeCommand")
@@ -519,10 +520,11 @@ YCursor YModeCommand::percentCommand(const YMotionArgs &args, CmdState *state, M
     QString line = args.view->buffer()->textline(cursorBefore.line());
 
     // Characters on which the cursor will jump
-    QString toMatch("\\(\\[\\{") , correspondingMatch("\\)\\]\\}");
+    QString toMatch("([{") , correspondingMatch(")]}");
 
     // Find the next opening or closing character on the current line
-    int pos = line.indexOf(QRegExp("["+toMatch+correspondingMatch+"]"), cursorBefore.column());
+    QString charactersRegexp("[" + QRegularExpression::escape(toMatch + correspondingMatch) + "]");
+    int pos = line.indexOf(charactersRegexp, cursorBefore.column());
 
     // If a supported char is found, switch to the corresponding one
     if (pos < 0) {

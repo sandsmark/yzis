@@ -120,7 +120,7 @@ void YDebugBackend::init()
     // it is better left off disabled at the moment. The last one gets lost
     // and the last one is the most interesting one.
 
-    qInstallMessageHandler( yzisMsgHandler );
+//    qInstallMessageHandler( yzisMsgHandler );
 
 }
 
