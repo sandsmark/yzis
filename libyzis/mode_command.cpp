@@ -510,10 +510,14 @@ YCursor YModeCommand::moveToMiddleColumn(const YMotionArgs &args, CmdState *stat
 
 YCursor YModeCommand::percentCommand(const YMotionArgs &args, CmdState *state, MotionStick* ms )
 {
-    if ( ms != NULL ) *ms = MotionNoStick;
+    if (ms) {
+        *ms = MotionNoStick;
+    }
     *state = CmdOk;
+
     YCursor cursorBefore = args.view->viewCursor().buffer()  , newCursorPos;
     QString line = args.view->buffer()->textline(cursorBefore.line());
+
     // Characters on which the cursor will jump
     QString toMatch("\\(\\[\\{") , correspondingMatch("\\)\\]\\}");
 
@@ -521,48 +525,57 @@ YCursor YModeCommand::percentCommand(const YMotionArgs &args, CmdState *state, M
     int pos = line.indexOf(QRegExp("["+toMatch+correspondingMatch+"]"), cursorBefore.column());
 
     // If a supported char is found, switch to the corresponding one
-    if(pos>=0)
-    {
-        newCursorPos.setLineColumn(cursorBefore.line(), pos);
-        int nOpen=0 , nClose=0;
-        int maxLine , l = newCursorPos.line();  
-        int direction; // Match forward or backwards ?
-        QChar ch = line[newCursorPos.column()] , correspondingCh;
-        // If it is an opening character (like (, [ ...), go to the closing character
-        if(toMatch.indexOf(ch) != -1)
-        {
-            correspondingCh = correspondingMatch.at(toMatch.indexOf(ch));
-            direction = 1; //search forward
-            maxLine =  args.view->buffer()->lineCount();
-        }
-        else if (correspondingMatch.indexOf(ch) != -1) 
-        {
-            correspondingCh = toMatch.at(correspondingMatch.indexOf(ch));
-            direction = -1; // search backwards
-            maxLine = -1;
-        }
-        int c = newCursorPos.column();
-        // Find the correponding char
-        while(l != maxLine)
-        {
-            while(c<=line.length() && c>=0)
-            {
-                if(ch == line[c]) nOpen++;
-                else if(correspondingCh == line[c]) {
-                    nClose++;
-                    if (nOpen == nClose) {
-                        newCursorPos.setLineColumn(l, c);
-                        return newCursorPos;
-                    }
+    if (pos < 0) {
+        return cursorBefore;
+    }
+
+    newCursorPos.setLineColumn(cursorBefore.line(), pos);
+
+    int nOpen=0 , nClose=0;
+    int maxLine , l = newCursorPos.line();
+    int direction; // Match forward or backwards ?
+    QChar ch = line[newCursorPos.column()] , correspondingCh;
+    // If it is an opening character (like (, [ ...), go to the closing character
+
+    if (toMatch.contains(ch)) {
+        correspondingCh = correspondingMatch.at(toMatch.indexOf(ch));
+        direction = 1; //search forward
+        maxLine =  args.view->buffer()->lineCount();
+    } else if (correspondingMatch.contains(ch)) {
+        correspondingCh = toMatch.at(correspondingMatch.indexOf(ch));
+        direction = -1; // search backwards
+        maxLine = -1;
+    }
+
+    int c = newCursorPos.column();
+    // Find the correponding char
+    while (l != maxLine) {
+        while (c<=line.length() && c>=0) {
+            if(ch == line[c]) nOpen++;
+            else if(correspondingCh == line[c]) {
+                nClose++;
+                if (nOpen == nClose) {
+                    newCursorPos.setLineColumn(l, c);
+                    return newCursorPos;
                 }
-                c += direction;
             }
-            l += direction;
-            if(l == maxLine) break;
-            line = args.view->buffer()->textline(l);
-            if(direction == 1) c = 0;   else c = line.length()-1;
+            c += direction;
+        }
+        l += direction;
+
+        if (l == maxLine) {
+            break;
+        }
+
+        line = args.view->buffer()->textline(l);
+
+        if (direction == 1) {
+            c = 0;
+        } else {
+            c = line.length()-1;
         }
     }
+
     return cursorBefore;
 }
 
