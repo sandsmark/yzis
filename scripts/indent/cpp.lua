@@ -13,7 +13,7 @@ function Indent_cpp(nbNextTabs,nbNextSpaces,nbPrevTabs,nbPrevSpaces,prevLine,nex
 
 	if string.sub(prevLine,-3,-1) == "/**" then 
 		result = result.." * " 
-	elseif string.find(prevLine,"^%s*\*%s.*") then
+	elseif string.find(prevLine,"^%s*%*%s.*") then
 		result = result.."* " 
 	end
 
