@@ -545,6 +545,9 @@ YCursor YModeCommand::percentCommand(const YMotionArgs &args, CmdState *state, M
         correspondingCh = toMatch.at(correspondingMatch.indexOf(ch));
         direction = -1; // search backwards
         maxLine = -1;
+    } else {
+        // Can't happen, but silences compiler
+        return cursorBefore;
     }
 
     int c = newCursorPos.column();
