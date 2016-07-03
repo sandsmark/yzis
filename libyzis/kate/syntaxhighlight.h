@@ -389,9 +389,6 @@ class YZIS_EXPORT YzisHlManager
     // be carefull: all documents hl should be invalidated after having successfully called this method!
     bool resetDynamicCtxs();
 
-  signals:
-    void changed();
-
   private:
     int wildcardFind(const QString &fileName);
     int mimeFind(const QString &contents);

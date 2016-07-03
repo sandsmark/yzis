@@ -3418,7 +3418,6 @@ void YzisHlManager::setDefaults(uint schema, YzisAttributeList &list)
 
     config->setQStringListEntry(defaultStyleName(z),settings);
   }
-//  emit changed();
 }
 
 int YzisHlManager::highlights()
