@@ -34,6 +34,7 @@
 #ifndef YZ_DEBUG_H
 #define YZ_DEBUG_H
 
+#include <QDebug>
 #include <QString>
 #include <QMap>
 #include <QFile>

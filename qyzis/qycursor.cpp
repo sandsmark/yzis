@@ -38,8 +38,6 @@ QYCursor::QYCursor( QYView * view, QYEdit* edit, CursorShape shape )
     mEdit = edit;
 
     setAutoFillBackground( false );
-    setAttribute( Qt::WA_NoSystemBackground );
-    setAttribute( Qt::WA_PaintOnScreen );
     setAttribute( Qt::WA_OpaquePaintEvent );
 
     move( 0, 0 );
@@ -102,7 +100,6 @@ void QYCursor::paintEvent( QPaintEvent* pe )
     }
     deepdbg() << "paintEvent(): cell foreground=" << cfg.name() << endl;
 
-
     QPainter p( this );
     QRect r = rect();
     CursorShape s = shape();
@@ -149,7 +146,7 @@ void QYCursor::paintEvent( QPaintEvent* pe )
         p.eraseRect( r );
         // paint character with cell foreground
         p.drawText( r, cell.content() );
-        return ;
+        break;
     }
 }
 
