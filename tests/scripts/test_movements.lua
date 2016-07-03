@@ -360,7 +360,7 @@ TestMovements = {} --class
         insertline(2, "some long text : test test test test test test test test test test test test test test test test test test test test test")
         insertline(3, "")
         middlePos=(screenwidth()/2)+1
-        goto(1,1)
+        moveto(1,1)
         sendkeys("gm")
         assertPos(1, 16)
         sendkeys("j5|")
@@ -378,7 +378,7 @@ TestMovements = {} --class
 
 	function TestMovements:testWordEndMovments()
 	    insertline(1, "void testProc(list<int> &arg1, char * arg2) {\n // does nothing\n}\n")
-	    goto(1,1)
+	    moveto(1,1)
 	    -- there
 	    assertPos( 1, 1 )
 	    sendkeys("e")
@@ -456,7 +456,7 @@ TestMovements = {} --class
 		clearBuffer()
 		insertline(1, "line1 line1 line1 line1 line1")
 		insertline(2, "		line2 line2 line2 line2")
-		goto(1,1)
+		moveto(1,1)
 		assertPos(1,1)
 		sendkeys("2lj")
 		assertScrPos(2,1)

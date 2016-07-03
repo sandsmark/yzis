@@ -205,7 +205,7 @@ TestLuaBinding = {} --class
         assertError( filename, 1 )
     end
 
-    function TestLuaBinding:test_goto_and_pos()
+    function TestLuaBinding:test_moveto_and_pos()
         clearBuffer()
         assertEquals( winline(), 1 )
         assertEquals( wincol(), 1 )
@@ -214,43 +214,43 @@ TestLuaBinding = {} --class
         appendline("111")
         appendline("222")
         appendline("333")
-        goto(1,1)
+        moveto(1,1)
         assertEquals( winline(), 1 )
         assertEquals( wincol(), 1 )
         c,l = winpos(); assertEquals( l, winline() ); assertEquals( c, winpos() )
 
-        goto(2,1)
+        moveto(2,1)
         assertEquals( wincol(), 2 )
         assertEquals( winline(), 1 )
         c,l = winpos(); assertEquals( l, winline() ); assertEquals( c, winpos() )
 
-        goto(1,2)
+        moveto(1,2)
         assertEquals( wincol(), 1 )
         assertEquals( winline(), 2 )
         c,l = winpos(); assertEquals( l, winline() ); assertEquals( c, winpos() )
 
-        goto(2,2)
+        moveto(2,2)
         assertEquals( wincol(), 2 )
         assertEquals( winline(), 2 )
         c,l = winpos(); assertEquals( l, winline() ); assertEquals( c, winpos() )
 
-        goto(4,2)
+        moveto(4,2)
         assertEquals( wincol(), 3 )
         assertEquals( winline(), 2 )
         c,l = winpos(); assertEquals( l, winline() ); assertEquals( c, winpos() )
 
-        goto(2,4)
+        moveto(2,4)
         assertEquals( wincol(), 2 )
         assertEquals( winline(), 3 )
         c,l = winpos(); assertEquals( l, winline() ); assertEquals( c, winpos() )
 
-        goto(0,0)
+        moveto(0,0)
         assertEquals( winline(), 1 )
         assertEquals( wincol(), 1 )
         c,l = winpos(); assertEquals( l, winline() ); assertEquals( c, winpos() )
         -- bad number of arguments
-        assertError( goto, 1 )
-        assertError( goto, 1, 2, 3 )
+        assertError( moveto, 1 )
+        assertError( moveto, 1, 2, 3 )
     end
 
     -- disabled until it works

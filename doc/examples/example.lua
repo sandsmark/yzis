@@ -38,8 +38,8 @@ appendline("Current file is : "..filename())
 -- wincol, winline 
 appendline("Current col,line: "..wincol()..","..winline())
 
--- goto 
-goto(3,3)
+-- moveto
+moveto(3,3)
 appendline("Updated col,line: "..wincol()..","..winline())
 
 -- color is not working

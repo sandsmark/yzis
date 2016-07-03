@@ -178,7 +178,7 @@ public:
      * Note: the underscore is necessary because the name "goto" is already
      * reserved in C/C++ but the lua function is really named "goto".
      */
-    static int _goto(lua_State *L);
+    static int moveto(lua_State *L);
 
     /** \brief
      * Returns the current column position on screen

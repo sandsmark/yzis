@@ -28,13 +28,13 @@ function Indent_OnKey_cpp(char,nbPrevTabs,nbPrevSpaces,nbCurTabs,nbCurSpaces,nbN
 
 	local xpos, ypos = winpos()
 
-	goto(wincol()-1, winline())
+	moveto(wincol()-1, winline())
 	if char == "}" then
 		-- find the matching opening { and use the same indent
 		local found, x, y = matchpair()
 		if found == true then 
 			if ( y == winline() ) then -- we are on the same line, dont change anything ;)
-				goto(xpos,ypos)
+				moveto(xpos,ypos)
 				return
 			end
 			lin = line(y+1)
@@ -45,11 +45,11 @@ function Indent_OnKey_cpp(char,nbPrevTabs,nbPrevSpaces,nbCurTabs,nbCurSpaces,nbN
 --			debug("(chars of curline :"..newcurline..")")
 			newcurline = news..newcurline
 			setline(winline(), newcurline)
-			goto(string.len(newcurline)+1, winline())
+			moveto(string.len(newcurline)+1, winline())
 			return
 		end
 	end
-	goto(xpos,ypos)
+	moveto(xpos,ypos)
 end
 
 connect ("INDENT_ON_ENTER", "Indent_cpp")

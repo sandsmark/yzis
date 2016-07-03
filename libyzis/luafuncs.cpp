@@ -81,7 +81,7 @@ void YLuaFuncs::registerLuaFuncs(lua_State *L)
     lua_register(L, "wincol", wincol);
     lua_register(L, "winline", winline);
     lua_register(L, "winpos", winpos);
-    lua_register(L, "goto", _goto);
+    lua_register(L, "moveto", moveto);
     lua_register(L, "scrcol", scrcol);
     lua_register(L, "screenwidth", screenwidth);
     lua_register(L, "scrline", scrline);
@@ -392,9 +392,9 @@ int YLuaFuncs::winpos(lua_State *L)
     return 2 ; // two results
 }
 
-int YLuaFuncs::_goto(lua_State *L)
+int YLuaFuncs::moveto(lua_State *L)
 {
-    if(!YLuaEngine::checkFunctionArguments(L, 2, 2, "goto", "line, col")) {
+    if(!YLuaEngine::checkFunctionArguments(L, 2, 2, "moveto", "line, col")) {
         return 0;
     }
 

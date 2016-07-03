@@ -46,13 +46,13 @@ Test_percentCommand = {} --class
 
         clearBuffer()
         sendkeys("otest ) with some text<ESC>")
-        goto(2,2)
+        moveto(2,2)
         sendkeys("%")
         assertPos(2,2)
 
         clearBuffer()
         insertline(1, "{ ()) }")
-        goto(1,1)
+        moveto(1,1)
         sendkeys("%")
         assertPos(1, 7)
         sendkeys("%")
