@@ -228,7 +228,7 @@ void QYEdit::keyPressEvent(QKeyEvent * e)
 #else
     key = YKey(e->key(), e->modifiers(), e->text());
 #endif
-    dbg().SPrintf("Event transferred to YSession");
+    //dbg().SPrintf("Event transferred to YSession");
     YSession::self()->sendKey(static_cast<YView*>(mView), key);
     e->accept();
 }
@@ -358,8 +358,9 @@ void QYEdit::scroll(int dx, int dy)
 
 void QYEdit::guiDrawCell(YCursor pos , const YDrawCell& cell, QPainter* p)
 {
-    //dbg() << "QYEdit::guiDrawCell(" << x << "," << y <<",'" << cell.content() << "')" << endl;
+    deepdbg() << "QYEdit::guiDrawCell(" << pos.x() << "," << pos.y() <<",'" << cell.content() << "')" << endl;
     p->save();
+    p->setFont(font());
     bool has_bg = false;
 
     if(cell.hasSelection(yzis::SelectionVisual)) {

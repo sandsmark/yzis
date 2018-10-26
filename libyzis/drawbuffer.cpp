@@ -478,6 +478,9 @@ bool YDrawBuffer::targetScreenLine(int sline, int* sid, int* lid, int* bline) co
 {
     YASSERT(0 <= sline);
     YASSERT(sline < screenHeight());
+    if (sline >= screenHeight()) {
+        sline = screenHeight() - 1;
+    }
     bool found = false;
     int my_sid = mScreenTopBufferLine - mFirstBufferLine;
     int my_lid = 0;

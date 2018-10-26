@@ -74,7 +74,7 @@ QYView::QYView(YBuffer* b, YSession * ysession)
     setupKeys();
     mEdit->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
     QSettings settings;
-    applyConfig(settings);   // XXX factory role
+    applyConfig(settings, true);   // XXX factory role
     mEdit->show();
     mStatusBar->show();
     mEdit->setFocus();
@@ -243,13 +243,17 @@ void QYView::unregisterModifierKeys(const QString& keys)
 void QYView::applyConfig(const QSettings& settings, bool refresh)
 {
     QFont defaultFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
+    defaultFont.setFixedPitch(true);
+    defaultFont.setStyleHint(QFont::TypeWriter, QFont::ForceIntegerMetrics);
     QFont user_font = settings.value("appearance/font", defaultFont).value<QFont>();
 
-    if(!user_font.fixedPitch()) {
+    if(!QFontInfo(user_font).fixedPitch()) {
         user_font = defaultFont;
     }
 
-    YASSERT(user_font.fixedPitch());
+    user_font.setKerning(false);
+    setFont(user_font);
+    YASSERT(QFontInfo(user_font).fixedPitch());
     mEdit->setFont(user_font);
     mLineNumbers->setFont(user_font);
     QPalette default_palette;
