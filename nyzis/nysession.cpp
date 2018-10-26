@@ -275,7 +275,7 @@ void NYSession::guiPopupMessage(const QString &_message)
     delwin(popup);
 
     if(currentView()) { // view is not up yet, let's output that to stderr maybe ?
-        currentView()->refreshScreen();
+        currentView()->sendRefreshEvent();
     } else {
         fputs(qp(message), stderr);
     }
@@ -289,7 +289,7 @@ void NYSession::guiDeleteView(YView *view)
     NYView *newview = dynamic_cast<NYView*>(currentView());
     Q_ASSERT(newview);
     newview->guiSetCommandLineText("");
-    newview->refreshScreen();
+    newview->sendRefreshEvent();
     dbg() << "guiDeleteView(): delete oldview;" << endl;
     delete oldview;
     // dumpObjectTree();
