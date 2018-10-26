@@ -60,7 +60,7 @@ public :
     void append(const QString&);
 
     //move cursor to position column, line relative to viewport
-    void setCursor(int c, int l);
+    void setCursor(const YCursor &newPos);
     void scroll(int dx, int dy);
 
     /** Return a cursor shape according to the current mode and focus */

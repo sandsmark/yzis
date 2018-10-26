@@ -74,7 +74,7 @@ void QYCursor::setCursorShape(CursorShape shape)
 void QYCursor::paintEvent(QPaintEvent* pe)
 {
     Q_UNUSED(pe);
-    YCursor my_pos = mEdit->translateRealToPosition(pos());
+    YCursor my_pos = mView->getRowColumnCursor();
     YDrawBufferConstIterator it = mEdit->mView->mDrawBuffer.const_iterator(YInterval(my_pos, my_pos), yzis::ScreenInterval);
     const YDrawCell cell = it.drawCellInfo().cell;
     QColor cbg, cfg;

@@ -286,8 +286,7 @@ void QYView::guiUpdateFileName()
 
 void QYView::guiUpdateCursorPosition()
 {
-    int line_h = viewCursor().column() / getColumnsVisible();
-    mEdit->setCursor(viewCursor().column() % getColumnsVisible(), viewCursor().line() + line_h);
+    mEdit->setCursor(getRowColumnCursor());
 }
 
 void QYView::guiUpdateMode()

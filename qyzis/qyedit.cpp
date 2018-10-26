@@ -326,16 +326,16 @@ void QYEdit::paintEvent(QPaintEvent* pe)
     mView->guiPaintEvent(mView->clipSelection(YSelection(r)));
 }
 
-void QYEdit::setCursor(int c, int l)
+void QYEdit::setCursor(const YCursor &newPos)
 {
     // dbg() << "setCursor" << endl;
-    unsigned int x = c * charWidth();
+    QPoint p = translatePositionToReal(newPos);
 
     if(mView->getLocalBooleanOption("rightleft")) {
-        x = width() - x - mCursor.width();
+        p.setX(width() - p.x() - mCursor.width());
     }
 
-    mCursor.move(x, l * fontMetrics().lineSpacing());
+    mCursor.move(p);
 
     if(!mCursor.isVisible()) {
         mCursor.show();
