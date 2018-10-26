@@ -595,9 +595,11 @@ YRawData YView::setSelection(yzis::SelectionType type, const YInterval& bufferIn
             sendPaintEvent(mDrawBuffer.delSelection(type, mSelectionPool[type], yzis::BufferInterval));
         }
 
-        mSelectionPool[type] = bufferInterval;
-        sendPaintEvent(mDrawBuffer.addSelection(type, mSelectionPool[type], yzis::BufferInterval));
-        selectedData = mBuffer->dataRegion(bufferInterval);
+        if (bufferInterval.valid()) {
+            mSelectionPool[type] = bufferInterval;
+            sendPaintEvent(mDrawBuffer.addSelection(type, mSelectionPool[type], yzis::BufferInterval));
+            selectedData = mBuffer->dataRegion(bufferInterval);
+        }
     } else {
         //TODO
         YASSERT(false);
