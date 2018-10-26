@@ -2419,7 +2419,11 @@ int YzisHighlighting::getIdFromString(QStringList *ContextNameList, QString tmpL
 
         for(; tmpLineEndContext.startsWith("#pop"); context--) {
             tmpLineEndContext.remove(0, 4);
-            //      dbg()<<"#pop found"<<endl;
+        }
+
+        if (tmpLineEndContext.startsWith("!")) {
+            tmpLineEndContext.remove(0, 1);
+            context = ContextNameList->indexOf(buildPrefix + tmpLineEndContext);
         }
     } else if(tmpLineEndContext.startsWith("##")) {
         QString tmp = tmpLineEndContext.right(tmpLineEndContext.length() - 2);
@@ -2680,7 +2684,7 @@ void YzisHighlighting::handleYzisHlIncludeRulesRecursive(YzisHlIncludeRules::ite
  */
 int YzisHighlighting::addToContextList(const QString &ident, int ctx0)
 {
-    deepdbg() << "=== Adding hl with ident '" << ident << "'" << endl;
+    deepdbg() << "=== Adding hl with ident '" << ident << "' " << ctx0 << endl;
     buildIdentifier = ident;
     YzisSyntaxContextData *data, *datasub;
     YzisHlItem *c;
@@ -2790,27 +2794,31 @@ int YzisHighlighting::addToContextList(const QString &ident, int ctx0)
                     QString incAttrib = YzisHlManager::self()->syntax->groupItemData(data, QString("includeAttrib"));
                     bool includeAttrib = (incAttrib.toLower() == "true" || incAttrib.toInt() == 1);
 
-                    // only context refernces of type NAME and ##Name are allowed
-                    if(incCtx.startsWith("##") || (!incCtx.startsWith("#"))) {
-                        //#stay, #pop is not interesting here
-                        if(!incCtx.startsWith("#")) {
-                            // a local reference -> just initialize the include rule structure
-                            incCtx = buildPrefix + incCtx.simplified();
-                            includeRules.append(new YzisHlIncludeRule(i, m_contexts[i]->items.count(), incCtx, includeAttrib));
+                    //#stay, #pop is not interesting here
+                    if (incCtx.contains("##")) {
+                        QStringList parts = incCtx.split("##", QString::SkipEmptyParts);
+                        QString contextName = parts.first();
+                        QString file = parts.last();
+
+                        if (parts.count() == 1) {
+                            incCtx = contextName;
                         } else {
-                            //a cross highlighting reference
-                            deepdbg() << "Cross highlight reference <IncludeRules>" << endl;
-                            YzisHlIncludeRule *ir = new YzisHlIncludeRule(i, m_contexts[i]->items.count(), "", includeAttrib);
-
-                            //use the same way to determine cross hl file references as other items do
-                            if(!embeddedHls.contains(incCtx.right(incCtx.length() - 2))) {
-                                embeddedHls.insert(incCtx.right(incCtx.length() - 2), YzisEmbeddedHlInfo());
-                            }
-
-                            unresolvedContextReferences.insert(&(ir->incCtx),
-                                                               incCtx.right(incCtx.length() - 2));
-                            includeRules.append(ir);
+                            incCtx = file + ":" + contextName;
                         }
+
+                        YzisHlIncludeRule *ir = new YzisHlIncludeRule(i, m_contexts[i]->items.count(), incCtx, includeAttrib);
+
+                        //use the same way to determine cross hl file references as other items do
+                        if(!embeddedHls.contains(file)) {
+                            embeddedHls.insert(file, YzisEmbeddedHlInfo());
+                        }
+
+                        unresolvedContextReferences.insert(&(ir->incCtx), incCtx);
+                        includeRules.append(ir);
+                    } else if (!incCtx.startsWith("#")) {
+                        // a local reference -> just initialize the include rule structure
+                        incCtx = buildPrefix + incCtx.simplified();
+                        includeRules.append(new YzisHlIncludeRule(i, m_contexts[i]->items.count(), incCtx, includeAttrib));
                     }
 
                     continue;
