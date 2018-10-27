@@ -371,7 +371,7 @@ YCommand *YModeCommand::parseCommand(const YKeySequence &inputs, YKeySequence::c
     if(cmds.count() != 1) {
         /* Assert precisely two matching commands, distinguished by argument */
         //this is not sufficient, see the 'q' (record macro command), we need a q+ArgChar and a 'q' commands //mm //FIXME
-        if(MapVisual) {
+        if(mapMode() == MapVisual) {
             if(cmds[0]->arg() == ArgMotion) { // Find the one with a motion arg
                 c = cmds[0];
             } else {
