@@ -257,6 +257,7 @@ public:
     YCursor scrollPageDown(const YMotionArgs &args, CmdState *state , MotionStick* ms = NULL);
     YCursor scrollLineUp(const YMotionArgs &args, CmdState *state , MotionStick* ms = NULL);
     YCursor scrollLineDown(const YMotionArgs &args, CmdState *state , MotionStick* ms = NULL);
+    YCursor findInner(const YMotionArgs &args, CmdState *state , MotionStick* ms = NULL);
 
     // methods implementing commands
     CmdState execMotion(const YCommandArgs &args);

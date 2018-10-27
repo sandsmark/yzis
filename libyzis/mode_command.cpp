@@ -157,6 +157,7 @@ void YModeCommand::initMotionPool()
     motions.append(new YMotion(YKeySequence("<C-y>"), &YModeCommand::scrollLineUp));
     motions.append(new YMotion(YKeySequence("<C-f>"), &YModeCommand::scrollPageDown));
     motions.append(new YMotion(YKeySequence("<C-e>"), &YModeCommand::scrollLineDown));
+    motions.append(new YMotion(YKeySequence("i"), &YModeCommand::findInner, ArgChar));
 }
 
 void YModeCommand::initCommandPool()
@@ -693,6 +694,84 @@ YCursor YModeCommand::scrollLineDown(const YMotionArgs &args, CmdState *state, M
     args.view->scrollLineToTop(line);
     *state = CmdOk;
     return args.view->viewCursorFromScreen().buffer();
+}
+
+YCursor YModeCommand::findInner(const YMotionArgs &args, CmdState *state, MotionStick *)
+{
+    *state = CmdStopped;
+
+    YLineSearch* finder = args.view->myLineSearch();
+    QString startBracket;
+    QString endBracket;
+    QString bracketArg = (*args.parsePos)->toString();
+    if (bracketArg.isEmpty()) {
+        return args.view->getLinePositionCursor();
+    }
+    QChar bracket = bracketArg[0];
+
+    switch(bracket.toLatin1()) {
+    case '(':
+    case ')':
+        startBracket = "(";
+        endBracket = ")";
+        break;
+    case '{':
+    case '}':
+        startBracket = "{";
+        endBracket = "}";
+        break;
+    case '[':
+    case ']':
+        startBracket = "[";
+        endBracket = "]";
+        break;
+    case '"':
+        startBracket = "\"";
+        endBracket = "\"";
+        break;
+    case '\'':
+        startBracket = "'";
+        endBracket = "'";
+        break;
+    case '<':
+    case '>':
+        startBracket = "<";
+        endBracket = ">";
+        break;
+    default:
+        return args.view->getLinePositionCursor();
+    }
+
+    if (startBracket.isEmpty() || endBracket.isEmpty()) {
+        return args.view->getLinePositionCursor();
+    }
+
+    ++(*args.parsePos);
+
+    bool found = false;
+
+    YCursor startPos = finder->reverseAfter(startBracket, found, args.count);
+    if (!found) {
+        return args.view->getLinePositionCursor();
+    }
+    YCursor endPos = finder->forward(endBracket, found, args.count);
+    if (!found) {
+        return args.view->getLinePositionCursor();
+    }
+
+    // For e. g. xml tags, "invert" search
+    YCursor endBracketBackward = finder->reverseAfter(endBracket, found, args.count);
+    if (found && endBracketBackward > startPos) {
+        YCursor startBracketForward = finder->forward(startBracket, found, args.count);
+        if (found && startBracketForward < endPos) {
+            startPos = endBracketBackward;
+            endPos = startBracketForward;
+        }
+    }
+
+    args.view->gotoLinePositionAndStick(startPos);
+    *state = CmdOk;
+    return endPos;
 }
 
 YCursor YModeCommand::previousEmptyLine(const YMotionArgs &args, CmdState *state, MotionStick*)
@@ -1561,7 +1640,6 @@ YInterval YModeCommand::interval(const YCommandArgs& args, CmdState *state)
     YKeySequence::const_iterator motPos = *args.parsePos;
     int count = args.count;
     MotionType motionType;
-    YCursor from(args.view->getLinePositionCursor());
     bool entireLines = (*args.parsePos != args.inputs->end()
                         && *(*args.parsePos) == YKey(Qt::Key_Apostrophe));
     YMotion *m = parseMotion(*args.inputs, *args.parsePos, count, motionType);
@@ -1580,6 +1658,7 @@ YInterval YModeCommand::interval(const YCommandArgs& args, CmdState *state)
     YCursor to = (this->*(m->motionMethod()))(YMotionArgs(args.view, count, args.inputs,
                  args.parsePos, args.cmd->keySeq().toString(),
                  args.usercount), state, NULL);
+    YCursor from(args.view->getLinePositionCursor());
     bool bound_open = true;
 
     switch(motionType) {
