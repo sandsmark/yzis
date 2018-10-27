@@ -149,6 +149,10 @@ void QYView::guiSetup()
 
 void QYView::guiNotifyContentChanged(const YSelection& s)
 {
+    mEdit->update();
+    return;
+
+    // FIXME: figure out why the YSelection doesn't cover what we need (buffer vs screen or something)
     dbg() << "guiNotifyContentChanged()" << endl;
     // content has changed, ask qt to repaint changed parts
     YSelectionMap m = s.map();
