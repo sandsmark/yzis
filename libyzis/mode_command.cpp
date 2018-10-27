@@ -157,7 +157,7 @@ void YModeCommand::initMotionPool()
     motions.append(new YMotion(YKeySequence("<C-y>"), &YModeCommand::scrollLineUp));
     motions.append(new YMotion(YKeySequence("<C-f>"), &YModeCommand::scrollPageDown));
     motions.append(new YMotion(YKeySequence("<C-e>"), &YModeCommand::scrollLineDown));
-    motions.append(new YMotion(YKeySequence("i"), &YModeCommand::findInner, ArgChar));
+    motions.append(new YMotion(YKeySequence("i"), &YModeCommand::findInner, ArgChar, MotionTypeSelection));
 }
 
 void YModeCommand::initCommandPool()
@@ -302,7 +302,7 @@ CmdState YModeCommand::execCommand(YView *view, const YKeySequence &inputs,
     YCommand *c = parseMotion(inputs, parsePos, count, motionType);
 
     // If it's not a motion, it's probably a regular command
-    if(c == NULL) {
+    if(c == NULL || motionType == MotionTypeSelection) {
         motionResult = parsePos; // Save how successful motion was, in case it's a better match than command
         parsePos = cmdPos;
         c = parseCommand(inputs, parsePos);
@@ -699,8 +699,10 @@ YCursor YModeCommand::scrollLineDown(const YMotionArgs &args, CmdState *state, M
 YCursor YModeCommand::findInner(const YMotionArgs &args, CmdState *state, MotionStick *)
 {
     *state = CmdStopped;
+    if (args.standalone) {
+        return args.view->getLinePositionCursor();
+    }
 
-    YLineSearch* finder = args.view->myLineSearch();
     QString startBracket;
     QString endBracket;
     QString bracketArg = (*args.parsePos)->toString();
@@ -709,6 +711,7 @@ YCursor YModeCommand::findInner(const YMotionArgs &args, CmdState *state, Motion
     }
     QChar bracket = bracketArg[0];
 
+    bool isRegex = false;
     switch(bracket.toLatin1()) {
     case '(':
     case ')':
@@ -745,8 +748,9 @@ YCursor YModeCommand::findInner(const YMotionArgs &args, CmdState *state, Motion
         endBracket = ">";
         break;
     case 'w':
-        startBracket = "<WORD-BOUNDARY>";
-        endBracket = "<WORD-BOUNDARY>";
+        startBracket = "\\s";
+        endBracket = "\\s";
+        isRegex = true;
         break;
     case 't':
         startBracket = ">";
@@ -760,17 +764,39 @@ YCursor YModeCommand::findInner(const YMotionArgs &args, CmdState *state, Motion
         return args.view->getLinePositionCursor();
     }
 
+    if (!isRegex) {
+        startBracket = QRegularExpression::escape(startBracket);
+        endBracket = QRegularExpression::escape(endBracket);
+    }
+
     ++(*args.parsePos);
 
-    bool found = false;
+    bool found = true;
 
-    YCursor startPos = finder->reverseAfter(startBracket, found, args.count);
+    YCursor startPos = args.view->getLinePositionCursor();;
+    YCursor endPos = args.view->getLinePositionCursor();
+    for(int i = 0; found && i < args.count; i++) {
+        startPos = YSession::self()->search()->backward(args.view->buffer(), startBracket, &found, startPos);
+        if (!found) {
+            break;
+        }
+
+        endPos = YSession::self()->search()->forward(args.view->buffer(), endBracket, &found, endPos);
+
+        if (!found) {
+            break;
+        }
+    }
+
     if (!found) {
         return args.view->getLinePositionCursor();
     }
-    YCursor endPos = finder->forward(endBracket, found, args.count);
-    if (!found) {
-        return args.view->getLinePositionCursor();
+
+    if (startPos.x() < args.view->buffer()->getLineLength(startPos.line()) - 1) {
+        startPos.setX(startPos.x() + 1);
+    } else {
+        startPos.setX(0);
+        startPos.setY(startPos.y() + 1);
     }
 
     args.view->gotoLinePositionAndStick(startPos);
@@ -1670,6 +1696,7 @@ YInterval YModeCommand::interval(const YCommandArgs& args, CmdState *state)
         bound_open  = false;
         break;
 
+    case MotionTypeSelection:
     case MotionTypeExclusive:
         bound_open  = true;
         break;

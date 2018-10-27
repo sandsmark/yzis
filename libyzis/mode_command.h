@@ -94,7 +94,8 @@ enum CmdArg {
 enum MotionType {
     MotionTypeExclusive,
     MotionTypeInclusive,
-    MotionTypeLinewise
+    MotionTypeLinewise,
+    MotionTypeSelection
 };
 
 enum MotionStick {
