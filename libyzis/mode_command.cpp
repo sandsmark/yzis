@@ -712,11 +712,13 @@ YCursor YModeCommand::findInner(const YMotionArgs &args, CmdState *state, Motion
     switch(bracket.toLatin1()) {
     case '(':
     case ')':
+    case 'b':
         startBracket = "(";
         endBracket = ")";
         break;
     case '{':
     case '}':
+    case 'B':
         startBracket = "{";
         endBracket = "}";
         break;
@@ -729,6 +731,10 @@ YCursor YModeCommand::findInner(const YMotionArgs &args, CmdState *state, Motion
         startBracket = "\"";
         endBracket = "\"";
         break;
+    case '`':
+        startBracket = "`";
+        endBracket = "`";
+        break;
     case '\'':
         startBracket = "'";
         endBracket = "'";
@@ -737,6 +743,14 @@ YCursor YModeCommand::findInner(const YMotionArgs &args, CmdState *state, Motion
     case '>':
         startBracket = "<";
         endBracket = ">";
+        break;
+    case 'w':
+        startBracket = "<WORD-BOUNDARY>";
+        endBracket = "<WORD-BOUNDARY>";
+        break;
+    case 't':
+        startBracket = ">";
+        endBracket = "</";
         break;
     default:
         return args.view->getLinePositionCursor();
@@ -757,16 +771,6 @@ YCursor YModeCommand::findInner(const YMotionArgs &args, CmdState *state, Motion
     YCursor endPos = finder->forward(endBracket, found, args.count);
     if (!found) {
         return args.view->getLinePositionCursor();
-    }
-
-    // For e. g. xml tags, "invert" search
-    YCursor endBracketBackward = finder->reverseAfter(endBracket, found, args.count);
-    if (found && endBracketBackward > startPos) {
-        YCursor startBracketForward = finder->forward(startBracket, found, args.count);
-        if (found && startBracketForward < endPos) {
-            startPos = endBracketBackward;
-            endPos = startBracketForward;
-        }
     }
 
     args.view->gotoLinePositionAndStick(startPos);

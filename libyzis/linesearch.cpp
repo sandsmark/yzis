@@ -25,6 +25,8 @@
 #include "debug.h"
 #include "buffer.h"
 
+#include <QRegularExpression>
+
 #define dbg()    yzDebug("YLineSearch")
 #define err()    yzError("YLineSearch")
 
@@ -53,8 +55,19 @@ YCursor YLineSearch::forward(const QString& ch, bool& found, unsigned int times)
     int index = 0;
     unsigned int nfound = 0;
 
+    QRegularExpression regex;
+    bool isRegex = false;
+    if (ch == "<WORD-BOUNDARY>") {
+        isRegex = true;
+        regex = QRegularExpression("\\s");
+    }
+
     while(nfound < times && x < current.length()) {
-        index = current.indexOf(ch, x);
+        if (isRegex) {
+            index = current.indexOf(regex, x);
+        } else {
+            index = current.indexOf(ch, x);
+        }
 
         if(index < 0) {
             break;
@@ -102,8 +115,19 @@ YCursor YLineSearch::reverse(const QString& ch, bool& found, unsigned int times)
     int index = 0;
     unsigned int nfound = 0;
 
+    QRegularExpression regex;
+    bool isRegex = false;
+    if (ch == "<WORD-BOUNDARY>") {
+        isRegex = true;
+        regex = QRegularExpression("\\s");
+    }
+
     while(nfound < times && x > 0) {
-        index = current.lastIndexOf(ch, x);
+        if (isRegex) {
+            index = current.lastIndexOf(regex, x);
+        } else {
+            index = current.lastIndexOf(ch, x);
+        }
 
         if(index < 0) {
             break;
