@@ -50,7 +50,7 @@ class QYEdit : public QWidget
 
 
 public :
-    QYEdit(QYView * view = 0);
+    QYEdit(QYView * view = nullptr);
     virtual ~QYEdit();
 
     //erase all text, and set new text

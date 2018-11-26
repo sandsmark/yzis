@@ -131,17 +131,17 @@ YInterval YDrawBuffer::addSelection(yzis::SelectionType sel, const YInterval& i,
         return YInterval();
     }
 
-    YCursor begin(/*TODO*/0, it.screenLine());
+    YCursor begin(/*TODO*/0, bufferDrawSectionScreenLine(it.bufferLine()));
     int lastScreenLine = 0;
     int lastScreenColumn = screenWidth(); /*TODO*/
 
     for(; it.isValid(); it.next()) {
         it.cell()->addSelection(sel);
-        lastScreenLine = it.screenLine();
+        lastScreenLine = it.bufferLine();
         /*lastScreenColumn = it.screenColumn() + it.cell()->width();*/
     }
 
-    return YInterval(begin, YCursor(lastScreenColumn, lastScreenLine));
+    return YInterval(begin, YCursor(lastScreenColumn, bufferDrawSectionScreenLine(lastScreenLine) + 1));
 }
 
 YInterval YDrawBuffer::delSelection(yzis::SelectionType sel, const YInterval& i, yzis::IntervalType itype)
@@ -152,17 +152,17 @@ YInterval YDrawBuffer::delSelection(yzis::SelectionType sel, const YInterval& i,
         return YInterval();
     }
 
-    YCursor begin(/*TODO*/0, it.screenLine());
+    YCursor begin(/*TODO*/0, bufferDrawSectionScreenLine(it.bufferLine()));
     int lastScreenLine = 0;
     int lastScreenColumn = screenWidth(); /*TODO*/
 
     for(; it.isValid(); it.next()) {
         it.cell()->delSelection(sel);
-        lastScreenLine = it.screenLine();
+        lastScreenLine = it.bufferLine();
         /*lastScreenColumn = it.screenColumn() + it.cell()->width();*/
     }
 
-    return YInterval(begin, YCursor(lastScreenColumn, lastScreenLine));
+    return YInterval(begin, YCursor(lastScreenColumn, bufferDrawSectionScreenLine(lastScreenLine) + 1));
 }
 
 YDebugStream& operator<< (YDebugStream& out, const YDrawBuffer& buff)

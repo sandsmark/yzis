@@ -29,15 +29,15 @@
  * displays several characters sharing the same properties (color, fonts, etc.)
  *
  * ##################################################  section 0.
- * |            |   |      |        |            |  |  line 0.
+ * |            |   |      |        |            |  |  line 0.
  * --------------------------------------------------
  * |   |         |         |                           line 1.
  * ##################################################  section 1.
- * |     |          |              |     | | | |  | |  line 0.
+ * |     |          |              |     | | | |  | |  line 0.
  * --------------------------------------------------
- * | | | | | |    | | |      | | |   | |           ||  line 1.
+ * | | | | | |    | | |      | | |   | |           ||  line 1.
  * --------------------------------------------------
- * |         |                     |   | | |           line 2.
+ * |         |                     |   | | |           line 2.
  *  ...
  *
  *
@@ -243,7 +243,7 @@ public:
      *
      * Warning: do not use this method, unless you known what you are doing. Please use iterators instead.
      */
-    int targetBufferColumn(int bcol, int sid, int* lid, int* cid, int* bshift, int* column = NULL) const;
+    int targetBufferColumn(int bcol, int sid, int* lid, int* cid, int* bshift, int* column = nullptr) const;
 
     /**
      * Low-level method.
@@ -255,7 +255,7 @@ public:
      *
      * Warning: do not use this method, unless you known what you are doing. Please use iterators instead.
      */
-    bool targetScreenLine(int sline, int* sid, int* lid, int* bline = NULL) const;
+    bool targetScreenLine(int sline, int* sid, int* lid, int* bline = nullptr) const;
 
     /**
      * Low-level method.
@@ -268,7 +268,7 @@ public:
      *
      * Warning: do not use this method, unless you known what you are doing. Please use iterators instead.
      */
-    int targetScreenColumn(int scol, int sid, int lid, int* cid, int* sshift, int* position = NULL) const;
+    int targetScreenColumn(int scol, int sid, int lid, int* cid, int* sshift, int* position = nullptr) const;
 
 
     /**

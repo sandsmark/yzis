@@ -1105,7 +1105,7 @@ void YView::guiPaintEvent(const YSelection& drawMap)
 
     int cur_line = -1;
 
-    foreach(YInterval di, drawMap.map()) {
+    for (YInterval di : drawMap.map()) {
         for(YDrawBufferConstIterator it = mDrawBuffer.const_iterator(di, yzis::ScreenInterval); it.isValid(); it.next()) {
             if(show_numbers && cur_line != it.screenLine()) {
                 guiDrawSetLineNumber(it.screenLine(), it.bufferLine() + 1, it.lineHeight());
