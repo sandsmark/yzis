@@ -134,7 +134,7 @@ void YInfo::read()
                 history->addEntry((list.join(" ")).remove(0, 1));
             }
 
-            if(list[0].startsWith(">") || list[0] == "start_position") {
+            if((list[0].startsWith(">") || list[0] == "start_position") && list.length() > 3) {
                 mStartPosition.push_back(new YInfoStartPositionRecord(list[3], YCursor(list[1].toInt(), list[2].toInt())));
             }
 
