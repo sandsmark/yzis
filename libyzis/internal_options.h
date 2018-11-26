@@ -170,6 +170,7 @@ public:
      */
     void setYColorEntry(const QString& key, const YColor& value);
 
+    QSet<QString> groups();
 
     /**
      * Changes the current group of options

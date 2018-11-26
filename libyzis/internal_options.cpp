@@ -546,6 +546,16 @@ void YInternalOptionPool::setYColorEntry(const QString& name, const YColor& valu
     setQStringEntry(name, YOptionValue::colorToString(value));
 }
 
+QSet<QString> YInternalOptionPool::groups()
+{
+    QList<QString> keys = mOptions.keys();
+    QSet<QString> ret;
+    for (const QString &key : mOptions.keys()) {
+        ret.insert(key.split('\\').first());
+    }
+    return ret;
+}
+
 void YInternalOptionPool::setGroup(const QString& group)
 {
     currentGroup = group;

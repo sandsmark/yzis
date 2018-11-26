@@ -581,6 +581,7 @@ void YzisSyntaxDocument::setupModeList(bool force)
     // Let's iterate through the list and build the Mode List
     QStringList::Iterator it = list.begin(), end = list.end();
 
+    QSet<QString> configGroups = config->groups();
     for(; it != end; ++it) {
         deepdbg() << "setupModeList(): analysing resource " << *it << endl;
         // Each file has a group called:
@@ -593,7 +594,7 @@ void YzisSyntaxDocument::setupModeList(bool force)
         stat(QFile::encodeName(*it), &sbuf);
 
         // If the group exist and we're not forced to read the xml file, let's build myModeList for katesyntax..rc
-        if(config->hasGroup(Group) && !force && (sbuf.st_mtime == config->readIntEntry("lastModified"))) {
+        if(configGroups.contains(Group) && !force && (sbuf.st_mtime == config->readIntEntry("lastModified"))) {
             // Let's make a new YzisSyntaxModeListItem to instert in myModeList from the information in katesyntax..rc
             YzisSyntaxModeListItem *mli = new YzisSyntaxModeListItem;
             mli->name       = config->readQStringEntry("name");
