@@ -41,6 +41,7 @@
 #include <QMenu>
 #include <QSettings>
 #include <QFontDatabase>
+#include <QDebug>
 
 #define dbg() yzDebug("QYView")
 #define err() yzError("QYView")
@@ -123,13 +124,8 @@ void QYView::guiSetFocusCommandLine()
 
 void QYView::guiScroll(int dx, int dy)
 {
-    if(dy >= getLinesVisible()) {
-        guiPaintEvent(YSelection(YInterval(YCursor(0, 0), YCursor(getColumnsVisible() - 1, getLinesVisible() - 1))));
-    } else {
-        mEdit->scroll(dx, dy);
-        mLineNumbers->scroll(dy);
-        // TODO scroll QScrollBar
-    }
+    mEdit->scroll(dx, dy);
+    mLineNumbers->scroll(dy);
 }
 
 void QYView::setVisibleArea(int columns, int lines)
@@ -183,11 +179,12 @@ void QYView::guiNotifyContentChanged(const YSelection& s)
 void QYView::guiPreparePaintEvent()
 {
     mPainter = new QPainter(mEdit);
+    mPainter->setFont(mEdit->font());
 }
 void QYView::guiEndPaintEvent()
 {
     delete mPainter;
-    mPainter = NULL;
+    mPainter = nullptr;
 }
 
 void QYView::guiPaintEvent(const YSelection& s)
@@ -202,10 +199,14 @@ void QYView::guiDrawCell(YCursor pos, const YDrawCell& cell)
 {
     mEdit->guiDrawCell(pos, cell, mPainter);
 }
+
 void QYView::guiDrawClearToEOL(YCursor pos, const YDrawCell& clearCell)
 {
-    mEdit->guiDrawClearToEOL(pos, clearCell, mPainter);
+    Q_UNUSED(pos);
+    Q_UNUSED(clearCell);
+    // Qt automatically redraws our background
 }
+
 void QYView::guiDrawSetMaxLineNumber(int max)
 {
     mVScroll->setMaximum(max);

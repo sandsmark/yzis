@@ -225,7 +225,7 @@ void NYView::drawCursor()
 
 void NYView::guiDrawClearToEOL(YCursor pos, const YDrawCell& cell)
 {
-    QChar clearChar = cell.content()[0]; /* TODO */
+    QChar clearChar = cell.content().isEmpty() ? QChar(' ') : cell.content()[0];
     int x = pos.x();
 
     if(!fakeLine) {

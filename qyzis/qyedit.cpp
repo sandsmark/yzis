@@ -28,8 +28,9 @@ using namespace std;
 #include <QApplication>
 #include <QSignalMapper>
 #include <QWidget>
-#include <qclipboard.h>
-#include <qcursor.h>
+#include <QClipboard>
+#include <QCursor>
+#include <QDebug>
 
 /* Yzis */
 #include "yzis.h"
@@ -353,22 +354,17 @@ void QYEdit::scroll(int dx, int dy)
     QRect cursorRect = mCursor.rect();
     cursorRect.moveTo(mCursor.pos());
     update(cursorRect);
-    QWidget::scroll(rx, ry, mUseArea);
+    QWidget::scroll(rx, -ry);
 }
 
 void QYEdit::guiDrawCell(YCursor pos , const YDrawCell& cell, QPainter* p)
 {
     deepdbg() << "QYEdit::guiDrawCell(" << pos.x() << "," << pos.y() <<",'" << cell.content() << "')" << endl;
-    p->save();
-    p->setFont(font());
-    bool has_bg = false;
 
     if(cell.hasSelection(yzis::SelectionVisual)) {
-        has_bg = true;
         p->setBackground(QColor(181, 24, 181));   //XXX setting
         p->setPen(Qt::white);
     } else if(cell.hasSelection(yzis::SelectionAny)) {
-        has_bg = true;
         p->setBackground(cell.foregroundColor().isValid() ? QColor(cell.foregroundColor().rgb()) : palette().color(QPalette::WindowText));
         p->setPen(cell.backgroundColor().isValid() ? QColor(cell.backgroundColor().rgb()) : palette().color(QPalette::Window));
     } else {
@@ -377,39 +373,16 @@ void QYEdit::guiDrawCell(YCursor pos , const YDrawCell& cell, QPainter* p)
         }
 
         if(cell.backgroundColor().isValid()) {
-            has_bg = true;
             p->setBackground(QColor(cell.backgroundColor().rgb()));
+        } else {
+            p->setBackground(Qt::black);
         }
     }
 
     QRect r(pos.x()*charWidth(), pos.y()*fontMetrics().lineSpacing(), cell.content().length()*charWidth(), fontMetrics().lineSpacing());
 
-    //dbg() << "guiDrawCell: r=" << r.topLeft() << "," << r.bottomRight() << " has_bg=" << has_bg << endl;
-    //dbg() << "guiDrawCell: fg=" << p->pen().color().name() << endl;
-    if(has_bg) {
-        p->eraseRect(r);
-    }
-
+    p->eraseRect(r);
     p->drawText(r, cell.content());
-    p->restore();
-}
-
-void QYEdit::guiDrawClearToEOL(YCursor pos , const YDrawCell& clearCell, QPainter* p)
-{
-    /* TODO
-    //dbg() << "QYEdit::guiDrawClearToEOL("<< x << "," << y <<"," << clearChar << ")" << endl;
-    if ( clearCell.c.isSpace() ) {
-        // not needed as we called qt for repainting this widget, and autoFillBackground = True
-        return ;
-    } else {
-        QRect r;
-        r.setTopLeft( translatePositionToReal( YCursor(pos) ) );
-        r.setRight( width() );
-        r.setHeight( fontMetrics().lineSpacing() );
-        int nb_char = mView->getColumnsVisible() - pos.x();
-        p->drawText( r, QString(nb_char, clearChar) );
-    }
-    */
 }
 
 QString QYEdit::keysToShortcut(const QString& keys)
