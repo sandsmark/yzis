@@ -53,10 +53,10 @@ void YLine::setData(const QString &data)
         len++;    //make sure to return a non empty array ... (that sucks)
     }
 
-    mAttributes.resize(len);
-
-    for(uint i = 0; i < len; i++) {
-        mAttributes.data()[ i ] = 0;
+    if (!mAttributes.isEmpty()) {
+        mAttributes.fill(0, len);
+    } else {
+        mAttributes.resize(len);
     }
 }
 
