@@ -564,8 +564,6 @@ void YInternalOptionPool::setGroup(const QString& group)
 void YInternalOptionPool::initConfFiles()
 {
     loadFrom(resourceMgr()->findResource(ConfigResource, "yzis.conf"));
-    //load cache files
-    loadFrom(resourceMgr()->findResource(ConfigResource, "hl.conf"));
 }
 
 bool YInternalOptionPool::hasGroup(const QString& group) const

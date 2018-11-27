@@ -36,6 +36,8 @@
 #include <sys/types.h>
 #include <QDir>
 #include <QFile>
+#include <QSettings>
+#include <QDateTime>
 
 #define deepdbg()    yzDeepDebug("YzisSyntaxDocument")
 #define dbg()        yzDebug("YzisSyntaxDocument")
@@ -558,63 +560,52 @@ void YzisSyntaxDocument::setupModeList(bool force)
     }
 
     // We'll store the ModeList in katesyntaxhighlightingrc
-    //KConfig config("katesyntaxhighlightingrc", false, false);
-    YInternalOptionPool* config = YSession::self()->getOptions();
-    // figure our if the kate install is too new
-    config->setGroup("General");
-
-    if(config->readIntEntry("Version") > config->readIntEntry("CachedVersion")) {
-        config->setIntEntry("CachedVersion", config->readIntEntry("Version"));
-        force = true;
-    }
+    QSettings settings(resourceMgr()->findResource(WritableConfigResource, "hl.conf"), QSettings::IniFormat);
+    settings.beginGroup("SyntaxHighlightingCache");
 
     // Let's get a list of all the xml files for hl
-    QStringList resourceDirList = resourceMgr()->resourceDirList(SyntaxHlResource);
+    const QStringList resourceDirList = resourceMgr()->resourceDirList(SyntaxHlResource);
     dbg() << "setupModeList() looking for syntax files in directories : " << resourceDirList << endl;
     QStringList list;
 
-    foreach(QString resourceDir, resourceDirList) {
+    for (const QString &resourceDir : resourceDirList) {
         list += findAllResources("data", resourceDir + "/*.xml", false, true);
     }
 
     deepdbg() << "setupModeList(): syntax file list = " << list.join("\n") << endl;
     // Let's iterate through the list and build the Mode List
-    QStringList::Iterator it = list.begin(), end = list.end();
 
-    QSet<QString> configGroups = config->groups();
-    for(; it != end; ++it) {
-        deepdbg() << "setupModeList(): analysing resource " << *it << endl;
+    for (const QString &file : list) {
+        deepdbg() << "setupModeList(): analysing resource " << file << endl;
         // Each file has a group called:
-        QString Group = "HL Cache " + *it;
+        QString Group = file;
         // Let's go to this group
-        config->setGroup(Group);
+        settings.beginGroup(Group);
         // stat the file
-        struct stat sbuf;
-        memset(&sbuf, 0, sizeof(sbuf));
-        stat(QFile::encodeName(*it), &sbuf);
+        const QDateTime lastModified = QFileInfo(file).lastModified();
 
         // If the group exist and we're not forced to read the xml file, let's build myModeList for katesyntax..rc
-        if(configGroups.contains(Group) && !force && (sbuf.st_mtime == config->readIntEntry("lastModified"))) {
+        if(!force && (lastModified == settings.value("lastModified").toDateTime())) {
             // Let's make a new YzisSyntaxModeListItem to instert in myModeList from the information in katesyntax..rc
             YzisSyntaxModeListItem *mli = new YzisSyntaxModeListItem;
-            mli->name       = config->readQStringEntry("name");
+            mli->name       = settings.value("name").toString();
             mli->nameTranslated = _(mli->name.toUtf8());
-            mli->section    = config->readQStringEntry("section").toUtf8();
-            mli->mimetype   = config->readQStringEntry("mimetype");
-            mli->extension  = config->readQStringEntry("extension");
-            mli->version    = config->readQStringEntry("version");
-            mli->priority   = config->readQStringEntry("priority");
-            mli->author    = config->readQStringEntry("author");
-            mli->license   = config->readQStringEntry("license");
-            mli->hidden   =  config->readBoolEntry("hidden");
-            mli->identifier = *it;
+            mli->section    = settings.value("section").toByteArray();
+            mli->mimetype   = settings.value("mimetype").toString();
+            mli->extension  = settings.value("extension").toString();
+            mli->version    = settings.value("version").toString();
+            mli->priority   = settings.value("priority").toString();
+            mli->author    = settings.value("author").toString();
+            mli->license   = settings.value("license").toString();
+            mli->hidden   =  settings.value("hidden").toBool();
+            mli->identifier = file;
             // Apend the item to the list
             myModeList.append(mli);
-            deepdbg() << "NO update hl cache for: " << *it << endl;
+            deepdbg() << "NO update hl cache for: " << file << endl;
         } else {
-            deepdbg() << "UPDATE hl cache for: " << *it << endl;
+            dbg() << "UPDATE hl cache for: " << file << endl;
             // We're forced to read the xml files or the mode doesn't exist in the katesyntax...rc
-            QFile f(*it);
+            QFile f(file);
 
             if(f.open(QIODevice::ReadOnly)) {
                 // Ok we opened the file, let's read the contents and close the file
@@ -627,41 +618,38 @@ void YzisSyntaxDocument::setupModeList(bool force)
                 if(success) {
                     QDomElement root = documentElement();
 
-                    if(!root.isNull()) {
+                    if(!root.isNull() && root.tagName() == "language") {
                         // If the 'first' tag is language, go on
-                        if(root.tagName() == "language") {
-                            // let's make the mode list item.
-                            YzisSyntaxModeListItem *mli = new YzisSyntaxModeListItem;
-                            mli->name      = root.attribute("name");
-                            mli->section   = root.attribute("section");
-                            mli->mimetype  = root.attribute("mimetype");
-                            mli->extension = root.attribute("extensions");
-                            mli->version   = root.attribute("version");
-                            mli->priority  = root.attribute("priority");
-                            mli->author    = root.attribute("author");
-                            mli->license   = root.attribute("license");
-                            QString hidden = root.attribute("hidden");
-                            mli->hidden    = (hidden == "true" || hidden == "TRUE");
-                            mli->identifier = *it;
-                            // Now let's write or overwrite (if force==true) the entry in katesyntax...rc
-                            config->setGroup(Group);
-                            config->setQStringEntry("name", mli->name);
-                            config->setQStringEntry("section", mli->section);
-                            config->setQStringEntry("mimetype", mli->mimetype);
-                            config->setQStringEntry("extension", mli->extension);
-                            config->setQStringEntry("version", mli->version);
-                            config->setQStringEntry("priority", mli->priority);
-                            config->setQStringEntry("author", mli->author);
-                            config->setQStringEntry("license", mli->license);
-                            config->setBoolEntry("hidden", mli->hidden);
-                            // modified time to keep cache in sync
-                            config->setIntEntry("lastModified", sbuf.st_mtime);
-                            // Now that the data is in the config file, translate section
-                            mli->section    = _("Language Section");  // We need the i18n context for when reading again the config
-                            mli->nameTranslated = _(mli->name.toUtf8());
-                            // Append the new item to the list.
-                            myModeList.append(mli);
-                        }
+                        // let's make the mode list item.
+                        YzisSyntaxModeListItem *mli = new YzisSyntaxModeListItem;
+                        mli->name      = root.attribute("name");
+                        mli->section   = root.attribute("section");
+                        mli->mimetype  = root.attribute("mimetype");
+                        mli->extension = root.attribute("extensions");
+                        mli->version   = root.attribute("version");
+                        mli->priority  = root.attribute("priority");
+                        mli->author    = root.attribute("author");
+                        mli->license   = root.attribute("license");
+                        QString hidden = root.attribute("hidden");
+                        mli->hidden    = (hidden == "true" || hidden == "TRUE");
+                        mli->identifier = file;
+                        // Now let's write or overwrite (if force==true) the entry in katesyntax...rc
+                        settings.setValue("name", mli->name);
+                        settings.setValue("section", mli->section);
+                        settings.setValue("mimetype", mli->mimetype);
+                        settings.setValue("extension", mli->extension);
+                        settings.setValue("version", mli->version);
+                        settings.setValue("priority", mli->priority);
+                        settings.setValue("author", mli->author);
+                        settings.setValue("license", mli->license);
+                        settings.setValue("hidden", mli->hidden);
+                        // modified time to keep cache in sync
+                        settings.setValue("lastModified", lastModified);
+                        // Now that the data is in the config file, translate section
+                        mli->section    = _("Language Section");  // We need the i18n context for when reading again the config
+                        mli->nameTranslated = _(mli->name.toUtf8());
+                        // Append the new item to the list.
+                        myModeList.append(mli);
                     }
                 } else {
                     YzisSyntaxModeListItem *emli = new YzisSyntaxModeListItem;
@@ -669,19 +657,27 @@ void YzisSyntaxDocument::setupModeList(bool force)
                     emli->mimetype = "invalid_file/invalid_file";
                     emli->extension = "invalid_file.invalid_file";
                     emli->version = "1.";
-                    emli->name = QString("Error: %1").arg(*it); // internal
-                    emli->nameTranslated = QString("Error: %1").arg(*it); // translated
-                    emli->identifier = (*it);
+                    emli->name = QString("Error: %1").arg(file); // internal
+                    emli->nameTranslated = QString("Error: %1").arg(file); // translated
+                    emli->identifier = (file);
+
+                    settings.setValue("name", emli->name);
+                    settings.setValue("section", emli->section);
+                    settings.setValue("mimetype", emli->mimetype);
+                    settings.setValue("extension", emli->extension);
+                    settings.setValue("version", emli->version);
+                    settings.setValue("priority", emli->priority);
+                    settings.setValue("author", emli->author);
+                    settings.setValue("license", emli->license);
+                    settings.setValue("hidden", emli->hidden);
+                    // modified time to keep cache in sync
+                    settings.setValue("lastModified", lastModified);
+
                     myModeList.append(emli);
                 }
             }
         }
-    }
-
-    QString resource = resourceMgr()->findResource(WritableConfigResource, "hl.conf");
-
-    if(! resource.isEmpty()) {
-        config->saveTo(resource, "HL Cache", "", true);
+        settings.endGroup();
     }
 }
 
