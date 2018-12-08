@@ -253,7 +253,7 @@ public:
     inline bool noHighlighting() const
     {
         return noHl;
-    };
+    }
 
     // be carefull: all documents hl should be invalidated after calling this method!
     void dropDynamicContexts();

@@ -195,7 +195,7 @@ public:
      *
      * Note: the valid line numbers are between 0 and lineCount()-1
      */
-    const QString textline(int line) const;
+    const QString &textline(int line) const;
 
     /**
      * Return the column of the first non-blank character in the line

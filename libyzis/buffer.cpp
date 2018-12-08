@@ -621,17 +621,6 @@ void YBuffer::load(const QString& file)
 
         if(d->currentEncoding == "locale") {
             codec = QTextCodec::codecForLocale();
-            /*   char *buff = (char*)malloc( 102400 * sizeof(char));
-               int readl = fl.readBlock(buff,102400);
-               QTextCodec *c = QTextCodec::codecForContent (buff,102400);
-               free(buff);
-               fl.reset();
-               dbg() << "Detected encoding " << c->name()  << " by reading " << readl << " bytes." << endl;
-               if ( readl > 0 && c && c->name() != codec->name() ) {
-                codec = c;
-                setLocalQStringOption("encoding", c->name());
-                setLocalQStringOption("fileencoding", c->name());
-               }*/ //not reliable enough
         } else {
             codec = QTextCodec::codecForName(d->currentEncoding.toLatin1());
         }
@@ -641,7 +630,7 @@ void YBuffer::load(const QString& file)
         YRawData data;
 
         while(!stream.atEnd()) {
-            data << stream.readLine();
+            data.append(stream.readLine());
         }
 
         insertRegion(YCursor(0, 0), data);
@@ -1068,11 +1057,11 @@ int YBuffer::updateHL(int line)
     int hlLine = line;
     int nElines = 0;
 
-    if(d->highlight != 0L) {
+    if(d->highlight != nullptr) {
         bool ctxChanged = true;
         bool hlChanged = false;
         int maxLine = lineCount();
-        YLine* yl = NULL;
+        YLine* yl = nullptr;
         YLine* last_yl = hlLine > 0 ? yzline(hlLine - 1) : new YLine();
 
         for(; ctxChanged && hlLine < maxLine; ++hlLine) {
@@ -1218,7 +1207,7 @@ int YBuffer::getLineLength(int line) const
     return length;
 }
 
-const QString YBuffer::textline(int line) const
+const QString &YBuffer::textline(int line) const
 {
     if(line < lineCount()) {
         return yzline(line)->data();
@@ -1233,7 +1222,7 @@ void YBuffer::setState(BufferState state)
     // that all the support stuff has been created
     if(state == BufferActive || state == BufferHidden) {
         if(!d->highlight) {
-            d->highlight = NULL;
+            d->highlight = nullptr;
         }
 
         if(!d->undoBuffer) {

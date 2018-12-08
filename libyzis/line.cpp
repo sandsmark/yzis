@@ -53,11 +53,7 @@ void YLine::setData(const QString &data)
         len++;    //make sure to return a non empty array ... (that sucks)
     }
 
-    if (!mAttributes.isEmpty()) {
-        mAttributes.fill(0, len);
-    } else {
-        mAttributes.resize(len);
-    }
+    mAttributes = QVector<uchar>(len);
 }
 
 int YLine::firstChar() const

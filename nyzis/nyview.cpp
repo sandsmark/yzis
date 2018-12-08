@@ -30,7 +30,7 @@
 #include "buffer.h"
 #include "color.h"
 
-const QRgb RGB_MASK = 0x00ffffff;                // masks RGB values
+const QRgb RGB_MASK = 0x00f0f0f0;                // masks RGB values
 
 /*
  * some color used internally
