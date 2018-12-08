@@ -78,14 +78,14 @@ public:
     /*
      * operators
      */
-    bool operator== (const YViewCursor right) const;
-    bool operator!= (const YViewCursor right) const;
-    bool operator< (const YViewCursor right) const;
-    bool operator<= (const YViewCursor right) const;
-    bool operator> (const YViewCursor right) const;
-    bool operator>= (const YViewCursor right) const;
+    bool operator==(const YViewCursor right) const;
+    bool operator!=(const YViewCursor right) const;
+    bool operator<(const YViewCursor right) const;
+    bool operator<=(const YViewCursor right) const;
+    bool operator>(const YViewCursor right) const;
+    bool operator>=(const YViewCursor right) const;
 
-private :
+private:
     YCursor mBuffer;
     int mColumn;
 };

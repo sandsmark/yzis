@@ -27,8 +27,8 @@
 
 #include <QRegularExpression>
 
-#define dbg()    yzDebug("YLineSearch")
-#define err()    yzError("YLineSearch")
+#define dbg() yzDebug("YLineSearch")
+#define err() yzError("YLineSearch")
 
 /**
  * class YLineSearch
@@ -46,12 +46,12 @@ YLineSearch::~YLineSearch()
     //        dbg() << "YLineSearch Destructor" << endl;
 }
 
-YCursor YLineSearch::forward(const QString& ch, bool& found, unsigned int times)
+YCursor YLineSearch::forward(const QString &ch, bool &found, unsigned int times)
 {
     YCursor cur = mView->getLineColumnCursor();
     int x = cur.x() + 1; // Start search after cursor pos
     int y = cur.y();
-    const QString& current = mView->buffer()->textline(y);
+    const QString &current = mView->buffer()->textline(y);
     int index = 0;
     unsigned int nfound = 0;
 
@@ -62,14 +62,14 @@ YCursor YLineSearch::forward(const QString& ch, bool& found, unsigned int times)
         regex = QRegularExpression("\\s");
     }
 
-    while(nfound < times && x < current.length()) {
+    while (nfound < times && x < current.length()) {
         if (isRegex) {
             index = current.indexOf(regex, x);
         } else {
             index = current.indexOf(ch, x);
         }
 
-        if(index < 0) {
+        if (index < 0) {
             break;
         }
 
@@ -80,7 +80,7 @@ YCursor YLineSearch::forward(const QString& ch, bool& found, unsigned int times)
     YCursor pos;
     found = (nfound == times);
 
-    if(found) {
+    if (found) {
         pos.setX(x - 1);
         pos.setY(y);
     }
@@ -89,11 +89,11 @@ YCursor YLineSearch::forward(const QString& ch, bool& found, unsigned int times)
     return pos;
 }
 
-YCursor YLineSearch::forwardBefore(const QString& ch, bool& found, unsigned int times)
+YCursor YLineSearch::forwardBefore(const QString &ch, bool &found, unsigned int times)
 {
     YCursor pos = forward(ch, found, times);
 
-    if(found) {
+    if (found) {
         pos.setX(pos.x() - 1);
     }
 
@@ -101,17 +101,17 @@ YCursor YLineSearch::forwardBefore(const QString& ch, bool& found, unsigned int 
     return pos;
 }
 
-YCursor YLineSearch::reverse(const QString& ch, bool& found, unsigned int times)
+YCursor YLineSearch::reverse(const QString &ch, bool &found, unsigned int times)
 {
     YCursor cur = mView->getLineColumnCursor();
     unsigned int x = cur.x();
     unsigned int y = cur.y();
 
-    if(x) {
-        x--;    // Start search before current cursor
+    if (x) {
+        x--; // Start search before current cursor
     }
 
-    const QString& current = mView->buffer()->textline(y);
+    const QString &current = mView->buffer()->textline(y);
     int index = 0;
     unsigned int nfound = 0;
 
@@ -122,14 +122,14 @@ YCursor YLineSearch::reverse(const QString& ch, bool& found, unsigned int times)
         regex = QRegularExpression("\\s");
     }
 
-    while(nfound < times && x > 0) {
+    while (nfound < times && x > 0) {
         if (isRegex) {
             index = current.lastIndexOf(regex, x);
         } else {
             index = current.lastIndexOf(ch, x);
         }
 
-        if(index < 0) {
+        if (index < 0) {
             break;
         }
 
@@ -140,7 +140,7 @@ YCursor YLineSearch::reverse(const QString& ch, bool& found, unsigned int times)
     YCursor pos;
     found = (nfound == times);
 
-    if(found) {
+    if (found) {
         pos.setX(x + 1);
         pos.setY(y);
     }
@@ -149,11 +149,11 @@ YCursor YLineSearch::reverse(const QString& ch, bool& found, unsigned int times)
     return pos;
 }
 
-YCursor YLineSearch::reverseAfter(const QString& ch, bool& found, unsigned int times)
+YCursor YLineSearch::reverseAfter(const QString &ch, bool &found, unsigned int times)
 {
     YCursor pos = reverse(ch, found, times);
 
-    if(found) {
+    if (found) {
         pos.setX(pos.x() + 1);
     }
 
@@ -166,7 +166,7 @@ YCursor YLineSearch::searchAgain(bool &found, unsigned int times)
     YCursor garbage;
     found = false;
 
-    if(mFirstTime) {
+    if (mFirstTime) {
         // Can't search again if we haven't searched a first time...
         dbg() << "Haven't searched before" << endl;
         return garbage;
@@ -174,7 +174,7 @@ YCursor YLineSearch::searchAgain(bool &found, unsigned int times)
 
     dbg() << "Searching for: " << mPrevSearched << endl;
 
-    switch(mType) {
+    switch (mType) {
     case SearchForward:
         return forward(mPrevSearched, found, times);
 
@@ -196,7 +196,7 @@ YCursor YLineSearch::searchAgain(bool &found, unsigned int times)
 
 YCursor YLineSearch::searchAgainOpposite(bool &found, unsigned int times)
 {
-    switch(mType) {
+    switch (mType) {
     case SearchForward:
         mType = SearchBackward;
         break;
@@ -218,10 +218,9 @@ YCursor YLineSearch::searchAgainOpposite(bool &found, unsigned int times)
 }
 
 /* PRIVATE */
-void YLineSearch::updateHistory(const QString& newch, SearchType type)
+void YLineSearch::updateHistory(const QString &newch, SearchType type)
 {
     mPrevSearched = newch;
     mType = type;
     mFirstTime = false;
 }
-

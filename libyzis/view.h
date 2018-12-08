@@ -39,7 +39,6 @@
  * Column: the column number, as in '|' vi command.
  */
 
-
 class YViewCursor;
 class YColor;
 class YCursor;
@@ -85,7 +84,7 @@ public:
     /**
      * Accessor to the list of foldings
      */
-    inline YZFoldPool* folds() const
+    inline YZFoldPool *folds() const
     {
         return mFoldPool;
     }
@@ -157,7 +156,7 @@ public:
     /**
      * Return my current buffer
      */
-    YBuffer* buffer() const
+    YBuffer *buffer() const
     {
         return mBuffer;
     }
@@ -166,7 +165,7 @@ public:
     /**
      * Return my current line search
      */
-    YLineSearch* myLineSearch()
+    YLineSearch *myLineSearch()
     {
         return mLineSearch;
     }
@@ -207,7 +206,7 @@ public:
     {
         mPreviousChars.clear();
     }
-    void appendInputBuffer(const YKey & k)
+    void appendInputBuffer(const YKey &k)
     {
         mPreviousChars.append(k);
     }
@@ -228,7 +227,7 @@ public:
     /* TODO: docstring */
     YViewCursor viewCursorFromLinePosition(int line, int position);
     /* TODO: docstring */
-    YViewCursor viewCursorFromLinePosition(const YCursor& buffer)
+    YViewCursor viewCursorFromLinePosition(const YCursor &buffer)
     {
         return viewCursorFromLinePosition(buffer.line(), buffer.column());
     }
@@ -244,20 +243,20 @@ public:
     /* TODO: docstring */
     YViewCursor viewCursorMoveVertical(int ticks);
     /* TODO: docstring */
-    YViewCursor viewCursorMoveHorizontal(int ticks, bool wrap = false, bool* stopped = NULL);
+    YViewCursor viewCursorMoveHorizontal(int ticks, bool wrap = false, bool *stopped = NULL);
 
     /* TODO: docstring */
-    void gotoViewCursor(const YViewCursor& cursor);
+    void gotoViewCursor(const YViewCursor &cursor);
 
     /* Shortcuts */
     void gotoLineColumn(int line, int position);
     void gotoLineColumnAndStick(int line, int position);
     void gotoLinePosition(int line, int position);
     void gotoLinePositionAndStick(int line, int position);
-    void gotoLinePosition(const YCursor& buffer);
-    void gotoLinePositionAndStick(const YCursor& buffer);
+    void gotoLinePosition(const YCursor &buffer);
+    void gotoLinePositionAndStick(const YCursor &buffer);
     void gotoRowColumn(int row, int column);
-    void gotoRowColumn(const YCursor& screen);
+    void gotoRowColumn(const YCursor &screen);
 
     void applyStartPosition(const YCursor pos);
 
@@ -266,8 +265,7 @@ public:
     //-------------------------------------------------------
 
     /*TODO: docstring */
-    YRawData setSelection(yzis::SelectionType type, const YInterval& bufferInterval);
-
+    YRawData setSelection(yzis::SelectionType type, const YInterval &bufferInterval);
 
     //-------------------------------------------------------
     // ----------------- Drawing
@@ -276,7 +274,7 @@ public:
     /**
      * Character color at column line
      */
-    const YColor& drawColor(int col, int line) const;
+    const YColor &drawColor(int col, int line) const;
 
     //-------------------------------------------------------
     // ----------------- Undo
@@ -343,45 +341,44 @@ public:
     /**
      * Prepend enough spaces to string so line is "centered"
      */
-    QString centerLine(const QString&);
+    QString centerLine(const QString &);
 
     //-------------------------------------------------------
     // ----------------- Options
     //-------------------------------------------------------
     QString getLocalOptionKey() const;
 
-    YOptionValue* getLocalOption(const QString& option) const;
+    YOptionValue *getLocalOption(const QString &option) const;
 
     /**
      * Retrieve an int option
      */
-    int getLocalIntegerOption(const QString& option) const;
+    int getLocalIntegerOption(const QString &option) const;
 
     /**
      * Retrieve a bool option
      */
-    bool getLocalBooleanOption(const QString& option) const;
+    bool getLocalBooleanOption(const QString &option) const;
 
     /**
      * Retrieve a string option
      */
-    QString getLocalStringOption(const QString& option) const;
+    QString getLocalStringOption(const QString &option) const;
 
     /**
      * Retrieve a qstringlist option
      */
-    QStringList getLocalListOption(const QString& option) const;
+    QStringList getLocalListOption(const QString &option) const;
 
     /**
      * Retrieve a map option
      */
-    MapOption getLocalMapOption(const QString& option) const;
+    MapOption getLocalMapOption(const QString &option) const;
 
     //-------------------------------------------------------
     // ----------------- Paint Events
     //-------------------------------------------------------
-    virtual void guiPaintEvent(const YSelection& drawMap);
-
+    virtual void guiPaintEvent(const YSelection &drawMap);
 
     /**
      * Ask for refresh screen
@@ -391,7 +388,7 @@ public:
     /*
      * Ask for repainting interval @arg i of screen.
      */
-    void sendPaintEvent(const YInterval& i);
+    void sendPaintEvent(const YInterval &i);
 
     /**
      * @arg enable is true, future paint events will be directly applied
@@ -499,7 +496,7 @@ public:
      *
      * Can't be called until the GUI has been initialized.
      */
-    void displayInfo(const QString&);
+    void displayInfo(const QString &);
 
     //-------------------------------------------------------
     // ----------------- Sticky
@@ -518,14 +515,14 @@ public:
      * Accessor to the list of availables modes
      * @return a QMap of @ref YMode
      */
-    YModePool* modePool() const
+    YModePool *modePool() const
     {
         return mModePool;
     }
 
     /** Return the current key mode of the view
      */
-    YMode * currentMode() const
+    YMode *currentMode() const
     {
         return mModePool->current();
     }
@@ -533,10 +530,12 @@ public:
     //-------------------------------------------------------
     // ----------------- Modifier Keys
     //-------------------------------------------------------
-    virtual void registerModifierKeys(const QString&)
-    {}
-    virtual void unregisterModifierKeys(const QString&)
-    {}
+    virtual void registerModifierKeys(const QString &)
+    {
+    }
+    virtual void unregisterModifierKeys(const QString &)
+    {
+    }
 
     //-------------------------------------------------------
     // ----------------- Miscellaneous
@@ -546,23 +545,23 @@ public:
      */
     void displayIntro();
 
-    virtual void printToFile(const QString& path);
+    virtual void printToFile(const QString &path);
 
     QString getCharBelow(int delta);
 
     /**
      * returns a YSelection which fit view
      */
-    YSelection clipSelection(const YSelection& sel) const;
+    YSelection clipSelection(const YSelection &sel) const;
 
     /*
      * TODO: docstring
      */
     void updateBufferInterval(int bl, int bl_last);
-    void updateBufferInterval(const YInterval& bi);
+    void updateBufferInterval(const YInterval &bi);
 
     // TODO: docstring
-    YDrawLine drawLineFromYLine(const YLine* yl, int start_column = 0) const;
+    YDrawLine drawLineFromYLine(const YLine *yl, int start_column = 0) const;
     // TODO: docstring
     YDrawSection drawSectionOfBufferLine(int bl) const;
 
@@ -577,18 +576,15 @@ public:
     }
 
 protected:
-
     void setupKeys();
 
-    bool stringHasOnlySpaces(const QString& what) const;
+    bool stringHasOnlySpaces(const QString &what) const;
 
     YDrawBuffer mDrawBuffer;
 
 private:
-
     /* update internal attributes */
     void updateInternalAttributes();
-
 
     // TODO: docstring
     bool setBufferLineContent(int bl);
@@ -610,12 +606,12 @@ private:
     /**
      * The current session, provided by the GUI
      */
-    YSession* mSession;
+    YSession *mSession;
 
     /**
      * The buffer we depend on
      */
-    YBuffer* mBuffer;
+    YBuffer *mBuffer;
 
     /**
       * This is the main cursor, the one which is displayed
@@ -625,13 +621,13 @@ private:
     /**
      * Line search
      */
-    YLineSearch* mLineSearch;
+    YLineSearch *mLineSearch;
 
     /**
      * This is the worker cursor, the one which we directly modify in our draw engine
      */
 
-    YzisAttribute* mHighlightAttributes;
+    YzisAttribute *mHighlightAttributes;
 
     /* TODO: docstring */
     int mStickyColumn;
@@ -647,12 +643,11 @@ private:
     QMap<yzis::SelectionType, YInterval> mSelectionPool;
     YSelection mPaintSelection;
 
-
     /// which regs to store macros in
     QList<QChar> mRegs;
     int m_paintAutoCommit;
 
-    YModePool* mModePool;
+    YModePool *mModePool;
 
     /**
      * options cache
@@ -660,10 +655,9 @@ private:
     int opt_schema;
     bool opt_list;
     MapOption opt_listchars;
-    YZFoldPool* mFoldPool;
+    YZFoldPool *mFoldPool;
 
     const int id;
 };
 
 #endif /*  YZ_VIEW_H */
-

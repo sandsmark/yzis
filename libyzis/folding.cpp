@@ -21,15 +21,16 @@
 #include "view.h"
 #include "debug.h"
 
-#define dbg()    yzDebug("YZFoldPool")
-#define err()    yzError("YZFoldPool")
+#define dbg() yzDebug("YZFoldPool")
+#define err() yzError("YZFoldPool")
 
-YZFoldPool::YZFoldPool(YView* view)
+YZFoldPool::YZFoldPool(YView *view)
 {
     m_view = view;
 }
 YZFoldPool::~YZFoldPool()
-{}
+{
+}
 
 void YZFoldPool::create(int from, int to)
 {
@@ -37,9 +38,9 @@ void YZFoldPool::create(int from, int to)
     int head = from;
     bool need_update = true;
 
-    if(isHead(from) || contains(from, &head)) {
-        if(m_folds[ head ].to < to) {
-            m_folds[ head ].to = to;
+    if (isHead(from) || contains(from, &head)) {
+        if (m_folds[head].to < to) {
+            m_folds[head].to = to;
         } else {
             need_update = false;
         }
@@ -50,7 +51,7 @@ void YZFoldPool::create(int from, int to)
         m_folds.insert(head, fold);
     }
 
-    if(need_update) {
+    if (need_update) {
         m_view->sendRefreshEvent();
     }
 
@@ -61,44 +62,44 @@ bool YZFoldPool::isHead(int line) const
 {
     return m_folds.contains(line);
 }
-bool YZFoldPool::contains(int line, int* head) const
+bool YZFoldPool::contains(int line, int *head) const
 {
     bool contains = false;
     QList<int> keys = m_folds.keys();
 
-    if(keys.size() > 0) {
+    if (keys.size() > 0) {
         int i;
 
-        for(i = keys.size() - 1; !contains && i >= 0 && m_folds[ keys[ i ] ].to >= line; --i) {
-            contains = (keys[ i ] < line);
+        for (i = keys.size() - 1; !contains && i >= 0 && m_folds[keys[i]].to >= line; --i) {
+            contains = (keys[i] < line);
         }
 
-        if(contains && head != NULL) {
-            *head = keys[ ++i ];
+        if (contains && head != NULL) {
+            *head = keys[++i];
         }
     }
 
     return contains;
 }
-bool YZFoldPool::isFolded(int line, int* head) const
+bool YZFoldPool::isFolded(int line, int *head) const
 {
     int fh;
     bool ret = contains(line, &fh);
 
-    if(head != NULL) {
+    if (head != NULL) {
         *head = fh;
     }
 
-    return ret && !m_folds[ fh ].opened;
+    return ret && !m_folds[fh].opened;
 }
 
 int YZFoldPool::lineAfterFold(int line) const
 {
     int head;
 
-    if(contains(line, &head)) {
-        if(!m_folds[ head ].opened) {
-            return m_folds[ head ].to + 1;
+    if (contains(line, &head)) {
+        if (!m_folds[head].opened) {
+            return m_folds[head].to + 1;
         }
     }
 
@@ -108,24 +109,22 @@ int YZFoldPool::lineHeadingFold(int line) const
 {
     int head;
 
-    if(contains(line, &head)) {
+    if (contains(line, &head)) {
         return head;
     }
 
     return line;
 }
 
-YDebugStream& operator<<(YDebugStream& out, const YZFoldPool& f)
+YDebugStream &operator<<(YDebugStream &out, const YZFoldPool &f)
 {
     QList<int> keys = f.m_folds.keys();
 
-    for(int i = 0; i < keys.size(); ++i) {
-        out << "fold from line " << keys[ i ]
-            << " to line " << f.m_folds[ keys[ i ] ].to
-            << ". Opened ? " << f.m_folds[ keys[ i ] ].opened << endl;
+    for (int i = 0; i < keys.size(); ++i) {
+        out << "fold from line " << keys[i]
+            << " to line " << f.m_folds[keys[i]].to
+            << ". Opened ? " << f.m_folds[keys[i]].opened << endl;
     }
 
     return out;
 }
-
-

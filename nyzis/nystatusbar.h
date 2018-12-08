@@ -16,15 +16,15 @@ public:
     virtual ~NYStatusBar();
 
     /** Display current mode */
-    virtual void setMode(const QString& mode);
+    virtual void setMode(const QString &mode);
     /** Display current file name */
-    virtual void setFileName(const QString& filename);
+    virtual void setFileName(const QString &filename);
     /** Display current file status information */
     virtual void setFileInfo(bool isNew, bool isModified);
     /** Display current position within the buffer */
     virtual void setLineInfo(int bufferLine, int bufferColumn, int screenColumn, QString percentage);
     /** Display an informational message */
-    virtual void setMessage(const QString& message);
+    virtual void setMessage(const QString &message);
 
     /** Initialize the status bar subwindow.
      * If the subwindow already exists we delete it beforehand.
@@ -54,4 +54,3 @@ private:
 };
 
 #endif
-

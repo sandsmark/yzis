@@ -62,18 +62,18 @@ using namespace yzis;
 
 #include "tags_stack.h"
 
-#define dbg()    yzDebug("YSession")
-#define err()    yzError("YSession")
-#define ftl()    yzFatal("YSession")
+#define dbg() yzDebug("YSession")
+#define err() yzError("YSession")
+#define ftl() yzFatal("YSession")
 
 YSessionIface::~YSessionIface()
 {
     // nothing to do here
 }
 
-YSession* YSession::mInstance = 0;
+YSession *YSession::mInstance = 0;
 
-void YSession::initDebug(int argc, char * const * argv)
+void YSession::initDebug(int argc, char *const *argv)
 {
     // initDebug() must be run early in the creation process
     YDebugBackend::self()->parseRcfile(DEBUGRC_FNAME);
@@ -81,9 +81,9 @@ void YSession::initDebug(int argc, char * const * argv)
     dbg() << " ==============[ Yzis started at: " << QDateTime::currentDateTime().toString() << "]====================" << endl;
 }
 
-YSession * YSession::self()
+YSession *YSession::self()
 {
-    if(mInstance == 0L) {
+    if (mInstance == 0L) {
         err() << "YSession::setInstance() has not been called" << endl;
         err() << "There is currently no instance of the session" << endl;
         err() << "Expect SEGFAULT as the next thing to happen!" << endl;
@@ -92,9 +92,9 @@ YSession * YSession::self()
     return mInstance;
 }
 
-void YSession::setInstance(YSession* instance)
+void YSession::setInstance(YSession *instance)
 {
-    dbg().SPrintf("setInstance( %p )", (void *) instance);
+    dbg().SPrintf("setInstance( %p )", (void *)instance);
     mInstance = instance;
     mInstance->init();
 }
@@ -111,7 +111,8 @@ void YSession::init()
     initLanguage();
     initModes();
     initResource();
-    YZIS_SAFE_MODE {
+    YZIS_SAFE_MODE
+    {
         dbg() << "Yzis SAFE MODE enabled." << endl;
     }
     mSearch = new YSearch();
@@ -151,19 +152,19 @@ void YSession::initScript()
     QString resource;
     resource = resourceMgr()->findResource(ConfigScriptResource, "init.lua");
 
-    if(! resource.isEmpty()) {
+    if (!resource.isEmpty()) {
         YLuaEngine::self()->source(resource);
     }
 }
 
-void YSession::parseCommandLine(int argc, char * argv[])
+void YSession::parseCommandLine(int argc, char *argv[])
 {
     QStringList args;
-    YView* first = NULL;
-    YView* v;
+    YView *first = NULL;
+    YView *v;
     QString s;
 
-    for(int i = 0; i < argc; i++) {
+    for (int i = 0; i < argc; i++) {
         args << argv[i];
     }
 
@@ -171,12 +172,12 @@ void YSession::parseCommandLine(int argc, char * argv[])
     //needed to avoid nyzis to find "unknown options"
     YDebugBackend::self()->parseArgv(args);
 
-    for(int i = 1; i < args.count(); ++i) {
-        if(args.at(i)[0] != '-') {
+    for (int i = 1; i < args.count(); ++i) {
+        if (args.at(i)[0] != '-') {
             dbg() << "Opening file : " << args.at(i) << endl;
             v = YSession::self()->createBufferAndView(args.at(i));
 
-            if(!first) {
+            if (!first) {
                 first = v;
             }
         } else {
@@ -184,41 +185,42 @@ void YSession::parseCommandLine(int argc, char * argv[])
             s = args.at(i);
 
             // --level and --area-level are parsed in YDebugBackend, Ignore them here
-            if(s.startsWith("--level") || s.startsWith("--area-level") || s.startsWith("--debug-output")) ;
+            if (s.startsWith("--level") || s.startsWith("--area-level") || s.startsWith("--debug-output"))
+                ;
             // Asking for Help
-            else if(s == "-h" || s == "--help") {
+            else if (s == "-h" || s == "--help") {
                 showCmdLineHelp(args[0]);
                 exit(0);
             }
             // Asking for Version Information
-            else if(s == "-v" || s == "--version") {
+            else if (s == "-v" || s == "--version") {
                 showCmdLineVersion();
                 exit(0);
             }
             // Passing Keys after the event loop started
-            else if(s == "-c") {
+            else if (s == "-c") {
                 // no splash screen when executing scripts
                 YSession::self()->getOptions()->setGroup("Global");
                 YSession::self()->getOptions()->getOption("blocksplash")->setBoolean(false);
 
-                if(s.length() > 2) {
+                if (s.length() > 2) {
                     mInitkeys = args[i].mid(2);
-                } else if(i < args.count() - 1) {
+                } else if (i < args.count() - 1) {
                     mInitkeys = args[++i];
                 }
 
                 dbg().SPrintf("Init keys = '%s'", qp(mInitkeys));
             }
             // Load a LUA script from a file
-            else if(s == "-s") {
+            else if (s == "-s") {
                 // no splash screen when executing scripts
                 YSession::self()->getOptions()->setGroup("Global");
                 YSession::self()->getOptions()->getOption("blocksplash")->setBoolean(false);
                 QString luaScript;
 
-                if(s.length() > 2) {
+                if (s.length() > 2) {
                     mLuaScript = args[i].mid(2);
-                } else if(i < args.count() - 1) {
+                } else if (i < args.count() - 1) {
                     mLuaScript = args[++i];
                 }
             }
@@ -230,7 +232,7 @@ void YSession::parseCommandLine(int argc, char * argv[])
         }
     }
 
-    if(!first) {
+    if (!first) {
         /* no view opened */
         first = YSession::self()->createBufferAndView();
         first->buffer()->openNewFile();
@@ -245,14 +247,14 @@ void YSession::frontendGuiReady()
     dbg() << "frontendGuiReady()" << endl;
     sendInitkeys();
 
-    if(mLuaScript.length()) {
+    if (mLuaScript.length()) {
         runLuaScript();
     }
 }
 
 void YSession::runLuaScript()
 {
-    if(mLuaScript.length() == 0) {
+    if (mLuaScript.length() == 0) {
         return;
     }
 
@@ -262,7 +264,7 @@ void YSession::runLuaScript()
     bool ok;
     int retInt = retValue.toInt(&ok, 0);
 
-    if(ok == false) {
+    if (ok == false) {
         err().SPrintf("runLuaScript(): Could not convert script return value '%s' to int: ", qp(retValue));
         exit(-2);
     } else {
@@ -276,11 +278,10 @@ void YSession::sendInitkeys()
     dbg() << toString() << endl;
     dbg() << "Init keys to send: '" << mInitkeys << "'" << endl;
 
-    if(mInitkeys.length()) {
+    if (mInitkeys.length()) {
         YSession::self()->scriptSendMultipleKeys(mInitkeys);
     }
 }
-
 
 QString YSession::toString() const
 {
@@ -288,13 +289,13 @@ QString YSession::toString() const
     s += "Session Content: \n";
     s += "- Buffer list: \n";
 
-    foreach(YBuffer * b, mBufferList) {
+    foreach (YBuffer *b, mBufferList) {
         s += "  + " + b->toString() + '\n';
     }
 
     s += "- View list: \n";
 
-    foreach(YView * v, mViewList) {
+    foreach (YView *v, mViewList) {
         s += "  + " + v->toString() + '\n';
     }
 
@@ -321,21 +322,21 @@ YSession::~YSession()
 
 void YSession::initModes()
 {
-    mModes[ YMode::ModeIntro ] = new YModeIntro();
-    mModes[ YMode::ModeCommand ] = new YModeCommand();
-    mModes[ YMode::ModeEx ] = new YModeEx();
-    mModes[ YMode::ModeInsert ] = new YModeInsert();
-    mModes[ YMode::ModeReplace ] = new YModeReplace();
-    mModes[ YMode::ModeVisual ] = new YModeVisual();
-    mModes[ YMode::ModeVisualLine ] = new YModeVisualLine();
-    mModes[ YMode::ModeVisualBlock ] = new YModeVisualBlock();
-    mModes[ YMode::ModeSearch ] = new YModeSearch();
-    mModes[ YMode::ModeSearchBackward ] = new YModeSearchBackward();
-    mModes[ YMode::ModeCompletion ] = new YModeCompletion();
+    mModes[YMode::ModeIntro] = new YModeIntro();
+    mModes[YMode::ModeCommand] = new YModeCommand();
+    mModes[YMode::ModeEx] = new YModeEx();
+    mModes[YMode::ModeInsert] = new YModeInsert();
+    mModes[YMode::ModeReplace] = new YModeReplace();
+    mModes[YMode::ModeVisual] = new YModeVisual();
+    mModes[YMode::ModeVisualLine] = new YModeVisualLine();
+    mModes[YMode::ModeVisualBlock] = new YModeVisualBlock();
+    mModes[YMode::ModeSearch] = new YModeSearch();
+    mModes[YMode::ModeSearchBackward] = new YModeSearchBackward();
+    mModes[YMode::ModeCompletion] = new YModeCompletion();
     YModeMap::Iterator it;
 
     // XXX orzel : why isn't that done in YMode ctor or YMode* ctors ?
-    for(it = mModes.begin(); it != mModes.end(); ++it) {
+    for (it = mModes.begin(); it != mModes.end(); ++it) {
         it.value()->init();
     }
 }
@@ -343,7 +344,7 @@ void YSession::endModes()
 {
     YModeMap::Iterator it;
 
-    for(it = mModes.begin(); it != mModes.end(); ++it) {
+    for (it = mModes.begin(); it != mModes.end(); ++it) {
         delete it.value();
     }
 
@@ -353,16 +354,16 @@ YModeMap YSession::getModes() const
 {
     return mModes;
 }
-YModeEx* YSession::getExPool()
+YModeEx *YSession::getExPool()
 {
-    return (YModeEx*)mModes[ YMode::ModeEx ];
+    return (YModeEx *)mModes[YMode::ModeEx];
 }
-YModeCommand* YSession::getCommandPool()
+YModeCommand *YSession::getCommandPool()
 {
-    return (YModeCommand*)mModes[ YMode::ModeCommand ];
+    return (YModeCommand *)mModes[YMode::ModeCommand];
 }
 
-YInfo * YSession::getYzisinfo()
+YInfo *YSession::getYzisinfo()
 {
     return mYzisinfo;
 }
@@ -379,14 +380,14 @@ YBuffer *YSession::createBuffer(const QString &filename)
     //make sure we don't have a buffer of this path yet
     YBuffer *buffer = findBuffer(filename);
 
-    if(buffer) {  //already open !
+    if (buffer) { //already open !
         return buffer;
     }
 
     buffer = new YBuffer();
     buffer->setState(YBuffer::BufferActive);
 
-    if(!filename.isEmpty()) {
+    if (!filename.isEmpty()) {
         buffer->load(filename);
     } else {
         buffer->openNewFile();
@@ -397,14 +398,14 @@ YBuffer *YSession::createBuffer(const QString &filename)
     return buffer;
 }
 
-YView *YSession::createBufferAndView(const QString& path)
+YView *YSession::createBufferAndView(const QString &path)
 {
     dbg().SPrintf("createBufferAndView( path='%s' )", qp(path));
     QString filename = YBuffer::parseFilename(path);
     YView *view;
     YBuffer *buffer = findBuffer(filename);
 
-    if(!buffer) {
+    if (!buffer) {
         buffer = createBuffer(filename);
         view = createView(buffer);
     } else {
@@ -421,7 +422,7 @@ void YSession::removeBuffer(YBuffer *b)
 {
     dbg() << "removeBuffer( " << b->toString() << " )" << endl;
 
-    foreach(YView *v, b->views()) {
+    foreach (YView *v, b->views()) {
         deleteView(v);
     }
 }
@@ -430,23 +431,23 @@ void YSession::deleteBuffer(YBuffer *b)
 {
     dbg() << "deleteBuffer( " << b->toString() << " )" << endl;
 
-    if(mBufferList.indexOf(b) >= 0) {
+    if (mBufferList.indexOf(b) >= 0) {
         mBufferList.removeAll(b);
         guiRemoveBuffer(b);
         delete b;
     }
 
-    if(mBufferList.empty()) {
+    if (mBufferList.empty()) {
         exitRequest();
     }
 }
 
-YBuffer* YSession::findBuffer(const QString& path)
+YBuffer *YSession::findBuffer(const QString &path)
 {
     QFileInfo fi(path);
 
-    foreach(YBuffer *b, mBufferList)
-        if(b->fileName() == fi.absoluteFilePath()) {
+    foreach (YBuffer *b, mBufferList)
+        if (b->fileName() == fi.absoluteFilePath()) {
             return b;
         }
 
@@ -455,8 +456,8 @@ YBuffer* YSession::findBuffer(const QString& path)
 
 bool YSession::isOneBufferModified() const
 {
-    foreach(YBuffer * b, mBufferList) {
-        if(b->fileIsModified()) {
+    foreach (YBuffer *b, mBufferList) {
+        if (b->fileIsModified()) {
             return true;
         }
     }
@@ -484,24 +485,24 @@ YView *YSession::createView(YBuffer *buffer)
     return view;
 }
 
-void YSession::deleteView(YView* view)
+void YSession::deleteView(YView *view)
 {
     dbg().SPrintf("deleteView( %s )", qp(view->toString()));
 
-    if(!mViewList.contains(view)) {
+    if (!mViewList.contains(view)) {
         ftl() << "deleteView(): trying to remove an unknown view " << view->getId() << endl;
-        return ;
+        return;
     }
 
     // Guardian, if we're deleting the last view, close the app
-    if(mViewList.size() == 1) {
+    if (mViewList.size() == 1) {
         dbg() << "deleteView(): last view being deleted, exiting!" << endl;
         exitRequest(0);
-        return ;
+        return;
     }
 
     // if we're deleting the current view, then we have to switch views
-    if(view == currentView()) {
+    if (view == currentView()) {
         setCurrentView(prevView());
     }
 
@@ -510,11 +511,11 @@ void YSession::deleteView(YView* view)
     guiDeleteView(view);
 }
 
-void YSession::setCurrentView(YView* view)
+void YSession::setCurrentView(YView *view)
 {
     dbg() << "setCurrentView( " << view->toString() << " )" << endl;
 
-    if(view == currentView()) {
+    if (view == currentView()) {
         dbg() << "setCurrentView(): view already set. Returning. " << endl;
         return;
     }
@@ -529,11 +530,11 @@ const YViewList YSession::getAllViews() const
 {
     YViewList result;
 
-    for(YBufferList::const_iterator itr = mBufferList.begin(); itr != mBufferList.end(); ++itr) {
+    for (YBufferList::const_iterator itr = mBufferList.begin(); itr != mBufferList.end(); ++itr) {
         YBuffer *buf = *itr;
         const YViewList views = buf->views();
 
-        for(YViewList::const_iterator vitr = views.begin(); vitr != views.end(); ++vitr) {
+        for (YViewList::const_iterator vitr = views.begin(); vitr != views.end(); ++vitr) {
             result.push_back(*vitr);
         }
     }
@@ -541,38 +542,38 @@ const YViewList YSession::getAllViews() const
     return result;
 }
 
-YView* YSession::findViewByBuffer(const YBuffer *buffer)
+YView *YSession::findViewByBuffer(const YBuffer *buffer)
 {
-    if(buffer == NULL) {
+    if (buffer == NULL) {
         return NULL;
     }
 
-    foreach(YView *view, mViewList)
-        if(view->buffer() == buffer) {
+    foreach (YView *view, mViewList)
+        if (view->buffer() == buffer) {
             return view;
         }
 
     return NULL;
 }
 
-YView* YSession::firstView()
+YView *YSession::firstView()
 {
     return mViewList.front();
 }
 
-YView* YSession::lastView()
+YView *YSession::lastView()
 {
     return mViewList.back();
 }
 
-YView* YSession::prevView()
+YView *YSession::prevView()
 {
-    if(mViewList.isEmpty()) {
+    if (mViewList.isEmpty()) {
         ftl() << "prevView(): WOW, no view in the list!" << endl;
         return NULL;
     }
 
-    if(currentView() == NULL) {
+    if (currentView() == NULL) {
         err() << "prevView(): WOW, current view is NULL !" << endl;
         // if that's null, the previous view is the last view
         return mViewList.last();
@@ -580,26 +581,26 @@ YView* YSession::prevView()
 
     int idx = mViewList.indexOf(currentView());
 
-    if(idx == -1) {
+    if (idx == -1) {
         ftl() << "prevView(): WOW, current view is not in mViewList !" << endl;
         return NULL;
     }
 
-    if(idx == 0) {
+    if (idx == 0) {
         idx = mViewList.size();
     }
 
     return mViewList.value(idx - 1);
 }
 
-YView* YSession::nextView()
+YView *YSession::nextView()
 {
-    if(mViewList.isEmpty()) {
+    if (mViewList.isEmpty()) {
         ftl() << "nextView(): WOW, no view in the list!" << endl;
         return NULL;
     }
 
-    if(currentView() == NULL) {
+    if (currentView() == NULL) {
         err() << "nextView(): WOW, current view is NULL !" << endl;
         // if that's null, the previous view is the last view
         return mViewList.first();
@@ -607,7 +608,7 @@ YView* YSession::nextView()
 
     int idx = mViewList.indexOf(currentView());
 
-    if(idx == -1) {
+    if (idx == -1) {
         ftl() << "nextView(): WOW, current view is not in mViewList !" << endl;
         return NULL;
     }
@@ -626,7 +627,7 @@ bool YSession::exitRequest(int errorCode)
     dbg() << "exitRequest( " << errorCode << " ) " << endl;
 
     //prompt unsaved files XXX
-    foreach(YBuffer *b, mBufferList) {
+    foreach (YBuffer *b, mBufferList) {
         b->saveYzisInfo(b->firstView());
     }
 
@@ -641,12 +642,11 @@ bool YSession::exitRequest(int errorCode)
     return guiQuit(errorCode);
 }
 
-
 void YSession::saveBufferExit()
 {
     dbg() << HERE() << endl;
 
-    if(saveAll()) {
+    if (saveAll()) {
         guiQuit();
     }
 }
@@ -656,40 +656,40 @@ bool YSession::saveAll()
     dbg() << HERE() << endl;
     bool savedAll = true;
 
-    foreach(YBuffer *b, mBufferList)
-        if(!b->fileIsNew())
-            if(b->fileIsModified() && !b->save()) {
+    foreach (YBuffer *b, mBufferList)
+        if (!b->fileIsNew())
+            if (b->fileIsModified() && !b->save()) {
                 savedAll = false;
             }
 
     return savedAll;
 }
 
-void YSession::scriptSendMultipleKeys(const QString& text)
+void YSession::scriptSendMultipleKeys(const QString &text)
 {
     dbg() << "scriptSendMultipleKeys(" << text << ")" << endl;
     YKeySequence inputs(text);
-    sendMultipleKeys(currentView(),  inputs);
+    sendMultipleKeys(currentView(), inputs);
     QCoreApplication::instance()->processEvents();
     /* }*/
 }
 
-CmdState YSession::sendMultipleKeys(YView * view, YKeySequence & inputs)
+CmdState YSession::sendMultipleKeys(YView *view, YKeySequence &inputs)
 {
     CmdState state = CmdOk;
     dbg() << "sendMultipleKeys(" << view << ", keys=" << inputs.toString() << ")" << endl;
 
-    if(view->modePool()->current()->mapMode() & MapCmdline) {
+    if (view->modePool()->current()->mapMode() & MapCmdline) {
         view->modePool()->change(YMode::ModeCommand);
     }
 
-    for(YKeySequence::const_iterator parsePos = inputs.begin() ; parsePos != inputs.end() && state != CmdStopped && state != CmdError; ++parsePos) {
-        if(view->modePool()->current()->mapMode() & MapCmdline) {
-            if(*parsePos == Qt::Key_Escape
-               || *parsePos == Qt::Key_Enter
-               || *parsePos == Qt::Key_Return
-               || *parsePos == Qt::Key_Up
-               || *parsePos == Qt::Key_Down) {
+    for (YKeySequence::const_iterator parsePos = inputs.begin(); parsePos != inputs.end() && state != CmdStopped && state != CmdError; ++parsePos) {
+        if (view->modePool()->current()->mapMode() & MapCmdline) {
+            if (*parsePos == Qt::Key_Escape
+                || *parsePos == Qt::Key_Enter
+                || *parsePos == Qt::Key_Return
+                || *parsePos == Qt::Key_Up
+                || *parsePos == Qt::Key_Down) {
                 state = sendKey(view, *parsePos);
                 continue;
             } else {
@@ -704,26 +704,26 @@ CmdState YSession::sendMultipleKeys(YView * view, YKeySequence & inputs)
     return state;
 }
 
-CmdState YSession::sendKey(YView * view, YKey _key)
+CmdState YSession::sendKey(YView *view, YKey _key)
 {
     dbg() << "sendKey( " << view << ", key=" << _key.toString() << ")" << endl;
     CmdState state;
 
     // Don't respond to pure modifier keys
-    if(_key.key() == Qt::Key_Shift || _key.key() == Qt::Key_Control
-       || _key.key() == Qt::Key_Alt) {
+    if (_key.key() == Qt::Key_Shift || _key.key() == Qt::Key_Control
+        || _key.key() == Qt::Key_Alt) {
         return CmdOk;
     }
 
     QList<QChar> reg = view->registersRecorded();
 
-    if(reg.count() > 0) {
-        for(int ab = 0 ; ab < reg.size(); ++ab) {
+    if (reg.count() > 0) {
+        for (int ab = 0; ab < reg.size(); ++ab) {
             QString newReg = _key.toString();
             QStringList curReg = getRegister(reg.at(ab));
 
-            if(curReg.size() > 0) {
-                newReg.prepend(curReg[ 0 ]);
+            if (curReg.size() > 0) {
+                newReg.prepend(curReg[0]);
             }
 
             setRegister(reg.at(ab), QStringList(newReg));
@@ -733,10 +733,12 @@ CmdState YSession::sendKey(YView * view, YKey _key)
     /** rightleft mapping **/
     bool rightleft = view->getLocalBooleanOption("rightleft");
 
-    if(rightleft && (view->modePool()->current()->mapMode() & (MapVisual | MapNormal))) {
-#define SWITCH_KEY( a, b ) \
-    if ( _key == a ) _key.setKey( b );        \
-    else if ( _key == b ) _key.setKey( a );
+    if (rightleft && (view->modePool()->current()->mapMode() & (MapVisual | MapNormal))) {
+#define SWITCH_KEY(a, b) \
+    if (_key == a)       \
+        _key.setKey(b);  \
+    else if (_key == b)  \
+        _key.setKey(a);
         SWITCH_KEY(Qt::Key_Right, Qt::Key_Left);
         SWITCH_KEY(Qt::Key_H, Qt::Key_L);
     }
@@ -752,16 +754,16 @@ CmdState YSession::sendKey(YView * view, YKey _key)
     return state;
 }
 
-void YSession::registerModifier(const QString& mod)
+void YSession::registerModifier(const QString &mod)
 {
-    foreach(YView *view, mViewList) {
+    foreach (YView *view, mViewList) {
         view->registerModifierKeys(mod);
     }
 }
 
-void YSession::unregisterModifier(const QString& mod)
+void YSession::unregisterModifier(const QString &mod)
 {
-    foreach(YView *view, mViewList) {
+    foreach (YView *view, mViewList) {
         view->unregisterModifierKeys(mod);
     }
 }
@@ -786,32 +788,32 @@ YTagStack &YSession::getTagStack()
     return *mTagStack;
 }
 
-int YSession::getIntegerOption(const QString& option)
+int YSession::getIntegerOption(const QString &option)
 {
     return YSession::self()->getOptions()->readIntegerOption(option);
 }
 
-bool YSession::getBooleanOption(const QString& option)
+bool YSession::getBooleanOption(const QString &option)
 {
     return YSession::self()->getOptions()->readBooleanOption(option);
 }
 
-QString YSession::getStringOption(const QString& option)
+QString YSession::getStringOption(const QString &option)
 {
     return YSession::self()->getOptions()->readStringOption(option);
 }
 
-QStringList YSession::getListOption(const QString& option)
+QStringList YSession::getListOption(const QString &option)
 {
     return YSession::self()->getOptions()->readListOption(option);
 }
 
-void YSession::eventConnect(const QString& event, const QString& function)
+void YSession::eventConnect(const QString &event, const QString &function)
 {
     events->connect(event, function);
 }
 
-QStringList YSession::eventCall(const QString& event, YView *view /*=NULL*/)
+QStringList YSession::eventCall(const QString &event, YView *view /*=NULL*/)
 {
     return events->exec(event, view);
 }
@@ -821,12 +823,12 @@ YInternalOptionPool *YSession::getOptions()
     return mOptions;
 }
 
-void YSession::setRegister(QChar r, const QStringList& value)
+void YSession::setRegister(QChar r, const QStringList &value)
 {
     mRegisters->setRegister(r, value);
 }
 
-QStringList& YSession::getRegister(QChar r)
+QStringList &YSession::getRegister(QChar r)
 {
     return mRegisters->getRegister(r);
 }
@@ -836,7 +838,7 @@ QList<QChar> YSession::getRegisters() const
     return mRegisters->keys();
 }
 
-void * YSession::operator new(size_t tSize)
+void *YSession::operator new(size_t tSize)
 {
     dbg() << "YSession::new()" << tSize << endl;
     return yzmalloc(tSize);
@@ -855,14 +857,14 @@ void YSession::operator delete(void *p)
 // ================================================================
 
 /** Show help text for -h and --help option */
-void YSession::showCmdLineHelp(const QString & progName)
+void YSession::showCmdLineHelp(const QString &progName)
 {
     QString usage = QString(
                         "%1 [options] [file1 [file2] ... ]\n"
                         "-h | --help : show this message\n"
                         "-v | --version: version information\n"
-                        "-c <some key presses> : execute immediately the key presses when yzis starts, asif they were typed by the user.\n"
-                    ).arg(progName);
+                        "-c <some key presses> : execute immediately the key presses when yzis starts, asif they were typed by the user.\n")
+                        .arg(progName);
     fputs(qp(usage), stderr);
 }
 
@@ -879,9 +881,8 @@ QString YSession::version()
 }
 
 /** Show error message for unknown option */
-void YSession::showCmdLineUnknowOption(const QString & opt)
+void YSession::showCmdLineUnknowOption(const QString &opt)
 {
     fprintf(stderr, "Unrecognised option: %s", qp(opt));
     dbg().SPrintf("Unrecognised option: %s", qp(opt));
 }
-

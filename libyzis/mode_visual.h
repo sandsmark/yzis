@@ -41,33 +41,33 @@ public:
     virtual void initCommandPool();
     virtual void initVisualCommandPool();
 
-    virtual void enter(YView* mView);
-    virtual void leave(YView* mView);
+    virtual void enter(YView *mView);
+    virtual void leave(YView *mView);
 
-    virtual void cursorMoved(YView* mView);
+    virtual void cursorMoved(YView *mView);
 
-    CmdState commandInsert(const YCommandArgs& args);
-    CmdState commandAppend(const YCommandArgs& args);
-    CmdState gotoExMode(const YCommandArgs& args);
-    CmdState movetoExMode(const YCommandArgs& args);
-    CmdState movetoInsertMode(const YCommandArgs& args);
-    CmdState escape(const YCommandArgs& args);
+    CmdState commandInsert(const YCommandArgs &args);
+    CmdState commandAppend(const YCommandArgs &args);
+    CmdState gotoExMode(const YCommandArgs &args);
+    CmdState movetoExMode(const YCommandArgs &args);
+    CmdState movetoInsertMode(const YCommandArgs &args);
+    CmdState escape(const YCommandArgs &args);
     CmdState changeWholeLines(const YCommandArgs &args);
     CmdState deleteWholeLines(const YCommandArgs &args);
     CmdState yankWholeLines(const YCommandArgs &args);
     CmdState yank(const YCommandArgs &args);
-    CmdState toUpperCase(const YCommandArgs& args);
-    CmdState toLowerCase(const YCommandArgs& args);
-    CmdState translateToVisual(const YCommandArgs& args);
-    CmdState translateToVisualLine(const YCommandArgs& args);
-    CmdState translateToVisualBlock(const YCommandArgs& args);
+    CmdState toUpperCase(const YCommandArgs &args);
+    CmdState toLowerCase(const YCommandArgs &args);
+    CmdState translateToVisual(const YCommandArgs &args);
+    CmdState translateToVisualLine(const YCommandArgs &args);
+    CmdState translateToVisualBlock(const YCommandArgs &args);
 
     virtual YInterval interval(const YCommandArgs &args, CmdState *state);
 
 protected:
-    virtual YInterval buildBufferInterval(YView* mView);
+    virtual YInterval buildBufferInterval(YView *mView);
     bool mEntireLines;
-    QMap<YView*, YViewCursor> mStartViewCursor;
+    QMap<YView *, YViewCursor> mStartViewCursor;
     yzis::SelectionType mSelectionType;
 };
 
@@ -81,7 +81,7 @@ public:
     virtual ~YModeVisualLine();
 
 protected:
-    virtual YInterval buildBufferInterval(YView* mView);
+    virtual YInterval buildBufferInterval(YView *mView);
 };
 
 /**
@@ -93,8 +93,7 @@ public:
     YModeVisualBlock();
     virtual ~YModeVisualBlock();
 
-    virtual void cursorMoved(YView* mView);
+    virtual void cursorMoved(YView *mView);
 };
 
 #endif
-

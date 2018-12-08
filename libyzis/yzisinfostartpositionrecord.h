@@ -46,9 +46,7 @@ public:
      * @param c The cursor for the start position in the current file
      */
 
-    YInfoStartPositionRecord(const QString & filename, const YCursor c);
-
-
+    YInfoStartPositionRecord(const QString &filename, const YCursor c);
 
     /**
      * Destructor
@@ -60,7 +58,7 @@ public:
      * The copy constructor
      */
 
-    YInfoStartPositionRecord(YInfoStartPositionRecord & copy);
+    YInfoStartPositionRecord(YInfoStartPositionRecord &copy);
 
     /**
      * Assignment operator
@@ -69,13 +67,13 @@ public:
      *             assignment
      */
 
-    YInfoStartPositionRecord & operator=(YInfoStartPositionRecord & copy);
+    YInfoStartPositionRecord &operator=(YInfoStartPositionRecord &copy);
 
     /**
      * Returns the current filename
      */
 
-    const QString & filename() const;
+    const QString &filename() const;
 
     /**
      * Returns the recorded start position for the current filename
@@ -89,7 +87,7 @@ public:
      * @param filename The name of the current file
      */
 
-    void setFilename(const QString & filename);
+    void setFilename(const QString &filename);
 
     /**
      * Sets the current position in the current file
@@ -99,7 +97,7 @@ public:
 
     void setPosition(const YCursor c)
     {
-        mPosition = c ;
+        mPosition = c;
     }
 
 private:

@@ -22,12 +22,13 @@
 #include "kyeditor.h"
 #include "kyview.h"
 
-KYEditor::KYEditor(KYView* parent)
-    : QYEdit(parent)
+KYEditor::KYEditor(KYView *parent) :
+    QYEdit(parent)
 {
 }
 
 KYEditor::~KYEditor()
-{}
+{
+}
 
 #include "kyeditor.moc"

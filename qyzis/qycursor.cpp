@@ -26,13 +26,12 @@
 /* Yzis */
 #include "debug.h"
 
-
 #define deepdbg() yzDeepDebug("QYCursor")
 #define dbg() yzDebug("QYCursor")
 #define err() yzError("QYCursor")
 
-QYCursor::QYCursor(QYView * view, QYEdit* edit, CursorShape shape)
-    : QWidget(edit)
+QYCursor::QYCursor(QYView *view, QYEdit *edit, CursorShape shape) :
+    QWidget(edit)
 {
     mView = view;
     mEdit = edit;
@@ -43,7 +42,8 @@ QYCursor::QYCursor(QYView * view, QYEdit* edit, CursorShape shape)
 }
 
 QYCursor::~QYCursor()
-{}
+{
+}
 
 QYCursor::CursorShape QYCursor::shape() const
 {
@@ -51,27 +51,27 @@ QYCursor::CursorShape QYCursor::shape() const
 }
 void QYCursor::setCursorShape(CursorShape shape)
 {
-    if(shape == mCursorShape) {
-        return ;
+    if (shape == mCursorShape) {
+        return;
     }
 
     mCursorShape = shape;
     int w = parentWidget()->fontMetrics().maxWidth();
 
-    if(w == 0) {
+    if (w == 0) {
         w = parentWidget()->fontMetrics().width("W");
     }
 
     int h = parentWidget()->fontMetrics().lineSpacing();
 
-    if(mCursorShape == CursorVbar) {
+    if (mCursorShape == CursorVbar) {
         w = 2;
     }
 
     resize(w, h);
 }
 
-void QYCursor::paintEvent(QPaintEvent* pe)
+void QYCursor::paintEvent(QPaintEvent *pe)
 {
     Q_UNUSED(pe);
     YCursor my_pos = mView->getRowColumnCursor();
@@ -80,7 +80,7 @@ void QYCursor::paintEvent(QPaintEvent* pe)
     QColor cbg, cfg;
     deepdbg().SPrintf("paintEvent(): cell string='%s'", qp(cell.content()));
 
-    if(cell.backgroundColor().isValid()) {
+    if (cell.backgroundColor().isValid()) {
         deepdbg() << "paintEvent(): valid cell.backgroundColor()" << endl;
         cbg = QColor(cell.backgroundColor().rgb());
         //cbg = QColor( Qt::red );
@@ -92,7 +92,7 @@ void QYCursor::paintEvent(QPaintEvent* pe)
 
     deepdbg() << "paintEvent(): cell background=" << cbg.name() << endl;
 
-    if(cell.foregroundColor().isValid()) {
+    if (cell.foregroundColor().isValid()) {
         deepdbg() << "paintEvent(): valid cell.foregroundColor()" << endl;
         cfg = QColor(cell.foregroundColor().rgb());
         //cfg = QColor(Qt::blue);
@@ -108,8 +108,8 @@ void QYCursor::paintEvent(QPaintEvent* pe)
     CursorShape s = shape();
     deepdbg() << "paintEvent(): shape=" << s << endl;
 
-    switch(s) {
-    case CursorFilledRect :
+    switch (s) {
+    case CursorFilledRect:
         p.setPen(cbg);
         p.setBackground(cfg);
         // erase with cell foreground
@@ -118,7 +118,7 @@ void QYCursor::paintEvent(QPaintEvent* pe)
         p.drawText(rect(), cell.content());
         break;
 
-    case CursorFrameRect :
+    case CursorFrameRect:
         p.setPen(cfg);
         p.setBackground(cbg);
         // erase with cell background
@@ -130,7 +130,7 @@ void QYCursor::paintEvent(QPaintEvent* pe)
         p.drawRect(r);
         break;
 
-    case CursorVbar :
+    case CursorVbar:
         r.setWidth(2);
         p.fillRect(r, QBrush(cfg));
         break;
@@ -153,30 +153,29 @@ void QYCursor::paintEvent(QPaintEvent* pe)
     }
 }
 
-YDebugStream& operator<<(YDebugStream& out, const QYCursor::CursorShape & shape)
+YDebugStream &operator<<(YDebugStream &out, const QYCursor::CursorShape &shape)
 {
-    switch(shape) {
-    case QYCursor::CursorFilledRect :
+    switch (shape) {
+    case QYCursor::CursorFilledRect:
         out << "CursorFilledRect";
         break;
 
-    case QYCursor::CursorVbar :
+    case QYCursor::CursorVbar:
         out << "CursorVbar";
         break;
 
-    case QYCursor::CursorHbar :
+    case QYCursor::CursorHbar:
         out << "CursorHbar";
         break;
 
-    case QYCursor::CursorFrameRect :
+    case QYCursor::CursorFrameRect:
         out << "CursorFrameRect";
         break;
 
-    case QYCursor::CursorHidden :
+    case QYCursor::CursorHidden:
         out << "CursorHidden";
         break;
     }
 
     return out;
 }
-

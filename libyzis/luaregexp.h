@@ -20,8 +20,7 @@
 #ifndef YZ_LUA_REGEXP
 #define YZ_LUA_REGEXP
 
-extern "C"
-{
+extern "C" {
 #include <lua.h>
 }
 
@@ -51,7 +50,6 @@ class YLuaRegexp
 {
 
 public:
-
     /** \brief Register the regexp functions to lua
      *
      * This functions register all the other methods listed in this
@@ -253,7 +251,6 @@ public:
       * Called by lua when the regexp is about to be deleted
      */
     static int Regexp_userdata_finalize(lua_State *L);
-
 };
 
 #endif // YZ_LUA_REGEXP

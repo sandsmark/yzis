@@ -30,36 +30,34 @@ class QYNumberLabel : public QLabel
 {
     Q_OBJECT
 
-public :
-    QYNumberLabel(const QFont& f);
+public:
+    QYNumberLabel(const QFont &f);
     virtual ~QYNumberLabel();
 
     void setNumber(int n);
-    void setFont(const QFont&);
+    void setFont(const QFont &);
 };
-
 
 class QYLineNumbers : public QWidget
 {
     Q_OBJECT
 
-public :
-    QYLineNumbers(QYView* view);
+public:
+    QYLineNumbers(QYView *view);
     virtual ~QYLineNumbers();
 
     void setLineNumber(int y, int h, int line);
     void setMaxLineNumber(int line);
 
-    void setFont(const QFont& f);
+    void setFont(const QFont &f);
     void scroll(int dy);
 
     void setLineCount(int lines);
 
-protected :
-    QVBoxLayout* mRows;
+protected:
+    QVBoxLayout *mRows;
 
-private :
-
+private:
 };
 
 #endif

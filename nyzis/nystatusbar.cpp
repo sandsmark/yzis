@@ -2,8 +2,8 @@
 #include "nystatusbar.h"
 
 #include "libyzis/debug.h"
-#define dbg()     yzDebug("NYStatusBar")
-#define err()     yzError("NYStatusBar")
+#define dbg() yzDebug("NYStatusBar")
+#define err() yzError("NYStatusBar")
 #define deepdbg() yzDeepDebug("NYStatusBar")
 
 NYStatusBar::NYStatusBar(NYView *view)
@@ -25,18 +25,18 @@ NYStatusBar::~NYStatusBar()
     delwin(m_bar);
 }
 
-void NYStatusBar::setup(WINDOW* mainwin, int line)
+void NYStatusBar::setup(WINDOW *mainwin, int line)
 {
     dbg() << QString().sprintf("setup( mainwin = %p )", mainwin) << endl;
 
-    if(m_bar) {
+    if (m_bar) {
         delwin(m_bar);
     }
 
     m_bar = subwin(mainwin, 1, 0, line, 0);
     YASSERT(m_bar);
     wattrset(m_bar, A_REVERSE);
-    wbkgd(m_bar, A_REVERSE);            // so that blank char are reversed, too
+    wbkgd(m_bar, A_REVERSE); // so that blank char are reversed, too
 }
 
 void NYStatusBar::refresh()
@@ -48,10 +48,10 @@ void NYStatusBar::refresh()
     // If there isn't enough space we delete the path starting from the beginning.
     QString central;
 
-    if(m_currentMessage.isEmpty()) {
+    if (m_currentMessage.isEmpty()) {
         central = m_currentFilename + ' ';
 
-        if(m_isModified) {
+        if (m_isModified) {
             central += "[+] ";
         }
     } else {
@@ -60,15 +60,15 @@ void NYStatusBar::refresh()
 
     int spaceforlineinfo = m_currentLineinfo.size() + 1;
     int freespace = m_view->getColumnsVisible() - m_currentMode.size() - 1
-                    - central.size() - spaceforlineinfo;
+        - central.size() - spaceforlineinfo;
 
-    if(freespace < 0) {
-        central.remove(0, -freespace);    // make room for the lineinfo
+    if (freespace < 0) {
+        central.remove(0, -freespace); // make room for the lineinfo
     } else {
         spaceforlineinfo += (freespace > 10) ? 5 : freespace / 2;
     }
 
-    if(!m_bar) {
+    if (!m_bar) {
         return;
     }
 
@@ -84,14 +84,14 @@ void NYStatusBar::refresh()
     wrefresh(m_bar);
 }
 
-void NYStatusBar::setMode(const QString& mode)
+void NYStatusBar::setMode(const QString &mode)
 {
     deepdbg() << "setMode( " << mode << " )" << endl;
     m_currentMode = mode;
     refresh();
 }
 
-void NYStatusBar::setFileName(const QString& filename)
+void NYStatusBar::setFileName(const QString &filename)
 {
     deepdbg() << "setFileName( " << filename << " )" << endl;
     m_currentFilename = filename;
@@ -101,7 +101,9 @@ void NYStatusBar::setFileName(const QString& filename)
 void NYStatusBar::setFileInfo(bool isNew, bool isModified)
 {
     deepdbg() << QString("setFileInfo( isNew=%1, isModified=%2 )")
-              .arg(isNew).arg(isModified) << endl;
+                     .arg(isNew)
+                     .arg(isModified)
+              << endl;
     m_isModified = isModified;
     refresh();
 }
@@ -110,38 +112,37 @@ void NYStatusBar::setLineInfo(int bufferLine, int bufferColumn,
                               int screenColumn, QString percentage)
 {
     deepdbg() << QString("setLineInfo( %1, %2, %3, %4 )")
-              .arg(bufferLine)
-              .arg(bufferColumn)
-              .arg(screenColumn)
-              .arg(percentage)
+                     .arg(bufferLine)
+                     .arg(bufferColumn)
+                     .arg(screenColumn)
+                     .arg(percentage)
               << endl;
     bool isNumber;
     percentage.toInt(&isNumber);
 
-    if(isNumber) {
+    if (isNumber) {
         percentage += '%';
     }
 
-    if(bufferColumn != screenColumn) {
+    if (bufferColumn != screenColumn) {
         m_currentLineinfo = QString("%1,%2-%3 (%4)")
-                            .arg(bufferLine)
-                            .arg(bufferColumn)
-                            .arg(screenColumn)
-                            .arg(percentage);
+                                .arg(bufferLine)
+                                .arg(bufferColumn)
+                                .arg(screenColumn)
+                                .arg(percentage);
     } else {
         m_currentLineinfo = QString("%1,%2 (%3)")
-                            .arg(bufferLine)
-                            .arg(bufferColumn)
-                            .arg(percentage);
+                                .arg(bufferLine)
+                                .arg(bufferColumn)
+                                .arg(percentage);
     }
 
     refresh();
 }
 
-void NYStatusBar::setMessage(const QString& message)
+void NYStatusBar::setMessage(const QString &message)
 {
     deepdbg() << "setMessage( " << message << " )" << endl;
     m_currentMessage = message;
     refresh();
 }
-

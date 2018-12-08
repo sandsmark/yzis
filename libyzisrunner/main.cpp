@@ -34,9 +34,8 @@ int main(int argc, char **argv)
     QCoreApplication *app = new QCoreApplication(argc, argv);
     NoGuiSession::createInstance();
     YSession::self()->parseCommandLine(argc, argv);
-    QTimer::singleShot(0, static_cast<NoGuiSession*>(YSession::self()), SLOT(frontendGuiReady()));
+    QTimer::singleShot(0, static_cast<NoGuiSession *>(YSession::self()), SLOT(frontendGuiReady()));
     app->exec();
     yzDebug("liyzisrunner::main() - app finished!");
     return 0;
 }
-

@@ -19,21 +19,22 @@
 
 #include "yzisinfojumplistrecord.h"
 
-#define dbg()    yzDebug("YInfoJumpListRecord")
-#define err()    yzError("YInfoJumpListRecord")
+#define dbg() yzDebug("YInfoJumpListRecord")
+#define err() yzError("YInfoJumpListRecord")
 
 /**
  * YInfoJumpListRecord::YInfoJumpListRecord
  */
 
 YInfoJumpListRecord::YInfoJumpListRecord()
-{}
+{
+}
 
 /**
  * YInfoJumpListRecord::YInfoJumpListRecord
  */
 
-YInfoJumpListRecord::YInfoJumpListRecord(const QString & filename, const QPoint pos)
+YInfoJumpListRecord::YInfoJumpListRecord(const QString &filename, const QPoint pos)
 {
     mFilename = filename;
     setPosition(pos);
@@ -44,13 +45,14 @@ YInfoJumpListRecord::YInfoJumpListRecord(const QString & filename, const QPoint 
  */
 
 YInfoJumpListRecord::~YInfoJumpListRecord()
-{}
+{
+}
 
 /**
  * YInfoJumpListRecord::YInfoJumpListRecord
  */
 
-YInfoJumpListRecord::YInfoJumpListRecord(const YInfoJumpListRecord & copy)
+YInfoJumpListRecord::YInfoJumpListRecord(const YInfoJumpListRecord &copy)
 {
     mFilename = copy.filename();
     mPosition = YCursor(copy.position().x(), copy.position().y());
@@ -60,7 +62,7 @@ YInfoJumpListRecord::YInfoJumpListRecord(const YInfoJumpListRecord & copy)
  * YInfoJumpListRecord::operator=
  */
 
-YInfoJumpListRecord & YInfoJumpListRecord::operator=(const YInfoJumpListRecord & copy)
+YInfoJumpListRecord &YInfoJumpListRecord::operator=(const YInfoJumpListRecord &copy)
 {
     mFilename = copy.filename();
     mPosition = YCursor(copy.position().x(), copy.position().y());
@@ -71,7 +73,7 @@ YInfoJumpListRecord & YInfoJumpListRecord::operator=(const YInfoJumpListRecord &
  * YInfoJumpListRecord::filename
  */
 
-QString & YInfoJumpListRecord::filename()
+QString &YInfoJumpListRecord::filename()
 {
     return mFilename;
 }
@@ -89,7 +91,7 @@ YCursor YInfoJumpListRecord::position()
  * YInfoJumpListRecord::filename
  */
 
-const QString & YInfoJumpListRecord::filename() const
+const QString &YInfoJumpListRecord::filename() const
 {
     return mFilename;
 }
@@ -122,7 +124,7 @@ const YCursor YInfoJumpListRecord::position() const
  * YInfoJumpListRecord::setFilename
  */
 
-void YInfoJumpListRecord::setFilename(const QString & filename)
+void YInfoJumpListRecord::setFilename(const QString &filename)
 {
     mFilename = filename;
 }

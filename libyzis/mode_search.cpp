@@ -31,12 +31,13 @@
 #include "selection.h"
 #include "session.h"
 
-#define dbg()    yzDebug("YModeSearch")
-#define err()    yzError("YModeSearch")
+#define dbg() yzDebug("YModeSearch")
+#define err() yzError("YModeSearch")
 
 using namespace yzis;
 
-YModeSearch::YModeSearch() : YMode()
+YModeSearch::YModeSearch() :
+    YMode()
 {
     mType = YMode::ModeSearch;
     mString = _("[ Search ]");
@@ -51,27 +52,27 @@ YModeSearch::~YModeSearch()
 {
     delete mHistory;
 }
-void YModeSearch::enter(YView* view)
+void YModeSearch::enter(YView *view)
 {
     view->guiSetFocusCommandLine();
     view->guiSetCommandLineText("");
     mSearchBegin = view->getLinePositionCursor();
 }
-void YModeSearch::leave(YView* view)
+void YModeSearch::leave(YView *view)
 {
     view->guiSetCommandLineText("");
     view->guiSetFocusMainWindow();
 }
 
-YCursor YModeSearch::replaySearch(YView* view, bool* found)
+YCursor YModeSearch::replaySearch(YView *view, bool *found)
 {
     return YSession::self()->search()->replayForward(view->buffer(), found, view->getLinePositionCursor());
 }
-YCursor YModeSearch::search(YView* view, const QString& s, bool* found)
+YCursor YModeSearch::search(YView *view, const QString &s, bool *found)
 {
     return YSession::self()->search()->forward(view->buffer(), s, found, view->getLinePositionCursor());
 }
-YCursor YModeSearch::search(YView* view, const QString& s, const YCursor begin, int* matchlength, bool* found)
+YCursor YModeSearch::search(YView *view, const QString &s, const YCursor begin, int *matchlength, bool *found)
 {
     YCursor end(0, view->buffer()->lineCount() - 1);
     end.setX(view->buffer()->textline(end.y()).length());
@@ -82,31 +83,31 @@ void YModeSearch::initModifierKeys()
 {
     mModifierKeys << "<ALT>:";
 }
-CmdState YModeSearch::execCommand(YView* view, const YKeySequence& keys, YKeySequence::const_iterator &parsePos)
+CmdState YModeSearch::execCommand(YView *view, const YKeySequence &keys, YKeySequence::const_iterator &parsePos)
 {
     Q_UNUSED(keys);
     //XXX YSelection* searchSelection = view->getSelectionPool()->search();
 
-    if(*parsePos == Qt::Key_Enter || *parsePos == Qt::Key_Return) {
+    if (*parsePos == Qt::Key_Enter || *parsePos == Qt::Key_Return) {
         QString what = view->guiGetCommandLineText();
         dbg() << "Current search: " << what;
         bool found = false;
         YCursor pos;
 
-        if(what.isEmpty()) {
+        if (what.isEmpty()) {
             pos = replaySearch(view, &found);
         } else {
             mHistory->addEntry(what);
             pos = search(view, what, &found);
 
-            if(view->getLocalBooleanOption("incsearch") && incSearchFound) {
+            if (view->getLocalBooleanOption("incsearch") && incSearchFound) {
                 pos = incSearchResult;
                 incSearchFound = false;
             }
         }
 
-        if(found) {
-            view->gotoLinePosition(pos.y() , pos.x());
+        if (found) {
+            view->gotoLinePosition(pos.y(), pos.x());
         } else {
             view->displayInfo(_("Pattern not found: ") + what);
         }
@@ -114,26 +115,26 @@ CmdState YModeSearch::execCommand(YView* view, const YKeySequence& keys, YKeySeq
         view->modePool()->pop();
         ++parsePos;
         return CmdOk;
-    } else if(*parsePos == Qt::Key_Down) {
+    } else if (*parsePos == Qt::Key_Down) {
         mHistory->goForwardInTime();
         view->guiSetCommandLineText(mHistory->getEntry());
         ++parsePos;
         return CmdOk;
-    } else if(*parsePos == Qt::Key_Left || *parsePos == Qt::Key_Right) {
+    } else if (*parsePos == Qt::Key_Left || *parsePos == Qt::Key_Right) {
         ++parsePos;
         return CmdOk;
-    } else if(*parsePos == Qt::Key_Up) {
+    } else if (*parsePos == Qt::Key_Up) {
         mHistory->goBackInTime();
         view->guiSetCommandLineText(mHistory->getEntry());
         ++parsePos;
         return CmdOk;
-    } else if(*parsePos == YKey(Qt::Key_Colon, Qt::AltModifier)) {
+    } else if (*parsePos == YKey(Qt::Key_Colon, Qt::AltModifier)) {
         view->modePool()->change(ModeEx);
         ++parsePos;
         return CmdOk;
-    } else if(*parsePos == Qt::Key_Escape
-              || *parsePos == YKey(Qt::Key_C, Qt::ControlModifier)) {
-        if(view->getLocalBooleanOption("incsearch")) {
+    } else if (*parsePos == Qt::Key_Escape
+               || *parsePos == YKey(Qt::Key_C, Qt::ControlModifier)) {
+        if (view->getLocalBooleanOption("incsearch")) {
             view->gotoLinePosition(mSearchBegin.y(), mSearchBegin.x());
             view->setPaintAutoCommit(false);
             incSearchFound = false;
@@ -145,10 +146,10 @@ CmdState YModeSearch::execCommand(YView* view, const YKeySequence& keys, YKeySeq
         view->modePool()->pop();
         ++parsePos;
         return CmdOk;
-    } else if(*parsePos == Qt::Key_Backspace) {
+    } else if (*parsePos == Qt::Key_Backspace) {
         QString back = view->guiGetCommandLineText();
 
-        if(back.isEmpty()) {
+        if (back.isEmpty()) {
             view->modePool()->pop();
             ++parsePos;
             return CmdOk;
@@ -159,13 +160,13 @@ CmdState YModeSearch::execCommand(YView* view, const YKeySequence& keys, YKeySeq
         view->guiSetCommandLineText(view->guiGetCommandLineText() + parsePos->toString());
     }
 
-    if(view->getLocalBooleanOption("incsearch")) {
+    if (view->getLocalBooleanOption("incsearch")) {
         view->setPaintAutoCommit(false);
         int matchlength;
         incSearchResult = search(view, view->guiGetCommandLineText(), mSearchBegin, &matchlength, &(incSearchFound));
 
-        if(incSearchFound) {
-            if(view->getLocalBooleanOption("hlsearch")) {
+        if (incSearchFound) {
+            if (view->getLocalBooleanOption("hlsearch")) {
                 YCursor endResult(incSearchResult);
                 endResult.setX(endResult.x() + matchlength - 1);
                 //XXX  searchSelection->addInterval( YInterval(incSearchResult, endResult) );
@@ -174,7 +175,7 @@ CmdState YModeSearch::execCommand(YView* view, const YKeySequence& keys, YKeySeq
 
             view->gotoLinePositionAndStick(incSearchResult);
         } else {
-            view->gotoLinePosition(mSearchBegin.y() , mSearchBegin.x());
+            view->gotoLinePosition(mSearchBegin.y(), mSearchBegin.x());
             //view->sendXXXPaintEvent( searchSelection->map() );
             //XXX searchSelection->clear();
         }
@@ -186,30 +187,28 @@ CmdState YModeSearch::execCommand(YView* view, const YKeySequence& keys, YKeySeq
     return CmdOk;
 }
 
-
-YModeSearchBackward::YModeSearchBackward() : YModeSearch()
+YModeSearchBackward::YModeSearchBackward() :
+    YModeSearch()
 {
     mType = YMode::ModeSearchBackward;
     mString = _("[ Search backward ]");
 }
 YModeSearchBackward::~YModeSearchBackward()
-{}
+{
+}
 
-YCursor YModeSearchBackward::replaySearch(YView* view, bool * found)
+YCursor YModeSearchBackward::replaySearch(YView *view, bool *found)
 {
     return YSession::self()->search()->replayBackward(view->buffer(), found, view->getLinePositionCursor());
 }
-YCursor YModeSearchBackward::search(YView* view, const QString& s, bool* found)
+YCursor YModeSearchBackward::search(YView *view, const QString &s, bool *found)
 {
     //XXX YCursor buffer = view->getLinePositionCursor();
     //XXX view->gotoLinePosition(false , buffer.x() + 1, buffer.y());
     return YSession::self()->search()->backward(view->buffer(), s, found, view->getLinePositionCursor());
 }
-YCursor YModeSearchBackward::search(YView* view, const QString& s, const YCursor begin, int* matchlength, bool* found)
+YCursor YModeSearchBackward::search(YView *view, const QString &s, const YCursor begin, int *matchlength, bool *found)
 {
     YCursor end(0, 0);
     return view->buffer()->action()->search(view->buffer(), s, begin, end, matchlength, found);
 }
-
-
-

@@ -35,7 +35,7 @@
 class YZIS_EXPORT YModePool
 {
 public:
-    YModePool(YView* view);
+    YModePool(YView *view);
     virtual ~YModePool();
 
     CmdState sendKey(const YKey &key);
@@ -65,11 +65,11 @@ public:
     void unregisterModifierKeys();
     void stop();
 
-    YMode* current() const;
+    YMode *current() const;
     ModeType currentType() const;
 
-private :
-    YView* mView;
+private:
+    YView *mView;
     YKey mKey;
     YModeMap mModes;
     YModeStack stack;
@@ -79,5 +79,3 @@ private :
 };
 
 #endif // YZ_MODEPOOL_H
-
-

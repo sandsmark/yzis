@@ -33,18 +33,18 @@ class KTEEditor : public KTextEditor::Editor
 public:
     virtual ~KTEEditor();
 
-    static KTextEditor::Editor* self();
+    static KTextEditor::Editor *self();
 
-    virtual KTextEditor::Document* createDocument(QObject *parent);
-    virtual const QList<KTextEditor::Document*>& documents();
-    virtual const KAboutData* aboutData() const;
+    virtual KTextEditor::Document *createDocument(QObject *parent);
+    virtual const QList<KTextEditor::Document *> &documents();
+    virtual const KAboutData *aboutData() const;
     virtual void readConfig(KConfig *config = 0);
     virtual void writeConfig(KConfig *config = 0);
 
     virtual bool configDialogSupported() const;
     virtual void configDialog(QWidget *parent);
     virtual int configPages() const;
-    virtual KTextEditor::ConfigPage* configPage(int number, QWidget *parent);
+    virtual KTextEditor::ConfigPage *configPage(int number, QWidget *parent);
     virtual QString configPageName(int number) const;
     virtual QString configPageFullName(int number) const;
     virtual KIcon configPageIcon(int number) const;
@@ -52,9 +52,8 @@ public:
 private:
     KTEEditor(QObject *parent);
 
-    static KTEEditor* me;
-    QList<KTextEditor::Document*> m_documents;
+    static KTEEditor *me;
+    QList<KTextEditor::Document *> m_documents;
 };
 
 #endif // YZIS_PART_KTE_EDITOR_H
-

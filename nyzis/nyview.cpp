@@ -17,7 +17,6 @@
    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-
 /* Std */
 #include <ctype.h>
 
@@ -30,13 +29,13 @@
 #include "buffer.h"
 #include "color.h"
 
-const QRgb RGB_MASK = 0x00f0f0f0;                // masks RGB values
+const QRgb RGB_MASK = 0x00f0f0f0; // masks RGB values
 
 /*
  * some color used internally
  */
-#define attribRed    mAttributesMap[0xff0000]
-#define attribWhite  mAttributesMap[0xffffff]
+#define attribRed mAttributesMap[0xff0000]
+#define attribWhite mAttributesMap[0xffffff]
 #define attribYellow mAttributesMap[0xffff00]
 #define attribMarker attribRed
 #define attribBlue mAttributesMap[0x0000ff]
@@ -49,16 +48,13 @@ const QRgb RGB_MASK = 0x00f0f0f0;                // masks RGB values
 int NYView::attributesMapInitialised = 0;
 QMap<QRgb, unsigned long int> NYView::mAttributesMap;
 
-
-NYView::NYView(YBuffer *b)
-    : YView(b, NYSession::self(), 10, 5)
-    , editor(0)
-    , infobar(this)
+NYView::NYView(YBuffer *b) :
+    YView(b, NYSession::self(), 10, 5), editor(0), infobar(this)
 {
     dbg() << "NYView( " << b->toString() << " )" << endl;
     statusbarHasCommand = false;
 
-    if(!attributesMapInitialised) {
+    if (!attributesMapInitialised) {
         initialiseAttributesMap();
     }
 
@@ -74,7 +70,7 @@ NYView::~NYView()
 {
     dbg() << "~NYView()" << endl;
 
-    if(window) {
+    if (window) {
         unmap();
     }
 }
@@ -86,12 +82,12 @@ void NYView::map(void)
     // main editor, fullscreen
     window = newwin(0, 0, 0, 0);
     YASSERT(window);
-    touchwin(window);   // throw away optimisations because we're going to subwin , as said in doc
+    touchwin(window); // throw away optimisations because we're going to subwin , as said in doc
     editor = subwin(window, height - 2, 0, 0, 0);
     YASSERT(editor);
     wattrset(editor, A_NORMAL);
     wmove(editor, 0, 0);
-    keypad(editor , true);  //active symbols for special keycodes
+    keypad(editor, true); //active symbols for special keycodes
     scrollok(editor, false);
     // creates layout
     /*
@@ -103,14 +99,13 @@ void NYView::map(void)
     YASSERT(statusbar);
     wattrset(statusbar, A_NORMAL | A_BOLD);
 
-    if(has_colors()) {
+    if (has_colors()) {
         wattron(statusbar, attribWhite);
     }
 
     statusbarHasCommand = false;
     updateVis();
 }
-
 
 void NYView::unmap(void)
 {
@@ -134,7 +129,7 @@ void NYView::guiScroll(int dx, int dy)
 {
     Q_UNUSED(dx); //TODO
 
-    if(dy >= getLinesVisible()) {
+    if (dy >= getLinesVisible()) {
         guiPaintEvent(YSelection(YInterval(YCursor(0, 0), YCursor(getColumnsVisible() - 1, getLinesVisible() - 1))));
     } else {
         scrollok(editor, true);
@@ -143,7 +138,7 @@ void NYView::guiScroll(int dx, int dy)
         int top = 0;
         int n = qAbs(dy);
 
-        if(dy > 0) {
+        if (dy > 0) {
             /* redraw the new bottom */
             top += getLinesVisible() - n;
         }
@@ -152,20 +147,22 @@ void NYView::guiScroll(int dx, int dy)
     }
 }
 
-void NYView::guiNotifyContentChanged(const YSelection& s)
+void NYView::guiNotifyContentChanged(const YSelection &s)
 {
     guiPaintEvent(s);
 }
 void NYView::guiPreparePaintEvent()
-{}
+{
+}
 void NYView::guiEndPaintEvent()
-{}
+{
+}
 
-void NYView::guiDrawCell(YCursor pos, const YDrawCell& cell)
+void NYView::guiDrawCell(YCursor pos, const YDrawCell &cell)
 {
     int x = pos.x();
 
-    if(!fakeLine) {
+    if (!fakeLine) {
         /* if this line is a fake, don't apply margins */
         x += marginLeft;
     }
@@ -177,27 +174,27 @@ void NYView::guiDrawCell(YCursor pos, const YDrawCell& cell)
      */
     int mAttributes = attribWhite;
 
-    if(cell.foregroundColor().isValid()) {
+    if (cell.foregroundColor().isValid()) {
         int rawcolor = cell.foregroundColor().rgb() & RGB_MASK;
 
-        if(mAttributesMap.contains(rawcolor)) {
-            mAttributes = mAttributesMap[ rawcolor ];
+        if (mAttributesMap.contains(rawcolor)) {
+            mAttributes = mAttributesMap[rawcolor];
         } else {
             yzWarning() << "Unknown color from libyzis, cell.foregroundColor().name() is " << cell.foregroundColor().name() << endl;
         }
     }
 
-    if(cell.hasSelection(yzis::SelectionAny)) {
-        mAttributes |= A_REVERSE;  // TODO, reverse bg/fg
+    if (cell.hasSelection(yzis::SelectionAny)) {
+        mAttributes |= A_REVERSE; // TODO, reverse bg/fg
     }
 
     //if ( drawUnderline() ) mAttributes |= A_UNDERLINE;
     /* convert string to wide_char */
     QByteArray my_char = cell.content().toLocal8Bit();
-    char* from_char = new char[ my_char.length() + 1 ];
+    char *from_char = new char[my_char.length() + 1];
     strcpy(from_char, my_char.constData());
     size_t needed = mbstowcs(NULL, from_char, strlen(from_char)) + 1;
-    wchar_t* wide_char = (wchar_t*)malloc(needed * sizeof(wchar_t));
+    wchar_t *wide_char = (wchar_t *)malloc(needed * sizeof(wchar_t));
     mbstowcs(wide_char, from_char, strlen(from_char));
     wide_char[needed - 1] = '\0';
     wattron(editor, mAttributes);
@@ -207,10 +204,10 @@ void NYView::guiDrawCell(YCursor pos, const YDrawCell& cell)
     delete[] from_char;
 }
 
-void NYView::guiPaintEvent(const YSelection& drawMap)
+void NYView::guiPaintEvent(const YSelection &drawMap)
 {
-    if(!editor) { // Avoid segfaults and infinite recursion.
-        return ;
+    if (!editor) { // Avoid segfaults and infinite recursion.
+        return;
     }
 
     YView::guiPaintEvent(drawMap);
@@ -223,16 +220,16 @@ void NYView::drawCursor()
     wrefresh(editor);
 }
 
-void NYView::guiDrawClearToEOL(YCursor pos, const YDrawCell& cell)
+void NYView::guiDrawClearToEOL(YCursor pos, const YDrawCell &cell)
 {
     QChar clearChar = cell.content().isEmpty() ? QChar(' ') : cell.content()[0];
     int x = pos.x();
 
-    if(!fakeLine) {
+    if (!fakeLine) {
         x += marginLeft;
     }
 
-    if(clearChar.isSpace()) {
+    if (clearChar.isSpace()) {
         /* optimization */
         wmove(editor, pos.y(), x);
         wclrtoeol(editor);
@@ -247,7 +244,7 @@ void NYView::guiDrawSetMaxLineNumber(int max)
 {
     int my_marginLeft = 2 + QString::number(max).length();
 
-    if(my_marginLeft != marginLeft) {
+    if (my_marginLeft != marginLeft) {
         marginLeft = my_marginLeft;
         updateVis();
     }
@@ -257,7 +254,7 @@ void NYView::guiDrawSetLineNumber(int y, int n, int h)
     fakeLine = n <= 0;
     QString num;
 
-    if(!fakeLine && h == 0) {
+    if (!fakeLine && h == 0) {
         num = QString::number(n);
     }
 
@@ -267,10 +264,9 @@ void NYView::guiDrawSetLineNumber(int y, int n, int h)
     wattroff(editor, attribYellow);
 }
 
-
 void NYView::guiSetFocusMainWindow()
 {
-    if(statusbarHasCommand) {
+    if (statusbarHasCommand) {
         werase(statusbar);
         wrefresh(statusbar);
     }
@@ -286,24 +282,24 @@ void NYView::guiSetFocusCommandLine()
 }
 void NYView::restoreFocus()
 {
-    switch(m_focus) {
-    case w_editor :
+    switch (m_focus) {
+    case w_editor:
         guiSetFocusMainWindow();
         break;
 
-    case w_statusbar :
+    case w_statusbar:
         guiSetFocusCommandLine();
         break;
     }
 }
 
-void NYView::guiSetCommandLineText(const QString& text)
+void NYView::guiSetCommandLineText(const QString &text)
 {
     yzDebug() << "NYView::guiSetCommandLineText: " << text << endl;
     commandline = text;
     static QChar modeChar = ':';
 
-    switch(modePool()->current()->modeType()) {
+    switch (modePool()->current()->modeType()) {
     case YMode::ModeEx:
         modeChar = ':';
         break;
@@ -326,7 +322,7 @@ void NYView::guiSetCommandLineText(const QString& text)
     statusbarHasCommand = true;
 }
 
-YStatusBarIface* NYView::guiStatusBar()
+YStatusBarIface *NYView::guiStatusBar()
 {
     return &infobar;
 }
@@ -335,15 +331,15 @@ void NYView::initialiseAttributesMap()
 {
     attributesMapInitialised = true;
 
-    if(!has_colors()) {
+    if (!has_colors()) {
         yzWarning() << "Terminal doesn't have color capabilities, disabling syntax highlighting" << endl;
-        return ;
+        return;
     }
 
     bool changecolorok = (can_change_color() == true);
     yzWarning() << "Terminal can";
 
-    if(!changecolorok) {
+    if (!changecolorok) {
         yzWarning() << " _not_";
     }
 
@@ -351,18 +347,18 @@ void NYView::initialiseAttributesMap()
     dbg() << "COLOR_PAIRS is : " << COLOR_PAIRS << endl;
     dbg() << "COLORS      is : " << COLORS << endl;
 #undef MAP
-#define RAWMAP( nb, rawcolor, color, attributes )               \
-    YASSERT( ERR != init_pair( nb, (color), -1 /*COLOR_BLACK*/ ) );    \
+#define RAWMAP(nb, rawcolor, color, attributes)                 \
+    YASSERT(ERR != init_pair(nb, (color), -1 /*COLOR_BLACK*/)); \
     mAttributesMap[(rawcolor)] = COLOR_PAIR((nb)) | (attributes);
-#define MAP( nb, qtcolor, color, attributes )               \
-    RAWMAP((nb),YColor(qtcolor).rgb() & RGB_MASK,(color),(attributes))
+#define MAP(nb, qtcolor, color, attributes) \
+    RAWMAP((nb), YColor(qtcolor).rgb() & RGB_MASK, (color), (attributes))
     // first arg is the new rawcolor, second arg is the one that should be used
-#define ALIASMAP(rawcolor1,rawcolor2) \
-    YASSERT( ! mAttributesMap.contains( rawcolor1) ); \
+#define ALIASMAP(rawcolor1, rawcolor2)            \
+    YASSERT(!mAttributesMap.contains(rawcolor1)); \
     mAttributesMap[(rawcolor1)] = mAttributesMap[(rawcolor2)];
-    MAP(1, Qt::red, COLOR_RED, A_BOLD);   // red = 1, is used to display info on statusbar..
+    MAP(1, Qt::red, COLOR_RED, A_BOLD); // red = 1, is used to display info on statusbar..
     YASSERT(ERR != init_pair(2, COLOR_WHITE, COLOR_BLUE));
-    \
+
     MAP(3, Qt::yellow, COLOR_YELLOW, A_BOLD);
     MAP(4, Qt::lightGray, COLOR_WHITE, A_NORMAL);
     MAP(5, Qt::gray, COLOR_WHITE, A_NORMAL);
@@ -381,7 +377,7 @@ void NYView::initialiseAttributesMap()
 
 void NYView::guiSetup()
 {
-    if(marginLeft > 0 && !getLocalBooleanOption("number")) {
+    if (marginLeft > 0 && !getLocalBooleanOption("number")) {
         marginLeft = 0;
     }
 
@@ -398,11 +394,11 @@ void NYView::guiSetup()
 //
 if(changecolorok)
 {
-#define COLOR_QT2CURSES(a) ((a)*1000/256)
-#define COLOR_CURSES2QT(a) ((a)*256/1000)
-#define MAP( nb, color )       \
-    init_color( nb, COLOR_QT2CURSES(qRed(color.rgb())), COLOR_QT2CURSES( qGreen(color.rgb())), COLOR_QT2CURSES( qBlue(color.rgb()))) ; \
-    YASSERT ( ERR != init_pair( nb, nb%COLORS, COLOR_BLACK ) );    \
+#define COLOR_QT2CURSES(a) ((a)*1000 / 256)
+#define COLOR_CURSES2QT(a) ((a)*256 / 1000)
+#define MAP(nb, color)                                                                                                             \
+    init_color(nb, COLOR_QT2CURSES(qRed(color.rgb())), COLOR_QT2CURSES(qGreen(color.rgb())), COLOR_QT2CURSES(qBlue(color.rgb()))); \
+    YASSERT(ERR != init_pair(nb, nb % COLORS, COLOR_BLACK));                                                                       \
     mColormap[color.rgb()] = nb;
     /*
     init_color( 1,
@@ -433,7 +429,7 @@ if(changecolorok)
 
 #endif
 
-    bool NYView::guiPopupFileSaveAs()
+bool NYView::guiPopupFileSaveAs()
 {
     // TODO
     displayInfo("Save as not implemented yet, use :w<filename>");
@@ -471,8 +467,7 @@ void NYView::guiUpdateCursorPosition()
     restoreFocus();
 }
 
-void NYView::guiDisplayInfo(const QString&)
+void NYView::guiDisplayInfo(const QString &)
 {
     restoreFocus();
 }
-

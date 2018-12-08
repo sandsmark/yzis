@@ -43,7 +43,7 @@ public:
      * @param event the event to listen for
      * @param function the Lua function to be called by the event
      */
-    void connect(const QString& event, const QString& function);
+    void connect(const QString &event, const QString &function);
 
     /**
      * Call plugins for event
@@ -51,7 +51,7 @@ public:
      * @param view view is the YView in which to execute the event string
      * (can be different from the current view)
      */
-    QStringList exec(const QString& event, YView *view = NULL);
+    QStringList exec(const QString &event, YView *view = NULL);
 
 private:
     QMap<QString, QStringList> mEvents;

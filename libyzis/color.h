@@ -30,7 +30,7 @@
 typedef unsigned int QRgb;
 #endif
 
-#define YzqRgb(r,g,b) (0xff000000 | (r << 16) |  (g << 8) | b)
+#define YzqRgb(r, g, b) (0xff000000 | (r << 16) | (g << 8) | b)
 
 /** Class to store the concept of color, for our syntax highlighting code.
   *
@@ -93,13 +93,12 @@ public:
     int green() const;
     int blue() const;
 
-    bool operator!=(const YColor& color) const;
-    bool operator==(const YColor& color) const;
+    bool operator!=(const YColor &color) const;
+    bool operator==(const YColor &color) const;
 
-    YColor& operator=(const YColor& color);
+    YColor &operator=(const YColor &color);
 
 private:
-
     // rgb
     int m_red;
     int m_green;

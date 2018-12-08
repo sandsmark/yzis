@@ -33,17 +33,17 @@ class KTEDocument : public KTextEditor::Document
 {
     Q_OBJECT
 public:
-    KTEDocument(QObject* parent = 0);
+    KTEDocument(QObject *parent = 0);
     virtual ~KTEDocument();
 
-    virtual KTextEditor::Editor* editor();
-    virtual KTextEditor::View* createView(QWidget *parent);
-    virtual KTextEditor::View* activeView() const;
-    virtual const QList<KTextEditor::View*>& views() const;
-    virtual const QString& documentName() const;
+    virtual KTextEditor::Editor *editor();
+    virtual KTextEditor::View *createView(QWidget *parent);
+    virtual KTextEditor::View *activeView() const;
+    virtual const QList<KTextEditor::View *> &views() const;
+    virtual const QString &documentName() const;
     virtual QString mimeType();
     virtual bool setEncoding(const QString &encoding);
-    virtual const QString& encoding() const;
+    virtual const QString &encoding() const;
     virtual bool documentReload();
 
     virtual bool documentSave();
@@ -81,7 +81,7 @@ public:
     virtual bool openFile();
     virtual bool saveFile();
 
-    YBuffer* buffer() const
+    YBuffer *buffer() const
     {
         return m_buffer;
     }
@@ -99,9 +99,8 @@ signals:
     void highlightingModeChanged(KTextEditor::Document *document);
 
 private:
-    QList<KTextEditor::View*> m_views;
-    YBuffer* m_buffer;
+    QList<KTextEditor::View *> m_views;
+    YBuffer *m_buffer;
 };
 
 #endif // YZIS_PART_KTE_DOCUMENT_H
-

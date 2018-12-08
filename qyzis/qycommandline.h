@@ -28,8 +28,8 @@ class QYCommandLine : public QLineEdit
 {
     Q_OBJECT
 
-public :
-    QYCommandLine(QYView * view = 0);
+public:
+    QYCommandLine(QYView *view = 0);
     virtual ~QYCommandLine();
 
 protected:
@@ -37,7 +37,7 @@ protected:
     virtual void focusInEvent(QFocusEvent *);
     virtual void focusOutEvent(QFocusEvent *);
 
-private :
+private:
     QYView *mView;
 };
 

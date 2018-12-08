@@ -20,8 +20,7 @@
 
 #include <kparts/mainwindow.h>
 
-namespace KTextEditor
-{
+namespace KTextEditor {
 class Document;
 class View;
 }
@@ -30,11 +29,12 @@ class MainWindow : public KParts::MainWindow
 {
     Q_OBJECT
 public:
-    MainWindow(KTextEditor::Document* doc = 0L);
+    MainWindow(KTextEditor::Document *doc = 0L);
     ~MainWindow();
+
 private:
-    KTextEditor::Document* document;
-    KTextEditor::View* view;
+    KTextEditor::Document *document;
+    KTextEditor::View *view;
 };
 
 #endif

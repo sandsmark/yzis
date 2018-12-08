@@ -35,13 +35,19 @@ class YInfoJumpListRecord;
 /**
   * @short In-memory representation of a tag
   */
-struct YTagStackItem {
+struct YTagStackItem
+{
     YTagStackItem()
-    {}
-    YTagStackItem(const YTagStackItem &o) : pattern(o.pattern), filename(o.filename)
-    {}
-    YTagStackItem(const QString &p, const QString &f) : pattern(p), filename(f)
-    {}
+    {
+    }
+    YTagStackItem(const YTagStackItem &o) :
+        pattern(o.pattern), filename(o.filename)
+    {
+    }
+    YTagStackItem(const QString &p, const QString &f) :
+        pattern(p), filename(f)
+    {
+    }
     QString pattern;
     QString filename;
 };

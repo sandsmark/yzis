@@ -27,7 +27,6 @@ Copyright (c) 2004-2005 Mickael Marchand <marchand@kde.org>
 #include <unistd.h>
 #include <ctype.h>
 
-
 #define dbg() yzDebug("NYSession")
 #define warn() yzWarning("NYSession")
 #define err() yzError("NYSession")
@@ -44,16 +43,16 @@ void NYSession::createInstance()
     setInstance(&instance);
 }
 
-NYSession::NYSession()
-    : YSession()
+NYSession::NYSession() :
+    YSession()
 {
     dbg() << "NYSession()" << endl;
     /* init screen */
-    (void) initscr(); /* initialize the curses library */
+    (void)initscr(); /* initialize the curses library */
     keypad(stdscr, true); /* enable keyboard mapping */
-    (void) nonl();  /* tell curses not to do NL->CR/NL on output */
-    (void) cbreak(); /* take input chars one at a time, no wait for \n */
-    (void) noecho(); /* echo input - in color */
+    (void)nonl(); /* tell curses not to do NL->CR/NL on output */
+    (void)cbreak(); /* take input chars one at a time, no wait for \n */
+    (void)noecho(); /* echo input - in color */
     intrflush(stdscr, false);
     // notimeout( stdscr, true ); // XXX conflict with nodelay ?? if you want to test half or no delay, comment this line.
     halfdelay(1);
@@ -62,7 +61,7 @@ NYSession::NYSession()
     wattron(stdscr, A_STANDOUT); // will be herited by subwin
     use_default_colors();
 
-    if(has_colors()) {
+    if (has_colors()) {
         start_color();
     }
 
@@ -87,65 +86,65 @@ bool NYSession::processInput(int /*fd*/)
     // this one is not blocking thanx to the nodelay() call
     int ret = get_wch(&c);
 
-    if(ret == ERR) {
+    if (ret == ERR) {
         return false;
     }
 
     // int c = getch();
 
     // we know what this is..
-    switch(c) {
+    switch (c) {
     //  case ERR: // nothing to be done
     //   return false;
-    case KEY_RESIZE:  // do nothing with this one
+    case KEY_RESIZE: // do nothing with this one
         return true;
 
     // don't do  currentView->sendKey(QString(QChar(0x60+c)),"<CTRL>");
     // on all iscntrl(c), it would break <esc> and <enter>....
-    case 0x01:  // ^a
-    case 0x02:  // ^b
-    case 0x05:  // ^e
-    case 0x06:  // ^f
-    case 0x07:  // ^g
-    case 0x08:  // ^h
+    case 0x01: // ^a
+    case 0x02: // ^b
+    case 0x05: // ^e
+    case 0x06: // ^f
+    case 0x07: // ^g
+    case 0x08: // ^h
 
     //  case 0x09: // ^i  <----- tab
     //  case 0x0a: // ^j  <----- enter
-    case 0x0b:  // ^k
-    case 0x0c:  // ^l // important, tested
+    case 0x0b: // ^k
+    case 0x0c: // ^l // important, tested
 
     //  case 0x0d: // ^m  <----- return
-    case 0x0e:  // ^n // important, tested
-    case 0x0f:  // ^o // important, tested
-    case 0x10:  // ^p
-    case 0x11:  // ^q
-    case 0x12:  // ^r // important, tested
+    case 0x0e: // ^n // important, tested
+    case 0x0f: // ^o // important, tested
+    case 0x10: // ^p
+    case 0x11: // ^q
+    case 0x12: // ^r // important, tested
 
     //  case 0x13: // ^s
     //  case 0x14: // ^t
     //  case 0x15: // ^u
     //  case 0x16: // ^v
     //  case 0x17: // ^w
-    case 0x18:  // ^x // important, tested
-    case 0x19:  // ^y
-    case 0x1a:  // ^z
+    case 0x18: // ^x // important, tested
+    case 0x19: // ^y
+    case 0x1a: // ^z
         sendKey(currentView(), YKey(0x60 + c, Qt::ControlModifier));
         return true;
     } // switch
 
-    if(c == 0x1d) {
+    if (c == 0x1d) {
         sendKey(currentView(), YKey(Qt::Key_BracketRight, Qt::ControlModifier));
     }
 
-    if(keycodes.contains(c)) {
+    if (keycodes.contains(c)) {
         sendKey(currentView(), keycodes[c]);
         return true;
     }
 
     // remaining cases
-    if(c & KEY_CODE_YES) {   // ncurses special key
-        err() << "*************** Unhandled" <<
-              "ncurses key code, please report : " << (int) c << endl;
+    if (c & KEY_CODE_YES) { // ncurses special key
+        err() << "*************** Unhandled"
+              << "ncurses key code, please report : " << (int)c << endl;
         return true;
     }
 
@@ -156,14 +155,14 @@ bool NYSession::processInput(int /*fd*/)
       modifiers += "<ALT>";
       c &= ~0200;
      } */
-    if(c >= KEY_MAX) {   // non-ascii key
-        err() << "*************** Unhandled" <<
-              "and very strange (>KEY_MAX) char received from ncurses, please report : " << (int) c << endl;
+    if (c >= KEY_MAX) { // non-ascii key
+        err() << "*************** Unhandled"
+              << "and very strange (>KEY_MAX) char received from ncurses, please report : " << (int)c << endl;
         return true;
     }
 
     // detect/remove the ncurses 'control' flag
-    if(iscntrl(c)) {
+    if (iscntrl(c)) {
         modifiers |= Qt::ControlModifier;
         c += 96;
     }
@@ -175,7 +174,7 @@ bool NYSession::processInput(int /*fd*/)
     return true;
 }
 
-void NYSession::guiSetClipboardText(const QString& , Clipboard::Mode)
+void NYSession::guiSetClipboardText(const QString &, Clipboard::Mode)
 {
     // XXX
 }
@@ -190,30 +189,30 @@ bool NYSession::guiQuit(int errorCode)
 void NYSession::guiSetFocusMainWindow()
 {
     dbg() << "guiSetFocusMainWindow()" << endl;
-    NYView *yv = static_cast<NYView*>(currentView());
+    NYView *yv = static_cast<NYView *>(currentView());
     yv->guiSetFocusMainWindow();
 }
 
 void NYSession::guiSetFocusCommandLine()
 {
     dbg() << "guiSetFocusCommandLine()" << endl;
-    NYView *yv = static_cast<NYView*>(currentView());
+    NYView *yv = static_cast<NYView *>(currentView());
     yv->guiSetFocusCommandLine();
 }
 
-void NYSession::guiChangeCurrentView(YView * view)
+void NYSession::guiChangeCurrentView(YView *view)
 {
     dbg() << "changeCurrentView( " << view->toString() << ")" << endl;
-    NYView *cur = static_cast<NYView*>(currentView());
-    NYView *v = static_cast<NYView*>(view);
+    NYView *cur = static_cast<NYView *>(currentView());
+    NYView *v = static_cast<NYView *>(view);
     YASSERT(view);
 
-    if(cur == v) {
+    if (cur == v) {
         warn() << "changeCurrentView() called with same view.." << endl;
-        return ;
+        return;
     }
 
-    if(cur) {
+    if (cur) {
         cur->unmap();
     }
 
@@ -221,7 +220,7 @@ void NYSession::guiChangeCurrentView(YView * view)
     v->sendRefreshEvent();
 }
 
-YView* NYSession::guiCreateView(YBuffer* buffer)
+YView *NYSession::guiCreateView(YBuffer *buffer)
 {
     dbg() << "doCreateView( " << buffer->toString() << ")" << endl;
     YASSERT(buffer);
@@ -264,7 +263,7 @@ void NYSession::guiPopupMessage(const QString &_message)
     WINDOW *popup = newwin(nl, nc + 4, (LINES - nl) / 2, (COLS - nc) / 2);
     box(popup, 0, 0);
     mvwaddstr(popup, 2, 2, message.toLocal8Bit().constData());
-    mvwaddstr(popup, 4, ((nc + 4) - length) / 2, anyKeyMsg.toLocal8Bit().constData());   // Center the text.
+    mvwaddstr(popup, 4, ((nc + 4) - length) / 2, anyKeyMsg.toLocal8Bit().constData()); // Center the text.
     // TODO : use QString QString::section
 #endif
     wrefresh(popup);
@@ -275,7 +274,7 @@ void NYSession::guiPopupMessage(const QString &_message)
     halfdelay(1); // Go back to the halfdelay-mode.
     delwin(popup);
 
-    if(currentView()) { // view is not up yet, let's output that to stderr maybe ?
+    if (currentView()) { // view is not up yet, let's output that to stderr maybe ?
         currentView()->sendRefreshEvent();
     } else {
         fputs(qp(message), stderr);
@@ -285,9 +284,9 @@ void NYSession::guiPopupMessage(const QString &_message)
 void NYSession::guiDeleteView(YView *view)
 {
     dbg() << "guiDeleteView(" << view->toString() << ")" << endl;
-    NYView *oldview = dynamic_cast<NYView*>(view);
+    NYView *oldview = dynamic_cast<NYView *>(view);
     Q_ASSERT(oldview);
-    NYView *newview = dynamic_cast<NYView*>(currentView());
+    NYView *newview = dynamic_cast<NYView *>(currentView());
     Q_ASSERT(newview);
     newview->guiSetCommandLineText("");
     newview->sendRefreshEvent();
@@ -297,19 +296,19 @@ void NYSession::guiDeleteView(YView *view)
     dbg() << "guiDeleteView(): done" << endl;
 }
 
-bool NYSession::guiPromptYesNo(const QString& /*title*/, const QString& /*message*/)
+bool NYSession::guiPromptYesNo(const QString & /*title*/, const QString & /*message*/)
 {
     //TODO
     return true;
 }
 
-int NYSession::guiPromptYesNoCancel(const QString& /*title*/, const QString& /*message*/)
+int NYSession::guiPromptYesNoCancel(const QString & /*title*/, const QString & /*message*/)
 {
     //TODO
     return 0; //return yes for now...
 }
 
-void NYSession::guiSplitHorizontally(YView* /*view*/)
+void NYSession::guiSplitHorizontally(YView * /*view*/)
 {
     //TODO
 }
@@ -318,67 +317,68 @@ void NYSession::initialiseKeycodes()
 {
     keycodes.clear();
     // ascii stuff
-    keycodes[ 9] = YKey(Qt::Key_Tab);
-    keycodes[ 10] = YKey(Qt::Key_Enter);   // enter
-    keycodes[ 13] = YKey(Qt::Key_Return);   // return
-    keycodes[ 27] = YKey(Qt::Key_Escape);
-    keycodes[ 127] = YKey(Qt::Key_Backspace);
+    keycodes[9] = YKey(Qt::Key_Tab);
+    keycodes[10] = YKey(Qt::Key_Enter); // enter
+    keycodes[13] = YKey(Qt::Key_Return); // return
+    keycodes[27] = YKey(Qt::Key_Escape);
+    keycodes[127] = YKey(Qt::Key_Backspace);
     //keycodes[ KEY_CODE_YES ] = ;
     //keycodes[ KEY_MIN ] = ;
     //    keycodes[ KEY_BREAK ] = YKey(Qt::Key_Break);
     //keycodes[ KEY_SRESET ] = ;
     //keycodes[ KEY_RESET ] = ;
-    keycodes[ KEY_DOWN ] = YKey(Qt::Key_Down);
-    keycodes[ KEY_UP ] = YKey(Qt::Key_Up);
-    keycodes[ KEY_LEFT ] = YKey(Qt::Key_Left);
-    keycodes[ KEY_RIGHT ] = YKey(Qt::Key_Right);
-    keycodes[ KEY_HOME ] = YKey(Qt::Key_Home);
-    keycodes[ KEY_BACKSPACE ] = YKey(Qt::Key_Backspace);
+    keycodes[KEY_DOWN] = YKey(Qt::Key_Down);
+    keycodes[KEY_UP] = YKey(Qt::Key_Up);
+    keycodes[KEY_LEFT] = YKey(Qt::Key_Left);
+    keycodes[KEY_RIGHT] = YKey(Qt::Key_Right);
+    keycodes[KEY_HOME] = YKey(Qt::Key_Home);
+    keycodes[KEY_BACKSPACE] = YKey(Qt::Key_Backspace);
     //keycodes[ KEY_F0 ] = Qt::Key_F0;
-    keycodes[ KEY_F(1) ] = YKey(Qt::Key_F1);
-    keycodes[ KEY_F(2) ] = YKey(Qt::Key_F2);
-    keycodes[ KEY_F(3) ] = YKey(Qt::Key_F3);
-    keycodes[ KEY_F(4) ] = YKey(Qt::Key_F4);
-    keycodes[ KEY_F(5) ] = YKey(Qt::Key_F5);
-    keycodes[ KEY_F(6) ] = YKey(Qt::Key_F6);
-    keycodes[ KEY_F(7) ] = YKey(Qt::Key_F7);
-    keycodes[ KEY_F(8) ] = YKey(Qt::Key_F8);
-    keycodes[ KEY_F(9) ] = YKey(Qt::Key_F9);
-    keycodes[ KEY_F(10) ] = YKey(Qt::Key_F10);
-    keycodes[ KEY_F(11) ] = YKey(Qt::Key_F11);
-    keycodes[ KEY_F(12) ] = YKey(Qt::Key_F12);
+    keycodes[KEY_F(1)] = YKey(Qt::Key_F1);
+    keycodes[KEY_F(2)] = YKey(Qt::Key_F2);
+    keycodes[KEY_F(3)] = YKey(Qt::Key_F3);
+    keycodes[KEY_F(4)] = YKey(Qt::Key_F4);
+    keycodes[KEY_F(5)] = YKey(Qt::Key_F5);
+    keycodes[KEY_F(6)] = YKey(Qt::Key_F6);
+    keycodes[KEY_F(7)] = YKey(Qt::Key_F7);
+    keycodes[KEY_F(8)] = YKey(Qt::Key_F8);
+    keycodes[KEY_F(9)] = YKey(Qt::Key_F9);
+    keycodes[KEY_F(10)] = YKey(Qt::Key_F10);
+    keycodes[KEY_F(11)] = YKey(Qt::Key_F11);
+    keycodes[KEY_F(12)] = YKey(Qt::Key_F12);
     //keycodes[ KEY_DL ] = ;
     //keycodes[ KEY_IL ] = ;
-    keycodes[ KEY_DC ] = YKey(Qt::Key_Delete);
-    keycodes[ KEY_IC ] = YKey(Qt::Key_Insert);
-    keycodes[ Qt::Key_Insert ] = YKey(Qt::Key_Insert);
+    keycodes[KEY_DC] = YKey(Qt::Key_Delete);
+    keycodes[KEY_IC] = YKey(Qt::Key_Insert);
+    keycodes[Qt::Key_Insert] = YKey(Qt::Key_Insert);
     //keycodes[ KEY_EIC ] = ;
-    keycodes[ KEY_CLEAR ] = YKey(Qt::Key_Clear);
+    keycodes[KEY_CLEAR] = YKey(Qt::Key_Clear);
     //keycodes[ KEY_EOS ] = ;
     //keycodes[ KEY_EOL ] = ;
     //keycodes[ KEY_SF ] = ;
     //keycodes[ KEY_SR ] = ;
-    keycodes[ KEY_NPAGE ] = YKey(Qt::Key_PageDown);
-    keycodes[ KEY_PPAGE ] = YKey(Qt::Key_PageUp);
+    keycodes[KEY_NPAGE] = YKey(Qt::Key_PageDown);
+    keycodes[KEY_PPAGE] = YKey(Qt::Key_PageUp);
     //keycodes[ KEY_STAB ] = ;
     //keycodes[ KEY_CTAB ] = ;
     //keycodes[ KEY_CATAB ] = ;
-    keycodes[ KEY_ENTER ] = YKey(Qt::Key_Enter);;
-    keycodes[ KEY_PRINT ] = YKey(Qt::Key_Print);
+    keycodes[KEY_ENTER] = YKey(Qt::Key_Enter);
+    ;
+    keycodes[KEY_PRINT] = YKey(Qt::Key_Print);
     //keycodes[ KEY_LL ] = ;
-    keycodes[ KEY_A1 ] = YKey(Qt::Key_Home);
+    keycodes[KEY_A1] = YKey(Qt::Key_Home);
     //    keycodes[ KEY_A3 ] = YKey(Qt::Key_Prior);
     //keycodes[ KEY_B2 ] = ;
-    keycodes[ KEY_C1 ] = YKey(Qt::Key_End);
+    keycodes[KEY_C1] = YKey(Qt::Key_End);
     //    keycodes[ KEY_C3 ] = YKey(Qt::Key_Next);
-    keycodes[ KEY_BTAB ] = YKey(Qt::Key_Backtab);
+    keycodes[KEY_BTAB] = YKey(Qt::Key_Backtab);
     //keycodes[ KEY_BEG ] = ;
     //keycodes[ KEY_CANCEL ] = ;
     //keycodes[ KEY_CLOSE ] = ;
     //keycodes[ KEY_COMMAND ] = ;
     //keycodes[ KEY_COPY ] = ;
     //keycodes[ KEY_CREATE ] = ;
-    keycodes[ KEY_END ] = YKey(Qt::Key_End);
+    keycodes[KEY_END] = YKey(Qt::Key_End);
     //keycodes[ KEY_EXIT ] = ;
     //keycodes[ KEY_FIND ] = ;
     //keycodes[ KEY_HELP ] = ;

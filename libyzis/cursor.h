@@ -42,13 +42,19 @@ class YDebugStream;
 class YZIS_EXPORT YCursor : public QPoint
 {
 
-public :
-    YCursor() : QPoint(0, 0)
-    { }
-    YCursor(const QPoint &p) : QPoint(p)
-    { } // handles YCursor(const YCursor&) as well
-    YCursor(const int x, const int y) : QPoint(x, y)
-    { }
+public:
+    YCursor() :
+        QPoint(0, 0)
+    {
+    }
+    YCursor(const QPoint &p) :
+        QPoint(p)
+    {
+    } // handles YCursor(const YCursor&) as well
+    YCursor(const int x, const int y) :
+        QPoint(x, y)
+    {
+    }
 
     void setXY(int x, int y)
     {
@@ -86,14 +92,12 @@ public :
     /*
      * operators
      */
-    bool operator< (const YCursor right) const;
-    bool operator<= (const YCursor right) const;
-    bool operator> (const YCursor right) const;
-    bool operator>= (const YCursor right) const;
-
+    bool operator<(const YCursor right) const;
+    bool operator<=(const YCursor right) const;
+    bool operator>(const YCursor right) const;
+    bool operator>=(const YCursor right) const;
 };
 
-extern YZIS_EXPORT YDebugStream &operator<< (YDebugStream & out, const YCursor c);
+extern YZIS_EXPORT YDebugStream &operator<<(YDebugStream &out, const YCursor c);
 
 #endif
-

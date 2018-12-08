@@ -18,7 +18,6 @@
 *  Boston, MA 02111-1307, USA.
 **/
 
-
 /* QYzis */
 #include "qyview.h"
 #include "qyedit.h"
@@ -46,9 +45,9 @@
 #define dbg() yzDebug("QYView")
 #define err() yzError("QYView")
 
-QYView::QYView(YBuffer* b, YSession * ysession)
-    : QWidget(),
-      YView(b, ysession, 10, 10)
+QYView::QYView(YBuffer *b, YSession *ysession) :
+    QWidget(),
+    YView(b, ysession, 10, 10)
 {
     mEdit = new QYEdit(this);
     mStatusBar = new QYStatusBar(this);
@@ -60,13 +59,13 @@ QYView::QYView(YBuffer* b, YSession * ysession)
     mStatusBar->setFocusProxy(mCommandLine);
     mStatusBar->setFocusPolicy(Qt::ClickFocus);
     mLineNumbers = new QYLineNumbers(this);
-    QHBoxLayout* editorLayout = new QHBoxLayout();
+    QHBoxLayout *editorLayout = new QHBoxLayout();
     editorLayout->setMargin(0);
     editorLayout->setSpacing(0);
     editorLayout->addWidget(mLineNumbers);
     editorLayout->addWidget(mEdit);
     editorLayout->addWidget(mVScroll);
-    QVBoxLayout* viewLayout = new QVBoxLayout(this);
+    QVBoxLayout *viewLayout = new QVBoxLayout(this);
     viewLayout->setMargin(0);
     viewLayout->setSpacing(0);
     viewLayout->addLayout(editorLayout);
@@ -75,7 +74,7 @@ QYView::QYView(YBuffer* b, YSession * ysession)
     setupKeys();
     mEdit->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
     QSettings settings;
-    applyConfig(settings, true);   // XXX factory role
+    applyConfig(settings, true); // XXX factory role
     mEdit->show();
     mStatusBar->show();
     mEdit->setFocus();
@@ -88,7 +87,7 @@ QYView::~QYView()
     dbg() << "~QYView() done" << endl;
 }
 
-void QYView::guiSetCommandLineText(const QString& text)
+void QYView::guiSetCommandLineText(const QString &text)
 {
     mCommandLine->setText(text);
 }
@@ -138,12 +137,12 @@ void QYView::guiSetup()
 {
     bool o_number = getLocalBooleanOption("number");
 
-    if(o_number != mLineNumbers->isVisible()) {
+    if (o_number != mLineNumbers->isVisible()) {
         mLineNumbers->setVisible(o_number);
     }
 }
 
-void QYView::guiNotifyContentChanged(const YSelection& s)
+void QYView::guiNotifyContentChanged(const YSelection &s)
 {
     // FIXME: figure out why the YSelection doesn't cover what we need (buffer vs screen or something)
     dbg() << "guiNotifyContentChanged()" << endl;
@@ -151,11 +150,11 @@ void QYView::guiNotifyContentChanged(const YSelection& s)
     YSelectionMap m = s.map();
 
     // convert each interval to QWidget coordinates and update
-    for(int i = 0; i < m.size(); ++i) {
+    for (int i = 0; i < m.size(); ++i) {
         YInterval interval = m[i];
         QRect r;
 
-        if(interval.fromPos().y() == interval.toPos().y()) {
+        if (interval.fromPos().y() == interval.toPos().y()) {
             r = interval.boundingRect();
             r.setBottom(r.bottom() + 1);
             r.setRight(r.right() + 1);
@@ -187,7 +186,7 @@ void QYView::guiEndPaintEvent()
     mPainter = nullptr;
 }
 
-void QYView::guiPaintEvent(const YSelection& s)
+void QYView::guiPaintEvent(const YSelection &s)
 {
     YView::guiPaintEvent(s);
 }
@@ -195,12 +194,12 @@ void QYView::guiPaintEvent(const YSelection& s)
 /*
  * View painting methods
  */
-void QYView::guiDrawCell(YCursor pos, const YDrawCell& cell)
+void QYView::guiDrawCell(YCursor pos, const YDrawCell &cell)
 {
     mEdit->guiDrawCell(pos, cell, mPainter);
 }
 
-void QYView::guiDrawClearToEOL(YCursor pos, const YDrawCell& clearCell)
+void QYView::guiDrawClearToEOL(YCursor pos, const YDrawCell &clearCell)
 {
     Q_UNUSED(pos);
     Q_UNUSED(clearCell);
@@ -221,10 +220,10 @@ QChar QYView::currentChar() const
     return buffer()->textline(viewCursor().line()).at(viewCursor().position());
 }
 
-void QYView::wheelEvent(QWheelEvent * e)
+void QYView::wheelEvent(QWheelEvent *e)
 {
-    if(e->orientation() == Qt::Vertical) {
-        int n = - (e->delta() * mVScroll->singleStep()) / 40;   // WHEEL_DELTA(120) / 3 XXX
+    if (e->orientation() == Qt::Vertical) {
+        int n = -(e->delta() * mVScroll->singleStep()) / 40; // WHEEL_DELTA(120) / 3 XXX
         scrollView(topLine() + n);
     } else {
         // TODO : scroll horizontally
@@ -233,23 +232,23 @@ void QYView::wheelEvent(QWheelEvent * e)
     e->accept();
 }
 
-void QYView::registerModifierKeys(const QString& keys)
+void QYView::registerModifierKeys(const QString &keys)
 {
     mEdit->registerModifierKeys(keys);
 }
-void QYView::unregisterModifierKeys(const QString& keys)
+void QYView::unregisterModifierKeys(const QString &keys)
 {
     mEdit->unregisterModifierKeys(keys);
 }
 
-void QYView::applyConfig(const QSettings& settings, bool refresh)
+void QYView::applyConfig(const QSettings &settings, bool refresh)
 {
     QFont defaultFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
     defaultFont.setFixedPitch(true);
     defaultFont.setStyleHint(QFont::TypeWriter, QFont::ForceIntegerMetrics);
     QFont user_font = settings.value("appearance/font", defaultFont).value<QFont>();
 
-    if(!QFontInfo(user_font).fixedPitch()) {
+    if (!QFontInfo(user_font).fixedPitch()) {
         user_font = defaultFont;
     }
 
@@ -264,7 +263,7 @@ void QYView::applyConfig(const QSettings& settings, bool refresh)
     QPalette my_palette = settings.value("appearance/palette", default_palette).value<QPalette>();
     mEdit->setPalette(my_palette);
 
-    if(refresh) {
+    if (refresh) {
         mEdit->updateArea();
     }
 }
@@ -276,14 +275,14 @@ void QYView::fileSave()
 
 void QYView::fileSaveAs()
 {
-    if(guiPopupFileSaveAs()) {
+    if (guiPopupFileSaveAs()) {
         buffer()->save();
     }
 }
 
 void QYView::guiUpdateFileName()
 {
-    static_cast<QYSession*>(QYSession::self())->viewFilenameChanged(this, buffer()->fileNameShort());
+    static_cast<QYSession *>(QYSession::self())->viewFilenameChanged(this, buffer()->fileNameShort());
 }
 
 void QYView::guiUpdateCursorPosition()
@@ -305,11 +304,11 @@ bool QYView::guiPopupFileSaveAs()
 {
     QString url = QFileDialog::getSaveFileName();
 
-    if(url.isEmpty()) {
-        return false;    //canceled
+    if (url.isEmpty()) {
+        return false; //canceled
     }
 
-    if(! url.isEmpty()) {
+    if (!url.isEmpty()) {
         buffer()->setPath(url);
         return true;
     }
@@ -317,7 +316,7 @@ bool QYView::guiPopupFileSaveAs()
     return false;
 }
 
-YStatusBarIface* QYView::guiStatusBar()
+YStatusBarIface *QYView::guiStatusBar()
 {
     return mStatusBar;
 }
@@ -325,18 +324,18 @@ YStatusBarIface* QYView::guiStatusBar()
 // scrolls the _view_ on a buffer and moves the cursor it scrolls off the screen
 void QYView::scrollView(int value)
 {
-    if(value < 0) {
+    if (value < 0) {
         value = 0;
-    } else if(value > buffer()->lineCount() - 1) {
+    } else if (value > buffer()->lineCount() - 1) {
         value = buffer()->lineCount() - 1;
     }
 
     // only redraw if the view actually moves
-    if(value != topLine()) {
+    if (value != topLine()) {
         scrollLineToTop(value);
         gotoViewCursor(viewCursorFromScreen());
 
-        if(!mVScroll->isSliderDown()) {
+        if (!mVScroll->isSliderDown()) {
             mVScroll->setValue(value);
         }
     }

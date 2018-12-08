@@ -42,15 +42,12 @@ using namespace std;
 #include "qyview.h"
 #include "qysession.h"
 
-
 #define deepdbg() yzDeepDebug("QYEdit")
 #define dbg() yzDebug("QYEdit")
 #define err() yzError("QYEdit")
 
-QYEdit::QYEdit(QYView * view)
-    : QWidget(view)
-    , signalMapper(this)
-    , mCursor(view, this, QYCursor::CursorHidden)
+QYEdit::QYEdit(QYView *view) :
+    QWidget(view), signalMapper(this), mCursor(view, this, QYCursor::CursorHidden)
 {
     mView = view;
     mUseArea.setCoords(0, 0, 0, 0);
@@ -60,9 +57,8 @@ QYEdit::QYEdit(QYView * view)
     setAttribute(Qt::WA_InputMethodEnabled, true);
     /* show an edit cursor */
     QWidget::setCursor(Qt::IBeamCursor);
-    connect(&signalMapper, SIGNAL(mapped(const QString&)), this, SLOT(sendMappedKey(const QString&)));
+    connect(&signalMapper, SIGNAL(mapped(const QString &)), this, SLOT(sendMappedKey(const QString &)));
 }
-
 
 QYEdit::~QYEdit()
 {
@@ -76,16 +72,16 @@ int QYEdit::charWidth() const
     return w > 0 ? w : fontMetrics().width("W");
 }
 
-QYView* QYEdit::view() const
+QYView *QYEdit::view() const
 {
     return mView;
 }
 
-QPoint QYEdit::translatePositionToReal(const YCursor& c) const
+QPoint QYEdit::translatePositionToReal(const YCursor &c) const
 {
     return QPoint(c.x() * charWidth(), c.y() * fontMetrics().lineSpacing());
 }
-YCursor QYEdit::translateRealToPosition(const QPoint& p, bool ceil) const
+YCursor QYEdit::translateRealToPosition(const QPoint &p, bool ceil) const
 {
     int height = fontMetrics().lineSpacing();
     int width = charWidth();
@@ -94,19 +90,19 @@ YCursor QYEdit::translateRealToPosition(const QPoint& p, bool ceil) const
     int x = px / width;
     int y = py / height;
 
-    if(ceil) {
-        if(py % height) {
+    if (ceil) {
+        if (py % height) {
             ++y;
         }
 
-        if(px % width) {
+        if (px % width) {
             ++x;
         }
     }
 
     return YCursor(x, y);
 }
-YCursor QYEdit::translateRealToAbsolutePosition(const QPoint& p, bool ceil) const
+YCursor QYEdit::translateRealToAbsolutePosition(const QPoint &p, bool ceil) const
 {
     return translateRealToPosition(p, ceil);
 }
@@ -118,15 +114,15 @@ QYCursor::CursorShape QYEdit::cursorShape()
     deepdbg() << "cursorShape(): mode=" << m << endl;
     shape = mCursor.shape();
 
-    if(! hasFocus()) {
+    if (!hasFocus()) {
         shape = QYCursor::CursorFrameRect;
     } else {
-        switch(m) {
-        case YMode::ModeInsert :
+        switch (m) {
+        case YMode::ModeInsert:
             shape = QYCursor::CursorVbar;
             break;
 
-        case YMode::ModeReplace :
+        case YMode::ModeReplace:
             shape = QYCursor::CursorHbar;
             break;
 
@@ -140,7 +136,7 @@ QYCursor::CursorShape QYEdit::cursorShape()
             shape = QYCursor::CursorFrameRect;
             break;
 
-        case YMode::ModeCompletion :
+        case YMode::ModeCompletion:
             // do not change it
             break;
 
@@ -188,11 +184,12 @@ void QYEdit::updateArea()
  */
 bool QYEdit::event(QEvent *e)
 {
-    if(e->type() == QEvent::KeyPress) {
+    if (e->type() == QEvent::KeyPress) {
         QKeyEvent *ke = (QKeyEvent *)e;
-        dbg() << "event( KeyEvent( key=" << ke->text() << ", mod=" << ke->modifiers() << ") )" << endl;;
+        dbg() << "event( KeyEvent( key=" << ke->text() << ", mod=" << ke->modifiers() << ") )" << endl;
+        ;
 
-        if(ke->key() == Qt::Key_Tab || ke->key() == Qt::Key_Backtab) {
+        if (ke->key() == Qt::Key_Tab || ke->key() == Qt::Key_Backtab) {
             keyPressEvent(ke);
             return true;
         }
@@ -203,9 +200,9 @@ bool QYEdit::event(QEvent *e)
     return QWidget::event(e);
 }
 
-#define ALPHABET(k) ( (k) >= Qt::Key_A && (k) <= Qt::Key_Z)
+#define ALPHABET(k) ((k) >= Qt::Key_A && (k) <= Qt::Key_Z)
 
-void QYEdit::keyPressEvent(QKeyEvent * e)
+void QYEdit::keyPressEvent(QKeyEvent *e)
 {
     dbg() << "keyPressEvent( QKeyEVent(text=\"" << e->text() << "\", key=" << e->key() << ", modifiers=" << e->modifiers() << ")" << endl;
     YKey key(Qt::Key_unknown, e->modifiers());
@@ -220,7 +217,7 @@ void QYEdit::keyPressEvent(QKeyEvent * e)
     // TODO: comprehensive solution
 #if 1
 
-    if(ALPHABET(e->key()) && !(e->modifiers() & Qt::ShiftModifier)) {
+    if (ALPHABET(e->key()) && !(e->modifiers() & Qt::ShiftModifier)) {
         key.setKey(QChar(e->key()).toLower());
     } else {
         key = YKey((Qt::Key)e->key(), e->modifiers());
@@ -230,11 +227,11 @@ void QYEdit::keyPressEvent(QKeyEvent * e)
     key = YKey(e->key(), e->modifiers(), e->text());
 #endif
     //dbg().SPrintf("Event transferred to YSession");
-    YSession::self()->sendKey(static_cast<YView*>(mView), key);
+    YSession::self()->sendKey(static_cast<YView *>(mView), key);
     e->accept();
 }
 
-void QYEdit::mousePressEvent(QMouseEvent * e)
+void QYEdit::mousePressEvent(QMouseEvent *e)
 {
     /*
     FIXME: How to handle mouse events commented out now so kyzis will compile
@@ -249,26 +246,26 @@ void QYEdit::mousePressEvent(QMouseEvent * e)
     // leave visual mode if the user clicks somewhere
     // TODO: this should only be done if the left button is used. Right button
     // should extend visual selection, like in vim.
-    if(mView->modePool()->current()->isSelMode()) {
+    if (mView->modePool()->current()->isSelMode()) {
         mView->modePool()->pop();
     }
 
-    if((e->button() == Qt::LeftButton) || (e->button() == Qt::RightButton)) {
-        if(mView->modePool()->currentType() != YMode::ModeEx) {
+    if ((e->button() == Qt::LeftButton) || (e->button() == Qt::RightButton)) {
+        if (mView->modePool()->currentType() != YMode::ModeEx) {
             YCursor screenPosition = translateRealToAbsolutePosition(e->pos());
             YViewCursor dest = mView->viewCursorFromRowColumn(screenPosition.line(), screenPosition.column());
             mView->gotoViewCursor(dest);
             mView->stickToColumn();
         }
-    } else if(e->button() == Qt::MidButton) {
+    } else if (e->button() == Qt::MidButton) {
         QString text = QApplication::clipboard()->text(QClipboard::Selection);
 
-        if(text.isNull()) {
+        if (text.isNull()) {
             text = QApplication::clipboard()->text(QClipboard::Clipboard);
         }
 
-        if(! text.isNull()) {
-            if(mView->modePool()->current()->isEditMode()) {
+        if (!text.isNull()) {
+            if (mView->modePool()->current()->isEditMode()) {
                 QChar reg = '\"';
                 YSession::self()->setRegister(reg, text.split("\n"));
                 mView->buffer()->action()->pasteContent(mView, reg, false);
@@ -281,15 +278,15 @@ void QYEdit::mousePressEvent(QMouseEvent * e)
 
 void QYEdit::mouseMoveEvent(QMouseEvent *e)
 {
-    if(e->buttons() == Qt::LeftButton) {
-        if(mView->modePool()->currentType() == YMode::ModeCommand) {
+    if (e->buttons() == Qt::LeftButton) {
+        if (mView->modePool()->currentType() == YMode::ModeCommand) {
             // start visual mode when user makes a selection with the left mouse button
             mView->modePool()->push(YMode::ModeVisual);
-        } else if(mView->modePool()->current()->isSelMode()) {
+        } else if (mView->modePool()->current()->isSelMode()) {
             // already in visual mode - move cursor if the mouse pointer has moved over a new char
             YCursor pos = translateRealToAbsolutePosition(e->pos());
 
-            if(pos != mView->getRowColumnCursor()) {
+            if (pos != mView->getRowColumnCursor()) {
                 mView->gotoRowColumn(pos);
             }
         }
@@ -308,13 +305,13 @@ void QYEdit::focusOutEvent(QFocusEvent *)
     updateCursor();
 }
 
-void QYEdit::resizeEvent(QResizeEvent* e)
+void QYEdit::resizeEvent(QResizeEvent *e)
 {
     dbg() << "resizeEvent(" << *e << ") - filename=" << mView->buffer()->fileNameShort() << endl;
     updateArea();
 }
 
-void QYEdit::paintEvent(QPaintEvent* pe)
+void QYEdit::paintEvent(QPaintEvent *pe)
 {
     updateCursor();
     // convert QPaintEvent rect to yzis coordinate
@@ -332,13 +329,13 @@ void QYEdit::setCursor(const YCursor &newPos)
     // dbg() << "setCursor" << endl;
     QPoint p = translatePositionToReal(newPos);
 
-    if(mView->getLocalBooleanOption("rightleft")) {
+    if (mView->getLocalBooleanOption("rightleft")) {
         p.setX(width() - p.x() - mCursor.width());
     }
 
     mCursor.move(p);
 
-    if(!mCursor.isVisible()) {
+    if (!mCursor.isVisible()) {
         mCursor.show();
     }
 
@@ -357,35 +354,35 @@ void QYEdit::scroll(int dx, int dy)
     QWidget::scroll(rx, -ry);
 }
 
-void QYEdit::guiDrawCell(YCursor pos , const YDrawCell& cell, QPainter* p)
+void QYEdit::guiDrawCell(YCursor pos, const YDrawCell &cell, QPainter *p)
 {
-    deepdbg() << "QYEdit::guiDrawCell(" << pos.x() << "," << pos.y() <<",'" << cell.content() << "')" << endl;
+    deepdbg() << "QYEdit::guiDrawCell(" << pos.x() << "," << pos.y() << ",'" << cell.content() << "')" << endl;
 
-    if(cell.hasSelection(yzis::SelectionVisual)) {
-        p->setBackground(QColor(181, 24, 181));   //XXX setting
+    if (cell.hasSelection(yzis::SelectionVisual)) {
+        p->setBackground(QColor(181, 24, 181)); //XXX setting
         p->setPen(Qt::white);
-    } else if(cell.hasSelection(yzis::SelectionAny)) {
+    } else if (cell.hasSelection(yzis::SelectionAny)) {
         p->setBackground(cell.foregroundColor().isValid() ? QColor(cell.foregroundColor().rgb()) : palette().color(QPalette::WindowText));
         p->setPen(cell.backgroundColor().isValid() ? QColor(cell.backgroundColor().rgb()) : palette().color(QPalette::Window));
     } else {
-        if(cell.foregroundColor().isValid()) {
+        if (cell.foregroundColor().isValid()) {
             p->setPen(cell.foregroundColor().rgb());
         }
 
-        if(cell.backgroundColor().isValid()) {
+        if (cell.backgroundColor().isValid()) {
             p->setBackground(QColor(cell.backgroundColor().rgb()));
         } else {
             p->setBackground(Qt::black);
         }
     }
 
-    QRect r(pos.x()*charWidth(), pos.y()*fontMetrics().lineSpacing(), cell.content().length()*charWidth(), fontMetrics().lineSpacing());
+    QRect r(pos.x() * charWidth(), pos.y() * fontMetrics().lineSpacing(), cell.content().length() * charWidth(), fontMetrics().lineSpacing());
 
     p->eraseRect(r);
     p->drawText(r, cell.content());
 }
 
-QString QYEdit::keysToShortcut(const QString& keys)
+QString QYEdit::keysToShortcut(const QString &keys)
 {
     QString ret = keys;
     ret = ret.replace("<CTRL>", "CTRL+");
@@ -395,7 +392,7 @@ QString QYEdit::keysToShortcut(const QString& keys)
     return ret;
 }
 
-void QYEdit::registerModifierKeys(const QString& keys)
+void QYEdit::registerModifierKeys(const QString &keys)
 {
     Q_UNUSED(keys);
     /*
@@ -403,7 +400,7 @@ void QYEdit::registerModifierKeys(const QString& keys)
     signalMapper.setMapping( k, keys );
     */
 }
-void QYEdit::unregisterModifierKeys(const QString& keys)
+void QYEdit::unregisterModifierKeys(const QString &keys)
 {
     Q_UNUSED(keys);
     /*
@@ -424,7 +421,7 @@ void QYEdit::unregisterModifierKeys(const QString& keys)
     */
 }
 
-void QYEdit::sendMappedKey(const QString & keys)
+void QYEdit::sendMappedKey(const QString &keys)
 {
     dbg().SPrintf("sendMappedKey( keys=%s )", qp(keys));
     YKeySequence inputs(keys);
@@ -474,4 +471,3 @@ void QYEdit::imEndEvent( QIMEvent *e ) {
  }
  e->accept();
 }*/
-

@@ -25,31 +25,29 @@
 
 #include <QObject>
 
-
 class KYSession : public YSession, public QObject
 {
 public:
     static void createInstance();
 
-    virtual void guiDeleteBuffer(YBuffer*);
-    virtual void guiSplitHorizontally(YView*);
+    virtual void guiDeleteBuffer(YBuffer *);
+    virtual void guiSplitHorizontally(YView *);
     virtual bool guiQuit(int);
-    virtual void guiPopupMessage(const QString&);
-    virtual bool guiPromptYesNo(const QString&, const QString&);
-    virtual int guiPromptYesNoCancel(const QString&, const QString&);
+    virtual void guiPopupMessage(const QString &);
+    virtual bool guiPromptYesNo(const QString &, const QString &);
+    virtual int guiPromptYesNoCancel(const QString &, const QString &);
     virtual void guiSetFocusCommandLine();
     virtual void guiSetFocusMainWindow();
-    virtual void guiSetClipboardText(const QString&, Clipboard::Mode);
-    virtual YView* guiCreateView(YBuffer*);
-    virtual void guiDeleteView(YView*);
-    virtual void guiCreateBuffer(YBuffer*);
-    virtual void guiChangeCurrentView(YView*);
+    virtual void guiSetClipboardText(const QString &, Clipboard::Mode);
+    virtual YView *guiCreateView(YBuffer *);
+    virtual void guiDeleteView(YView *);
+    virtual void guiCreateBuffer(YBuffer *);
+    virtual void guiChangeCurrentView(YView *);
 
 private:
     virtual ~KYSession();
     KYSession();
-    static KYSession* me;
+    static KYSession *me;
 };
 
 #endif // YZIS_PART_SESSION_H
-

@@ -46,17 +46,17 @@ class YZIS_EXPORT YZAction
 {
 
 public:
-    YZAction(YBuffer* buffer);
+    YZAction(YBuffer *buffer);
     ~YZAction();
 
     // YCursor versions
-    void insertChar(YView* pView, const YCursor pos, const QString& text);
-    bool replaceChar(YView* pView, const YCursor pos, const QString& text);
-    bool deleteChar(YView* pView, const YCursor pos, int len);
-    void insertLine(YView* pView, const YCursor pos, const QString &text);
-    void insertNewLine(YView* pView, const YCursor pos);
-    void replaceLine(YView* pView, const YCursor pos, const QString &text);
-    void deleteLine(YView* pView, const YCursor pos, int len, const QList<QChar> &reg);
+    void insertChar(YView *pView, const YCursor pos, const QString &text);
+    bool replaceChar(YView *pView, const YCursor pos, const QString &text);
+    bool deleteChar(YView *pView, const YCursor pos, int len);
+    void insertLine(YView *pView, const YCursor pos, const QString &text);
+    void insertNewLine(YView *pView, const YCursor pos);
+    void replaceLine(YView *pView, const YCursor pos, const QString &text);
+    void deleteLine(YView *pView, const YCursor pos, int len, const QList<QChar> &reg);
 
     /*
      * if line >= lineCount(), create the necessary empty lines
@@ -64,61 +64,59 @@ public:
     void ensureLineExists(int line);
 
     // X,Y versions
-    void insertChar(YView* pView, const int X, const int Y, const QString& text)
+    void insertChar(YView *pView, const int X, const int Y, const QString &text)
     {
         YCursor pos(X, Y);
         insertChar(pView, pos, text);
     }
-    bool replaceChar(YView* pView, const int X, const int Y, const QString& text)
+    bool replaceChar(YView *pView, const int X, const int Y, const QString &text)
     {
         YCursor pos(X, Y);
         return replaceChar(pView, pos, text);
     }
-    bool deleteChar(YView* pView, const int X, const int Y, int len)
+    bool deleteChar(YView *pView, const int X, const int Y, int len)
     {
         YCursor pos(X, Y);
         return deleteChar(pView, pos, len);
     }
-    void insertLine(YView* pView, int Y, const QString &text)
+    void insertLine(YView *pView, int Y, const QString &text)
     {
         YCursor pos(0, Y);
         insertLine(pView, pos, text);
     }
-    void insertNewLine(YView* pView, const int X, const int Y)
+    void insertNewLine(YView *pView, const int X, const int Y)
     {
         YCursor pos(X, Y);
         insertNewLine(pView, pos);
     }
-    void deleteLine(YView* pView, int Y, int len, const QList<QChar>& regs)
+    void deleteLine(YView *pView, int Y, int len, const QList<QChar> &regs)
     {
         YCursor pos(0, Y);
         deleteLine(pView, pos, len, regs);
     }
-    void replaceLine(YView* pView, int Y, const QString& text)
+    void replaceLine(YView *pView, int Y, const QString &text)
     {
         YCursor pos(0, Y);
         replaceLine(pView, pos, text);
     }
 
+    void mergeNextLine(YView *pView, int Y, bool stripSpaces = true);
 
-    void mergeNextLine(YView* pView, int Y, bool stripSpaces = true);
+    void deleteArea(YView *pView, const YCursor begin, const YCursor end, const QList<QChar> &reg);
+    void deleteArea(YView *pView, const YInterval &i, const QList<QChar> &reg);
 
-    void deleteArea(YView* pView, const YCursor begin, const YCursor end, const QList<QChar> &reg);
-    void deleteArea(YView* pView, const YInterval& i, const QList<QChar> &reg);
+    void copyLine(YView *pView, const YCursor pos, int len, const QList<QChar> &reg);
+    void copyArea(YView *pView, const YCursor begin, const YCursor end, const QList<QChar> &reg);
+    void copyArea(YView *pView, const YInterval &i, const QList<QChar> &reg);
 
-    void copyLine(YView* pView, const YCursor pos, int len, const QList<QChar> &reg);
-    void copyArea(YView* pView, const YCursor begin, const YCursor end, const QList<QChar> &reg);
-    void copyArea(YView* pView, const YInterval& i, const QList<QChar> &reg);
+    void replaceArea(YView *pView, const YInterval &i, const YRawData &text);
 
-    void replaceArea(YView* pView, const YInterval& i, const YRawData& text);
+    void replaceText(YView *pView, const YCursor pos, int replacedLength, const QString &text);
 
+    void indentLine(YView *pView, int Y, int count); // if count is < 0, unindent line
 
-    void replaceText(YView* pView, const YCursor pos, int replacedLength, const QString& text);
-
-    void indentLine(YView* pView, int Y, int count);   // if count is < 0, unindent line
-
-    YCursor match(YView* pView, const YCursor cursor, bool *found) const;
-    YCursor search(YBuffer* pBuffer, const QString& what, const YCursor mBegin, const YCursor mEnd, int *matchlength, bool *found) const;
+    YCursor match(YView *pView, const YCursor cursor, bool *found) const;
+    YCursor search(YBuffer *pBuffer, const QString &what, const YCursor mBegin, const YCursor mEnd, int *matchlength, bool *found) const;
 
     /**
      * Pastes the content of default or given register
@@ -126,8 +124,7 @@ public:
     void pasteContent(YView *pView, QChar registr, bool after = true);
 
 private:
-    YBuffer* mBuffer;
+    YBuffer *mBuffer;
 };
 
 #endif
-

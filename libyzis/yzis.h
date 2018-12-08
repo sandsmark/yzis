@@ -59,52 +59,51 @@
 #ifdef SAFE_MODE
 #define YZIS_SAFE_MODE
 #else
-#define YZIS_SAFE_MODE if(0)
+#define YZIS_SAFE_MODE if (0)
 #endif
 
 #if defined(Q_CC_GNU)
-#	define YZIS_DEPRECATED __attribute__ ((__deprecated__))
+#define YZIS_DEPRECATED __attribute__((__deprecated__))
 #else
-#	define YZIS_DEPRECATED
+#define YZIS_DEPRECATED
 #endif
 
 /** Standard namespace for yzis special types */
-namespace yzis
-{
+namespace yzis {
 
 /** Possible scope of an option */
 enum OptScope {
-    ScopeDefault,    //!< XXX ???
-    ScopeGlobal,     //!< global to all buffers
-    ScopeLocal,      //!< local to a buffer or a view
+    ScopeDefault, //!< XXX ???
+    ScopeGlobal, //!< global to all buffers
+    ScopeLocal, //!< local to a buffer or a view
 };
 
 /** visibility of an option */
 enum OptContext {
-    ContextNone,     //!< no visibility
-    ContextSession,  //!< session visibility (global)
-    ContextBuffer,   //!< visbility to the buffer
-    ContextView     //!< visiblity to the view
+    ContextNone, //!< no visibility
+    ContextSession, //!< session visibility (global)
+    ContextBuffer, //!< visbility to the buffer
+    ContextView //!< visiblity to the view
 };
 
 /** kind of value stored by an option */
 enum OptType {
-    TypeInvalid,   //!< No value yet
-    TypeInt,       //!< Integer
-    TypeString,    //!< String
-    TypeList,      //!< List of string
-    TypeBool,      //!< Boolean
-    TypeMap,       //!< Dictionary of string to string
-    TypeColor,     //!< Color
+    TypeInvalid, //!< No value yet
+    TypeInt, //!< Integer
+    TypeString, //!< String
+    TypeList, //!< List of string
+    TypeBool, //!< Boolean
+    TypeMap, //!< Dictionary of string to string
+    TypeColor, //!< Color
 };
 
 /** Different modes available for a mapping */
 enum MapMode {
-    MapNormal = 1,   //!< in normal mode
-    MapCmdline = 2,   //!< on command line
-    MapVisual = 4,   //!< in visual mode
-    MapPendingOp = 8,   //!< waiting for an operator
-    MapInsert = 16,  //!< insert mode
+    MapNormal = 1, //!< in normal mode
+    MapCmdline = 2, //!< on command line
+    MapVisual = 4, //!< in visual mode
+    MapPendingOp = 8, //!< waiting for an operator
+    MapInsert = 16, //!< insert mode
 };
 
 /** Different selection types */
@@ -121,8 +120,7 @@ enum IntervalType {
 };
 };
 
-namespace Clipboard
-{
+namespace Clipboard {
 enum Mode {
     Clipboard,
     Selection
@@ -130,4 +128,3 @@ enum Mode {
 };
 
 #endif /* YZIS_H */
-

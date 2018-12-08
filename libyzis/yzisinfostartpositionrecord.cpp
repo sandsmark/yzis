@@ -19,8 +19,8 @@
 
 #include "yzisinfostartpositionrecord.h"
 
-#define dbg()    yzDebug("YInfoStartPositionRecord")
-#define err()    yzError("YInfoStartPositionRecord")
+#define dbg() yzDebug("YInfoStartPositionRecord")
+#define err() yzError("YInfoStartPositionRecord")
 
 /**
  * YInfoStartPositionRecord::YZYzsinfoStartPositionRecord
@@ -36,26 +36,25 @@ YInfoStartPositionRecord::YInfoStartPositionRecord()
  * YInfoStartPositionRecord::YInfoStartPositionRecord
  */
 
-YInfoStartPositionRecord::YInfoStartPositionRecord(const QString & filename, const YCursor c)
+YInfoStartPositionRecord::YInfoStartPositionRecord(const QString &filename, const YCursor c)
 {
     mFilename = filename;
     mPosition = c;
 }
-
-
 
 /**
  * YInfoStartPositionRecord::~YZYzsinfoStartPositionRecord
  */
 
 YInfoStartPositionRecord::~YInfoStartPositionRecord()
-{}
+{
+}
 
 /**
  * YInfoStartPositionRecord::YZYzsinfoStartPositionRecord
  */
 
-YInfoStartPositionRecord::YInfoStartPositionRecord(YInfoStartPositionRecord & copy)
+YInfoStartPositionRecord::YInfoStartPositionRecord(YInfoStartPositionRecord &copy)
 {
     mFilename = copy.filename();
     setPosition(copy.position());
@@ -65,10 +64,10 @@ YInfoStartPositionRecord::YInfoStartPositionRecord(YInfoStartPositionRecord & co
  * YInfoStartPositionRecord::operator=
  */
 
-YInfoStartPositionRecord & YInfoStartPositionRecord::operator=(YInfoStartPositionRecord & copy)
+YInfoStartPositionRecord &YInfoStartPositionRecord::operator=(YInfoStartPositionRecord &copy)
 {
-    if(this == &copy) {
-        return * this;
+    if (this == &copy) {
+        return *this;
     }
 
     mFilename = copy.filename();
@@ -80,7 +79,7 @@ YInfoStartPositionRecord & YInfoStartPositionRecord::operator=(YInfoStartPositio
  * YInfoStartPositionRecord::filename
  */
 
-const QString& YInfoStartPositionRecord::filename() const
+const QString &YInfoStartPositionRecord::filename() const
 {
     return mFilename;
 }
@@ -98,7 +97,7 @@ YCursor YInfoStartPositionRecord::position() const
  * YInfoStartPositionRecord::setFilename
  */
 
-void YInfoStartPositionRecord::setFilename(const QString & filename)
+void YInfoStartPositionRecord::setFilename(const QString &filename)
 {
     mFilename = filename;
 }

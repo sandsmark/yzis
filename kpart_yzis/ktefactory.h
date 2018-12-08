@@ -18,7 +18,6 @@
 *  Boston, MA 02110-1301, USA.
 **/
 
-
 #ifndef YZIS_PART_KTE_FACTORY_H
 #define YZIS_PART_KTE_FACTORY_H
 
@@ -28,15 +27,11 @@ class KTEFactory : public KTextEditor::Factory
 {
     Q_OBJECT
 public:
-    KTEFactory(QObject* parent = 0);
-    virtual ~KTEFactory()
-    {}
-    ;
+    KTEFactory(QObject *parent = 0);
+    virtual ~KTEFactory() {};
 
-    virtual KTextEditor::Editor* editor();
-    virtual KParts::Part* createPartObject(QWidget*, QObject*, const char*, const QStringList&);
+    virtual KTextEditor::Editor *editor();
+    virtual KParts::Part *createPartObject(QWidget *, QObject *, const char *, const QStringList &);
 };
 
-
 #endif // YZIS_PART_KTE_FACTORY_H
-

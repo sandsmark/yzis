@@ -17,7 +17,6 @@
 *  Boston, MA 02110-1301, USA.
 **/
 
-
 #ifndef RESOURCE_MGR_H
 #define RESOURCE_MGR_H
 
@@ -31,7 +30,6 @@ class YDebugStream;
 /** @file resourcemgr.h
   * Some documentation
   */
-
 
 /** Resource type that one can look for in yzis. */
 enum ResourceType {
@@ -80,7 +78,6 @@ public:
     YResourceMgr();
     ~YResourceMgr();
 
-
     /** Try to find a resource in the different yzis directories.
       *
       * Resources are looked up in the following order and places:
@@ -101,7 +98,7 @@ public:
       * @return an empty QString if the resource could not be found, or
       * the absolute path of the resource.
       */
-    QString findResource(ResourceType type, const QString & fname);
+    QString findResource(ResourceType type, const QString &fname);
 
     /** Get a list of all directories that are looked up for finding a
       * resource.
@@ -131,15 +128,14 @@ protected:
 
     /** Store the path of the yzis directory. */
     QString mYzisUserDir;
-
 };
 
 /** Shortcut for YSession::self()->resourceMgr(); */
-inline YResourceMgr * resourceMgr()
+inline YResourceMgr *resourceMgr()
 {
     return YSession::self()->resourceMgr();
 }
 
-YDebugStream& operator<<(YDebugStream& out, const ResourceType & type);
+YDebugStream &operator<<(YDebugStream &out, const ResourceType &type);
 
 #endif // RESOURCE_MGR_H

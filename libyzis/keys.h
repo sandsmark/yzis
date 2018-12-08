@@ -36,12 +36,10 @@
 class YZIS_EXPORT YKey
 {
 public:
-    YKey(int key = Qt::Key_unknown, Qt::KeyboardModifiers modifiers = Qt::NoModifier, const QString & text = QString());
+    YKey(int key = Qt::Key_unknown, Qt::KeyboardModifiers modifiers = Qt::NoModifier, const QString &text = QString());
 
     QString toString() const;
     int fromString(const QString &);
-
-
 
     // dont use operator QChar() here, i want an explicit cast only
     QChar getChar(void) const
@@ -57,7 +55,7 @@ public:
     // should be removed
     void setKey(QChar ch)
     {
-        mKey = (Qt::Key) ch.unicode();
+        mKey = (Qt::Key)ch.unicode();
         mText = ch;
         mModifiers &= ~Qt::ShiftModifier;
     }
@@ -77,7 +75,7 @@ public:
         return mModifiers;
     }
 
-    YKey & operator=(const YKey &oth)
+    YKey &operator=(const YKey &oth)
     {
         mKey = oth.mKey;
         mText = oth.mText;
@@ -155,7 +153,7 @@ public:
         return mKeys->begin();
     }
 
-    YKeySequence &operator =(const YKeySequence &from);
+    YKeySequence &operator=(const YKeySequence &from);
 #ifdef DEBUG
     QString describe(void)
     {
@@ -168,6 +166,5 @@ private:
     QString mName;
 #endif
 };
-
 
 #endif // _KEYEVENT_H

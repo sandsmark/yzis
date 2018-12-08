@@ -11,8 +11,7 @@
 #ifndef BOOST_NONCOPYABLE_HPP_INCLUDED
 #define BOOST_NONCOPYABLE_HPP_INCLUDED
 
-namespace boost
-{
+namespace boost {
 
 /**
   * Private copy constructor and copy assignment ensure classes derived from
@@ -23,14 +22,17 @@ class noncopyable
 {
 protected:
     noncopyable()
-    {}
+    {
+    }
     ~noncopyable()
-    {}
-private:   // emphasize the following members are private
-    noncopyable(const noncopyable&);
-    const noncopyable& operator=(const noncopyable&);
+    {
+    }
+
+private: // emphasize the following members are private
+    noncopyable(const noncopyable &);
+    const noncopyable &operator=(const noncopyable &);
 };
 
 } // namespace boost
 
-#endif  // BOOST_NONCOPYABLE_HPP_INCLUDED
+#endif // BOOST_NONCOPYABLE_HPP_INCLUDED

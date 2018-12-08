@@ -37,7 +37,8 @@ class YZIS_EXPORT YModeInsert : public YModeCommand
 public:
     YModeInsert();
     virtual ~YModeInsert()
-    {}
+    {
+    }
 
     virtual void initMotionPool();
     virtual void initCommandPool();
@@ -58,17 +59,18 @@ public:
     CmdState deleteLineBefore(const YCommandArgs &args);
     CmdState commandEnter(const YCommandArgs &args);
 
-    virtual CmdState addText(YView* mView, const QString& text);
+    virtual CmdState addText(YView *mView, const QString &text);
 
     // Dubious
     CmdState deleteChar(const YCommandArgs &args);
     CmdState deleteCharBackwards(const YCommandArgs &args);
-    void imBegin(YView*);
-    void imCompose(YView* mView, const QString& entry);
-    void imEnd(YView* mView, const QString& entry);
+    void imBegin(YView *);
+    void imCompose(YView *mView, const QString &entry);
+    void imEnd(YView *mView, const QString &entry);
 
     void initModifierKeys();
-protected :
+
+protected:
     QString m_imPreedit;
 };
 
@@ -77,15 +79,15 @@ protected :
  */
 class YZIS_EXPORT YModeReplace : public YModeInsert
 {
-public :
+public:
     YModeReplace();
     virtual ~YModeReplace()
-    {}
+    {
+    }
 
-    virtual CmdState addText(YView* mView, const QString& key);
+    virtual CmdState addText(YView *mView, const QString &key);
     virtual CmdState commandInsert(const YCommandArgs &args);
     virtual CmdState backspace(const YCommandArgs &args);
 };
 
 #endif
-

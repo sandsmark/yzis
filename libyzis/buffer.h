@@ -43,13 +43,12 @@ class YInterval;
 
 class YzisHighlighting;
 
-typedef QVector<YLine*> YBufferData;
+typedef QVector<YLine *> YBufferData;
 
 typedef QStringList YRawData;
 
-
 // misc functions
-QString tildeExpand(const QString& path);
+QString tildeExpand(const QString &path);
 
 /**
  * A buffer is the implementation of the content of a file.
@@ -94,23 +93,22 @@ public:
      * @param data : data to insert, may start and end with YRawData_endline
      * @returns position of char after inserted data
      */
-    YCursor insertRegion(const YCursor& begin, const YRawData& data);
+    YCursor insertRegion(const YCursor &begin, const YRawData &data);
 
     /*
      * Remove data contained in the given interval
      * @param bi : interval to remove
      */
-    void deleteRegion(const YInterval& bi);
+    void deleteRegion(const YInterval &bi);
 
     /*
      * Shortcut for deleteRegion + insertRegion
      * @param bi : interval to remove
      * @param data : data to insert, may start and end with YRawData_endline
      */
-    YCursor replaceRegion(const YInterval& bi, const YRawData& data);
+    YCursor replaceRegion(const YInterval &bi, const YRawData &data);
 
-    YRawData dataRegion(const YInterval& bi) const;
-
+    YRawData dataRegion(const YInterval &bi) const;
 
     //-------------------------------------------------------
     // ----------------- Character Operations
@@ -121,7 +119,7 @@ public:
      * @param pos : the position where to insert the character
      * @param c the character to add
      */
-    void insertChar(YCursor pos, const QString& c);
+    void insertChar(YCursor pos, const QString &c);
 
     /**
      * Deletes a character in the buffer
@@ -159,7 +157,7 @@ public:
     /**
      * Replaces the line at @param line with the given string @param l
      */
-    void replaceLine(const QString& l, int line);
+    void replaceLine(const QString &l, int line);
 
     /**
      * Finds the @ref YLine pointer for a line in the buffer
@@ -169,15 +167,15 @@ public:
      *
      * Note: the valid line numbers are between 0 and lineCount()-1
      */
-    YLine * yzline(int line, bool noHL = true);
-    const YLine * yzline(int line) const;
+    YLine *yzline(int line, bool noHL = true);
+    const YLine *yzline(int line) const;
 
     /**
      * Replaces the given regexp @arg what with the given string @arg with on the specified @arg line
      * Repeat the change on the line if @arg wholeline is true
      * @return true if a change was done
      */
-    bool substitute(const QString& what, const QString& with, bool wholeline, int line);
+    bool substitute(const QString &what, const QString &with, bool wholeline, int line);
 
     /**
      * Get the length of a line
@@ -234,8 +232,7 @@ public:
      */
     void clearText();
 
-    void loadText(QString* content);
-
+    void loadText(QString *content);
 
     /**
      * Get the character at the given cursor position.
@@ -276,7 +273,7 @@ public:
     /**
      * Opens the file and fills the buffer with its content
      */
-    void load(const QString& file = QString());
+    void load(const QString &file = QString());
 
     /**
      * Save the buffer content into the current filename
@@ -288,7 +285,7 @@ public:
     * Get the absolute filename of the buffer
     * @return the filename
     */
-    const QString& fileName() const;
+    const QString &fileName() const;
 
     /**
      * Get the filename of the buffer ( not the path )
@@ -300,7 +297,7 @@ public:
      * Changes the filename
      * @param _path the new filename ( and path )
      */
-    void setPath(const QString& _path);
+    void setPath(const QString &_path);
 
     /**
      * Called whenever the filename is changed
@@ -322,8 +319,8 @@ public:
      */
     void setChanged(bool v);
 
-    void setEncoding(const QString& name);
-    const QString& encoding() const;
+    void setEncoding(const QString &name);
+    const QString &encoding() const;
 
     /**
      * Write all text for all buffers into swap file.  The
@@ -356,13 +353,13 @@ public:
      * The list of view for this buffer
      * @return a QValuelist of pointers to the views
      */
-    QList<YView*> views() const;
+    QList<YView *> views() const;
 
     /**
      * Find the first view of this buffer
      * Temporary function
      */
-    YView* firstView() const;
+    YView *firstView() const;
 
     /**
      * Refresh all views
@@ -373,11 +370,11 @@ public:
     // ------------ Sub-object accessors
     //-------------------------------------------------------
 
-    YZUndoBuffer * undoBuffer() const;
-    YZAction* action() const;
-    YViewMarker* viewMarks() const;
-    YDocMark* docMarks() const;
-    YzisHighlighting* highlight() const;
+    YZUndoBuffer *undoBuffer() const;
+    YZAction *action() const;
+    YViewMarker *viewMarks() const;
+    YDocMark *docMarks() const;
+    YzisHighlighting *highlight() const;
 
     //-------------------------------------------------------
     // ------------ Highlighting
@@ -398,7 +395,7 @@ public:
       * The highlighting mode is looked up using YzisHlManager::nameFind(). If
       * found, setHighLight( mode, true ) is called.
       */
-    void setHighLight(const QString& name);
+    void setHighLight(const QString &name);
 
     /*
      * update highlight from given line
@@ -428,22 +425,22 @@ public:
     /**
      * Retrieve an int option
      */
-    int getLocalIntegerOption(const QString& option) const;
+    int getLocalIntegerOption(const QString &option) const;
 
     /**
      * Retrieve a bool option
      */
-    bool getLocalBooleanOption(const QString& option) const;
+    bool getLocalBooleanOption(const QString &option) const;
 
     /**
      * Retrieve a string option
      */
-    QString getLocalStringOption(const QString& option) const;
+    QString getLocalStringOption(const QString &option) const;
 
     /**
      * Retrieve a qstringlist option
      */
-    QStringList getLocalListOption(const QString& option) const;
+    QStringList getLocalListOption(const QString &option) const;
 
     //-------------------------------------------------------
     // ------------ Buffer State
@@ -458,7 +455,7 @@ public:
     void setState(BufferState state);
     BufferState getState() const;
 
-    void saveYzisInfo(YView* view);
+    void saveYzisInfo(YView *view);
 
     /*
      * Checks if a file needs a recovery
@@ -484,8 +481,7 @@ public:
      * @param gotoPos a cursor that receives the line,col information if any
      * @return filename stripped from line,col information.
      */
-    static QString parseFilename(const QString& filename, YCursor* gotoPos = NULL);
-
+    static QString parseFilename(const QString &filename, YCursor *gotoPos = NULL);
 
     /** Get the cursor initial position for a filename.
      *
@@ -501,7 +497,7 @@ public:
      * position.
      * @return a cursor containing line:col that was found (if any).
      */
-    static YCursor getStartPosition(const QString& filename, bool parseFilename = true);
+    static YCursor getStartPosition(const QString &filename, bool parseFilename = true);
 
 protected:
     /**
@@ -509,7 +505,7 @@ protected:
      * @param line is between 0 and lineCount()-1
      * @param l may not contain '\n'
      */
-    void setTextline(int line, const QString & l);
+    void setTextline(int line, const QString &l);
 
 private:
     /**
@@ -517,25 +513,27 @@ private:
      * extra work to do when the state is changed to BufferInactive
      */
     virtual void makeInactive()
-    {}
+    {
+    }
 
     /**
      * This function is to be overridden by subclasses that have
      * extra work to do when the state is changed to HIDDEN
      */
     virtual void makeHidden()
-    {}
+    {
+    }
 
     /**
      * This function is to be overridden by subclasses that have
      * extra work to do when the state is changed to BufferActive
      */
     virtual void makeActive()
-    {}
+    {
+    }
 
     struct Private;
     Private *d;
 };
 
 #endif /*  YZ_BUFFER_H */
-

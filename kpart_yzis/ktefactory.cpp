@@ -17,28 +17,26 @@
 *  Boston, MA 02110-1301, USA.
 **/
 
-
 #include "ktefactory.h"
 #include "ktedocument.h"
 #include "kteeditor.h"
 #include "kysession.h"
 
-KTEFactory::KTEFactory(QObject* parent)
-    : KTextEditor::Factory::Factory(parent)
+KTEFactory::KTEFactory(QObject *parent) :
+    KTextEditor::Factory::Factory(parent)
 {
     KYSession::initDebug(0, 0);
     KYSession::createInstance();
 }
 
-KTextEditor::Editor* KTEFactory::editor()
+KTextEditor::Editor *KTEFactory::editor()
 {
     return KTEEditor::self();
 }
 
-
-KParts::Part* KTEFactory::createPartObject(QWidget*, QObject*, const char*, const QStringList&)
+KParts::Part *KTEFactory::createPartObject(QWidget *, QObject *, const char *, const QStringList &)
 {
-    KTEDocument* doc = new KTEDocument(NULL);
+    KTEDocument *doc = new KTEDocument(NULL);
     doc->setReadWrite(true);
     return doc;
 }

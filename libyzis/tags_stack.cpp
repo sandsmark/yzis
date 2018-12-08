@@ -41,14 +41,16 @@ static YInfoJumpListRecord getRecord()
     return YInfoJumpListRecord(buffer->fileName(), cursor);
 }
 
-#define dbg()    yzDebug("YTagStack")
-#define err()    yzError("YTagStack")
+#define dbg() yzDebug("YTagStack")
+#define err() yzError("YTagStack")
 
 YTagStack::YTagStack()
-{}
+{
+}
 
 YTagStack::~YTagStack()
-{}
+{
+}
 
 void YTagStack::push()
 {
@@ -58,7 +60,7 @@ void YTagStack::push()
 
 const YInfoJumpListRecord *YTagStack::getHead() const
 {
-    if(!mStack.empty()) {
+    if (!mStack.empty()) {
         return &mStack.back();
     } else {
         return NULL;
@@ -70,9 +72,9 @@ const YTagStackItem *YTagStack::moveToNext()
     const YTagStackItem *result = NULL;
     MatchingStackItem &pair = mCurrentTags.back();
 
-    if(pair.second < (unsigned)pair.first.size() - 1) {
+    if (pair.second < (unsigned)pair.first.size() - 1) {
         ++pair.second;
-        result = &pair.first[ pair.second ];
+        result = &pair.first[pair.second];
     }
 
     return result;
@@ -83,9 +85,9 @@ const YTagStackItem *YTagStack::moveToPrevious()
     const YTagStackItem *result = NULL;
     MatchingStackItem &pair = mCurrentTags.back();
 
-    if(pair.second != 0) {
-        --pair.second ;
-        result = &pair.first[ pair.second ];
+    if (pair.second != 0) {
+        --pair.second;
+        result = &pair.first[pair.second];
     }
 
     return result;
@@ -111,7 +113,7 @@ void YTagStack::storeMatchingTags(const QVector<YTagStackItem> &tags)
 
 unsigned int YTagStack::getNumMatchingTags() const
 {
-    if(!mCurrentTags.empty()) {
+    if (!mCurrentTags.empty()) {
         const MatchingStackItem &pair = mCurrentTags.back();
         return pair.first.size();
     } else {
@@ -121,7 +123,7 @@ unsigned int YTagStack::getNumMatchingTags() const
 
 unsigned int YTagStack::getNumCurMatchingTag() const
 {
-    if(!mCurrentTags.empty()) {
+    if (!mCurrentTags.empty()) {
         const MatchingStackItem &pair = mCurrentTags.back();
         return pair.second;
     } else {

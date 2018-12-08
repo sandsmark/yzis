@@ -18,24 +18,24 @@
 *  Boston, MA 02110-1301, USA.
 **/
 
-
 #include "history.h"
 
 #include <QStringList>
 #include <QTextStream>
 
-#define dbg()    yzDebug("YZHistory")
-#define err()    yzError("YZHistory")
+#define dbg() yzDebug("YZHistory")
+#define err() yzError("YZHistory")
 
 static QString Null = QString();
 
-struct YZHistory::Private {
+struct YZHistory::Private
+{
     QStringList entries;
     QStringList::Iterator current;
 };
 
-YZHistory::YZHistory()
-    : d(new Private)
+YZHistory::YZHistory() :
+    d(new Private)
 {
     d->current = d->entries.end();
 }
@@ -56,14 +56,14 @@ void YZHistory::addEntry(const QString &entry)
 
 void YZHistory::goBackInTime()
 {
-    if(!atBeginning()) {
+    if (!atBeginning()) {
         --d->current;
     }
 }
 
 void YZHistory::goForwardInTime()
 {
-    if(!atEnd()) {
+    if (!atEnd()) {
         ++d->current;
     }
 }
@@ -80,7 +80,7 @@ bool YZHistory::atEnd() const
 
 const QString YZHistory::getEntry() const
 {
-    if(d->current != d->entries.end()) {
+    if (d->current != d->entries.end()) {
         return *d->current;
     } else {
         return Null;
@@ -94,12 +94,12 @@ unsigned int YZHistory::getNumEntries() const
 
 QString &YZHistory::getEntryByIdx(unsigned int idx)
 {
-    return const_cast<QString&>(static_cast<const YZHistory*>(this)->getEntryByIdx(idx));
+    return const_cast<QString &>(static_cast<const YZHistory *>(this)->getEntryByIdx(idx));
 }
 
 const QString &YZHistory::getEntryByIdx(unsigned int idx) const
 {
-    return d->entries[ idx ];
+    return d->entries[idx];
 }
 
 bool YZHistory::isEmpty() const
@@ -114,11 +114,11 @@ QTextStream &YZHistory::writeToStream(QTextStream &stream) const
     QStringList::iterator end = d->entries.end();
 
     // cap the write out at MAX_ENTRIES_TO_WRITE
-    if(getNumEntries() > MAX_ENTRIES_TO_WRITE) {
+    if (getNumEntries() > MAX_ENTRIES_TO_WRITE) {
         start += getNumEntries() - MAX_ENTRIES_TO_WRITE;
     }
 
-    for(QStringList::iterator i = start; i != end; ++i) {
+    for (QStringList::iterator i = start; i != end; ++i) {
         stream << ":";
         stream << *i;
         stream << endl;

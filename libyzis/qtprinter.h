@@ -32,7 +32,7 @@ public:
     YZQtPrinter(YView *view);
     virtual ~YZQtPrinter();
 
-    void printToFile(const QString& path);
+    void printToFile(const QString &path);
     void run();
 
 private:
@@ -44,4 +44,3 @@ private:
 };
 
 #endif
-

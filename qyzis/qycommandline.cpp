@@ -33,31 +33,32 @@
 #define dbg() yzDebug("QYCommandLine")
 #define err() yzError("QYCommandLine")
 
-QYCommandLine::QYCommandLine(QYView * view)
-    : QLineEdit(view)
+QYCommandLine::QYCommandLine(QYView *view) :
+    QLineEdit(view)
 {
     mView = view;
     setFocusPolicy(Qt::ClickFocus);
 }
 
 QYCommandLine::~QYCommandLine()
-{}
+{
+}
 
-void QYCommandLine::keyPressEvent(QKeyEvent * e)
+void QYCommandLine::keyPressEvent(QKeyEvent *e)
 {
     dbg() << "keyPressEvent( modifier=" << e->modifiers() << ", key=" << e->key() << ", ascii=" << e->text().toLatin1().constData() << ", unicode=" << e->text() << ")" << endl;
 
-    if(e->key() == Qt::Key_Return
-       || e->key() == Qt::Key_Enter
-       || e->key() == Qt::Key_Up
-       || e->key() == Qt::Key_Down
-       || e->key() == Qt::Key_Escape) {
+    if (e->key() == Qt::Key_Return
+        || e->key() == Qt::Key_Enter
+        || e->key() == Qt::Key_Up
+        || e->key() == Qt::Key_Down
+        || e->key() == Qt::Key_Escape) {
         dbg() << "keyPressEvent: sending to Session" << endl;
-        YSession::self()->sendKey(static_cast< YView * >(mView), YKey(e->key())) ;
+        YSession::self()->sendKey(static_cast<YView *>(mView), YKey(e->key()));
         e->accept();
-    } else if((e->QInputEvent::modifiers() & Qt::ControlModifier) && e->key() == Qt::Key_C) {      // handle CTRL-C
+    } else if ((e->QInputEvent::modifiers() & Qt::ControlModifier) && e->key() == Qt::Key_C) { // handle CTRL-C
         dbg() << "keyPressEvent: sending CONTROL-C to Session" << endl;
-        YSession::self()->sendKey(static_cast< YView * >(mView), YKey(Qt::Key_C,  e->modifiers())) ;
+        YSession::self()->sendKey(static_cast<YView *>(mView), YKey(Qt::Key_C, e->modifiers()));
         e->accept();
     } else {
         dbg() << "keyPressEvent: sending to QLineEdit" << endl;
@@ -65,7 +66,7 @@ void QYCommandLine::keyPressEvent(QKeyEvent * e)
     }
 }
 
-void QYCommandLine::focusInEvent(QFocusEvent * e)
+void QYCommandLine::focusInEvent(QFocusEvent *e)
 {
     dbg() << "focusInEvent() for " << mView->buffer()->fileNameShort() << ", reason=" << e->reason() << endl;
     //e->accept();
@@ -83,4 +84,3 @@ void QYCommandLine::focusOutEvent(QFocusEvent *e)
     */
     QLineEdit::focusOutEvent(e);
 }
-

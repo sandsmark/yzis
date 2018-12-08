@@ -30,7 +30,7 @@ class QYCursor : public QWidget
 {
     Q_OBJECT
 
-public :
+public:
     enum CursorShape {
         CursorFilledRect,
         CursorVbar,
@@ -39,24 +39,21 @@ public :
         CursorHidden,
     };
 
-    QYCursor(QYView * view, QYEdit* parent, CursorShape shape);
+    QYCursor(QYView *view, QYEdit *parent, CursorShape shape);
     virtual ~QYCursor();
 
     void setCursorShape(CursorShape shape);
     CursorShape shape() const;
 
+protected:
+    virtual void paintEvent(QPaintEvent *pe);
 
-protected :
-    virtual void paintEvent(QPaintEvent* pe);
-
-private :
+private:
     CursorShape mCursorShape;
-    QYEdit* mEdit;
-    QYView* mView;
-
+    QYEdit *mEdit;
+    QYView *mView;
 };
 
-YDebugStream& operator<<(YDebugStream& out, const QYCursor::CursorShape & shape);
+YDebugStream &operator<<(YDebugStream &out, const QYCursor::CursorShape &shape);
 
 #endif
-

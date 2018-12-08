@@ -45,25 +45,23 @@ class YKeySequence;
 class YZIS_EXPORT YSessionIface
 {
 public:
-
     //-------------------------------------------------------
     // ----------------- GUI Prompts
     //-------------------------------------------------------
 
     /** @brief Display the specified error/information message
      */
-    virtual void guiPopupMessage(const QString& message) = 0;
+    virtual void guiPopupMessage(const QString &message) = 0;
 
     /** @brief Prompt a Yes/No question for the user and returns the answer.
      */
-    virtual bool guiPromptYesNo(const QString& title, const QString& message) = 0;
+    virtual bool guiPromptYesNo(const QString &title, const QString &message) = 0;
 
     /** @brief Prompt a Yes/No/Cancel question for the user
            *
      * @return 0 (Yes), 1 (No), 2 (Cancel)
      */
-    virtual int guiPromptYesNoCancel(const QString& title, const QString& message) = 0;
-
+    virtual int guiPromptYesNoCancel(const QString &title, const QString &message) = 0;
 
     //-------------------------------------------------------
     // ----------------- Gui Events
@@ -81,15 +79,13 @@ public:
       */
     virtual bool guiQuit(int errorCode = 0) = 0;
 
-
     //-------------------------------------------------------
     // ----------------- Clipboard
     //-------------------------------------------------------
 
     /** Set the text of the clipboard.
       */
-    virtual void guiSetClipboardText(const QString& text, Clipboard::Mode mode) = 0;
-
+    virtual void guiSetClipboardText(const QString &text, Clipboard::Mode mode) = 0;
 
     //-------------------------------------------------------
     // ----------------- View and Buffer management
@@ -97,11 +93,11 @@ public:
 
     /** @brief Create new views on an existing buffer.
       */
-    virtual YView * guiCreateView(YBuffer *buffer) = 0;
+    virtual YView *guiCreateView(YBuffer *buffer) = 0;
 
     /** @brief Switch the current view.
      */
-    virtual void guiChangeCurrentView(YView*) = 0;
+    virtual void guiChangeCurrentView(YView *) = 0;
 
     /** @brief Ask the frontend to delete the view.
       *
@@ -114,7 +110,7 @@ public:
     /** @brief Inform the frontend of the buffer creation.
       *
       */
-    virtual void guiCreateBuffer(YBuffer * b)
+    virtual void guiCreateBuffer(YBuffer *b)
     {
         Q_UNUSED(b);
     }
@@ -129,14 +125,13 @@ public:
         Q_UNUSED(b);
     }
 
-
     //-------------------------------------------------------
     // ----------------- Splitting
     //-------------------------------------------------------
 
     /** @brief Splits horizontally the mainwindow area to create a new view on the current buffer
      */
-    virtual void guiSplitHorizontally(YView*) = 0;
+    virtual void guiSplitHorizontally(YView *) = 0;
 
     /** @brief Splits the screen vertically showing the 2 given views
      */
@@ -145,7 +140,6 @@ public:
     /** @brief Splits the screen vertically to show the 2 given views
      */
     //  virtual void splitVerticallyOnView( YView*, YView* ) = 0;
-
 
     //-------------------------------------------------------
     // ----------------- Misc
@@ -156,5 +150,3 @@ public:
 };
 
 #endif // YZ_SESSION_IFACE_H
-
-

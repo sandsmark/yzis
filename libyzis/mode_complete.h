@@ -28,7 +28,6 @@
 #include "cursor.h"
 #include "yzismacros.h"
 
-
 class YBuffer;
 
 /**
@@ -36,18 +35,18 @@ class YBuffer;
   */
 class YZIS_EXPORT YModeCompletion : public YMode
 {
-public :
+public:
     YModeCompletion();
     virtual ~YModeCompletion();
 
-    virtual void leave(YView* mView);
-    virtual CmdState execCommand(YView* mView, const YKeySequence &keys, YKeySequence::const_iterator &parsePos);
+    virtual void leave(YView *mView);
+    virtual CmdState execCommand(YView *mView, const YKeySequence &keys, YKeySequence::const_iterator &parsePos);
 
-protected :
-    void doComplete(YView* mView, bool forward);
-    bool initCompletion(YView* mView, bool forward);
+protected:
+    void doComplete(YView *mView, bool forward);
+    bool initCompletion(YView *mView, bool forward);
 
-private :
+private:
     void completeFromBuffer(YBuffer *buffer, QStringList &proposed, bool elimDups = true, QList<YCursor> *cursors = NULL);
     void completeFromCurrentBuffer(const YCursor cursor, bool forward, QStringList &proposed);
     void completeFromOtherBuffers(YBuffer *skip, QStringList &proposed);
@@ -68,4 +67,3 @@ private :
 };
 
 #endif
-

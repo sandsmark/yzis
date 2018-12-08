@@ -27,8 +27,8 @@ class QYConfigureDialog : public QDialog, private Ui::ConfigureDialog
 {
     Q_OBJECT
 
-public :
-    QYConfigureDialog(QWidget* parent = 0);
+public:
+    QYConfigureDialog(QWidget *parent = 0);
 };
 
 #endif // QYCONFIGUREDIAGLOG_H

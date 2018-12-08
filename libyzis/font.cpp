@@ -19,11 +19,12 @@
 
 #include "font.h"
 
-#define dbg()    yzDebug("YFont")
-#define err()    yzError("YFont")
+#define dbg() yzDebug("YFont")
+#define err() yzError("YFont")
 
 YFont::YFont()
-{}
+{
+}
 
 void YFont::setWeight(int weight)
 {
@@ -71,17 +72,16 @@ bool YFont::strikeOut() const
     return m_strikeOut;
 }
 
-bool YFont::operator==(const YFont& font) const
+bool YFont::operator==(const YFont &font) const
 {
-    return m_weight == font.m_weight && m_italic == font.m_italic && m_underline == font.m_underline &&
-           m_overline == font.m_overline && m_strikeOut == font.m_strikeOut;
+    return m_weight == font.m_weight && m_italic == font.m_italic && m_underline == font.m_underline && m_overline == font.m_overline && m_strikeOut == font.m_strikeOut;
 }
-bool YFont::operator!=(const YFont& font) const
+bool YFont::operator!=(const YFont &font) const
 {
     return !(*this == font);
 }
 
-YFont& YFont::operator=(const YFont& font)
+YFont &YFont::operator=(const YFont &font)
 {
     m_weight = font.m_weight;
     m_italic = font.m_italic;
@@ -90,4 +90,3 @@ YFont& YFont::operator=(const YFont& font)
     m_strikeOut = font.m_strikeOut;
     return *this;
 }
-

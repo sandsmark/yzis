@@ -33,102 +33,102 @@ public:
 
     static YZMapping *self();
 
-    void addNormalMapping(const QString& key, const QString& map)
+    void addNormalMapping(const QString &key, const QString &map)
     {
         registerModifier(key);
         mNormalMappings[key] = map;
     }
 
-    void addNormalNoreMapping(const QString& key, const QString& map)
+    void addNormalNoreMapping(const QString &key, const QString &map)
     {
         registerModifier(key);
         QString copy = QString(map);
         mNormalMappings[key] = copy.insert(0, "<Noremap>");
     }
 
-    void deleteNormalMapping(const QString& key)
+    void deleteNormalMapping(const QString &key)
     {
         unregisterModifier(key);
         mNormalMappings.remove(key);
     }
 
-    void addVisualMapping(const QString& key, const QString& map)
+    void addVisualMapping(const QString &key, const QString &map)
     {
         registerModifier(key);
         mVisualMappings[key] = map;
     }
 
-    void addVisualNoreMapping(const QString& key, const QString& map)
+    void addVisualNoreMapping(const QString &key, const QString &map)
     {
         registerModifier(key);
         QString copy = QString(map);
         mVisualMappings[key] = copy.insert(0, "<Noremap>");
     }
 
-    void deleteVisualMapping(const QString& key)
+    void deleteVisualMapping(const QString &key)
     {
         unregisterModifier(key);
         mVisualMappings.remove(key);
     }
 
-    void addInsertMapping(const QString& key, const QString& map)
+    void addInsertMapping(const QString &key, const QString &map)
     {
         registerModifier(key);
         mInsertMappings[key] = map;
     }
 
-    void addInsertNoreMapping(const QString& key, const QString& map)
+    void addInsertNoreMapping(const QString &key, const QString &map)
     {
         registerModifier(key);
         QString copy = QString(map);
         mInsertMappings[key] = copy.insert(0, "<Noremap>");
     }
 
-    void deleteInsertMapping(const QString& key)
+    void deleteInsertMapping(const QString &key)
     {
         unregisterModifier(key);
         mInsertMappings.remove(key);
     }
 
-    void addCmdLineMapping(const QString& key, const QString& map)
+    void addCmdLineMapping(const QString &key, const QString &map)
     {
         registerModifier(key);
         mCmdLineMappings[key] = map;
     }
 
-    void addCmdLineNoreMapping(const QString& key, const QString& map)
+    void addCmdLineNoreMapping(const QString &key, const QString &map)
     {
         registerModifier(key);
         QString copy = QString(map);
         mCmdLineMappings[key] = copy.insert(0, "<Noremap>");
     }
 
-    void deleteCmdLineMapping(const QString& key)
+    void deleteCmdLineMapping(const QString &key)
     {
         unregisterModifier(key);
         mCmdLineMappings.remove(key);
     }
 
-    void addPendingOpMapping(const QString& key, const QString& map)
+    void addPendingOpMapping(const QString &key, const QString &map)
     {
         registerModifier(key);
         mPendingOpMappings[key] = map;
     }
 
-    void addPendingOpNoreMapping(const QString& key, const QString& map)
+    void addPendingOpNoreMapping(const QString &key, const QString &map)
     {
         registerModifier(key);
         QString copy = QString(map);
         mPendingOpMappings[key] = copy.insert(0, "<Noremap>");
     }
 
-    void deletePendingOpMapping(const QString& key)
+    void deletePendingOpMapping(const QString &key)
     {
         unregisterModifier(key);
         mPendingOpMappings.remove(key);
     }
 
-    void addGlobalMapping(const QString& key, const QString& map)
+    void addGlobalMapping(const QString &key, const QString &map)
     {
         registerModifier(key);
         mNormalMappings[key] = map;
@@ -136,7 +136,7 @@ public:
         mPendingOpMappings[key] = map;
     }
 
-    void addGlobalNoreMapping(const QString& key, const QString& map)
+    void addGlobalNoreMapping(const QString &key, const QString &map)
     {
         registerModifier(key);
         QString copy = QString(map);
@@ -146,17 +146,17 @@ public:
         mPendingOpMappings[key] = copy;
     }
 
-    void deleteGlobalMapping(const QString& key)
+    void deleteGlobalMapping(const QString &key)
     {
         unregisterModifier(key);
         mNormalMappings.remove(key);
         mVisualMappings.remove(key);
         mPendingOpMappings.remove(key);
     }
-    bool applyMappings(QString& text, int modes, bool *mapped);
-    bool applyMappings(QString& text, QMap<QString, QString>& mappings);
-    void registerModifier(const QString& map);
-    void unregisterModifier(const QString& map);
+    bool applyMappings(QString &text, int modes, bool *mapped);
+    bool applyMappings(QString &text, QMap<QString, QString> &mappings);
+    void registerModifier(const QString &map);
+    void unregisterModifier(const QString &map);
 
 protected:
     YZMapping();
@@ -169,7 +169,6 @@ private:
     QMap<QString, QString> mCmdLineMappings;
     QMap<QString, QString> mPendingOpMappings;
     bool mNoremap;
-
 };
 
 #endif

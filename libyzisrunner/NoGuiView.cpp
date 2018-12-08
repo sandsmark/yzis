@@ -17,15 +17,14 @@
 *  Boston, MA 02110-1301, USA.
 **/
 
-
 #include "NoGuiView.h"
 #include "debug.h"
 #include "statusbariface.h"
 
 #define dbg() yzDebug("NoGuiView")
 
-NoGuiView::NoGuiView(YBuffer *buf, YSession *sess, int cols, int lines)
-    : YView(buf, sess, cols, lines)
+NoGuiView::NoGuiView(YBuffer *buf, YSession *sess, int cols, int lines) :
+    YView(buf, sess, cols, lines)
 {
     dbg().SPrintf("NoGuiView( %s, cols=%d, lines=%d )", qp(buf->toString()), cols, lines);
 }
@@ -56,7 +55,7 @@ uint NoGuiView::getCursorCol()
 
 // Reimplemented to please compilation
 
-void NoGuiView::guiSetCommandLineText(const QString& text)
+void NoGuiView::guiSetCommandLineText(const QString &text)
 {
     // dbg() << "NoGuiView::guiSetCommandLineText( text='" << text << "') \n";
     mCommandLine = text;
@@ -101,13 +100,13 @@ void NoGuiView::scrollDown(int)
 {
     dbg() << "NoGuiView::scrollDown" << endl;
 }
-void NoGuiView::registerModifierKeys(const QString& s)
+void NoGuiView::registerModifierKeys(const QString &s)
 {
     dbg() << "NoGuiView::registerModifierKeys(" << s << ")" << endl;
-    return ;
+    return;
 }
 
-void NoGuiView::paintEvent(const YSelection&)
+void NoGuiView::paintEvent(const YSelection &)
 {
     dbg() << "NoGuiView::paintEvent( )" << endl;
 }
@@ -117,7 +116,7 @@ void NoGuiView::guiScroll(int dx, int dy)
     dbg() << "NoGuiView::Scroll" << dx << dy << endl;
 }
 
-void NoGuiView::guiNotifyContentChanged(const YSelection&)
+void NoGuiView::guiNotifyContentChanged(const YSelection &)
 {
     dbg() << "NoGuiView::guiNotifyContentChanged" << endl;
 }
@@ -128,7 +127,7 @@ bool NoGuiView::guiPopupFileSaveAs()
     return false;
 }
 
-YStatusBarIface* NoGuiView::guiStatusBar()
+YStatusBarIface *NoGuiView::guiStatusBar()
 {
     dbg() << HERE() << endl;
     return NULL;
@@ -150,7 +149,7 @@ void NoGuiView::guiUpdateCursorPosition()
 {
     dbg() << HERE() << endl;
 }
-void NoGuiView::guiDisplayInfo(const QString&)
+void NoGuiView::guiDisplayInfo(const QString &)
 {
     dbg() << HERE() << endl;
 }
@@ -170,11 +169,11 @@ void NoGuiView::guiEndPaintEvent()
 {
     dbg() << HERE() << endl;
 }
-void NoGuiView::guiDrawCell(YCursor, const YDrawCell&)
+void NoGuiView::guiDrawCell(YCursor, const YDrawCell &)
 {
     dbg() << HERE() << endl;
 }
-void NoGuiView::guiDrawClearToEOL(YCursor, const YDrawCell&)
+void NoGuiView::guiDrawClearToEOL(YCursor, const YDrawCell &)
 {
     dbg() << HERE() << endl;
 }
@@ -186,5 +185,3 @@ void NoGuiView::guiDrawSetLineNumber(int, int, int)
 {
     dbg() << HERE() << endl;
 }
-
-

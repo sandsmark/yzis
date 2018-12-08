@@ -17,7 +17,6 @@
 *  Boston, MA 02110-1301, USA.
 **/
 
-
 #ifndef NOGUI_VIEW_H
 #define NOGUI_VIEW_H
 
@@ -39,7 +38,7 @@ public:
 
     // Reimplemented to please compilation
 
-    virtual void guiSetCommandLineText(const QString& text);
+    virtual void guiSetCommandLineText(const QString &text);
 
     virtual void guiSetFocusCommandLine();
 
@@ -55,30 +54,30 @@ public:
 
     virtual void scrollUp(int);
     virtual void scrollDown(int);
-    virtual void registerModifierKeys(const QString& s);
+    virtual void registerModifierKeys(const QString &s);
 
-    virtual void paintEvent(const YSelection&);
+    virtual void paintEvent(const YSelection &);
 
     virtual void guiScroll(int dx, int dy);
 
-    virtual void guiNotifyContentChanged(const YSelection& s);
+    virtual void guiNotifyContentChanged(const YSelection &s);
 
     virtual bool guiPopupFileSaveAs();
 
-    virtual YStatusBarIface* guiStatusBar();
+    virtual YStatusBarIface *guiStatusBar();
 
     virtual void guiUpdateFileName();
     virtual void guiUpdateFileInfo();
     virtual void guiUpdateMode();
     virtual void guiUpdateCursorPosition();
-    virtual void guiDisplayInfo(const QString&);
+    virtual void guiDisplayInfo(const QString &);
 
     virtual void guiHighlightingChanged();
     virtual void guiSetup();
     void guiPreparePaintEvent();
     void guiEndPaintEvent();
-    void guiDrawCell(YCursor, const YDrawCell&);
-    void guiDrawClearToEOL(YCursor, const YDrawCell&);
+    void guiDrawCell(YCursor, const YDrawCell &);
+    void guiDrawClearToEOL(YCursor, const YDrawCell &);
     void guiDrawSetMaxLineNumber(int);
     void guiDrawSetLineNumber(int, int, int);
 

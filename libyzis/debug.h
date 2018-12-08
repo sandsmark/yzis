@@ -47,11 +47,11 @@ class QStringList;
 
 //! \name Debug levels
 //! @{
-#define YZ_DEEPDEBUG_LEVEL   0  //!< deep debuggging level
-#define YZ_DEBUG_LEVEL   1      //!< debuggging level
-#define YZ_WARNING_LEVEL 2      //!< warning level
-#define YZ_ERROR_LEVEL   3      //!< error level
-#define YZ_FATAL_LEVEL   4      //!< fatal level 
+#define YZ_DEEPDEBUG_LEVEL 0 //!< deep debuggging level
+#define YZ_DEBUG_LEVEL 1 //!< debuggging level
+#define YZ_WARNING_LEVEL 2 //!< warning level
+#define YZ_ERROR_LEVEL 3 //!< error level
+#define YZ_FATAL_LEVEL 4 //!< fatal level
 //! @}
 
 /** default file name for controlling which area are enabled or not.
@@ -145,9 +145,8 @@ class YZIS_EXPORT YDebugBackend : private boost::noncopyable
 {
 
 public:
-
     /** The singleton constructor */
-    static YDebugBackend * self();
+    static YDebugBackend *self();
 
     /** Write data to the debug backend.
          *
@@ -158,7 +157,7 @@ public:
          * \param area  the area
          * \param data  the data to display
          */
-    void flush(int level, const QString& area, const char * data);
+    void flush(int level, const QString &area, const char *data);
 
     /** Set debugging level.
          *
@@ -178,12 +177,11 @@ public:
     /** All debug will be logged to the file \p fileName
      *  \p fileName may be stdout or stderr.
      */
-    void setDebugOutputFilename(const QString& fileName);
+    void setDebugOutputFilename(const QString &fileName);
 
     /** Temporary debug output
      */
     void setDebugOutputTemp();
-
 
     /** Set the debug \p level of an \p area
          *
@@ -210,7 +208,7 @@ public:
          *
          * You can remove an area level with removeArea()
          */
-    void setAreaLevel(const QString& area, int level);
+    void setAreaLevel(const QString &area, int level);
 
     /** Returns the debugging level of an \p area.
          *
@@ -218,13 +216,13 @@ public:
          * returns the upmost area matching the beginning of area or if non
          * matches, the global level.
          */
-    int areaLevel(const QString& area) const;
+    int areaLevel(const QString &area) const;
 
     /** Remove the individual debugging level of this area.
       *
       * The area now obeys the global debugging level.
       */
-    void removeArea(const QString & area)
+    void removeArea(const QString &area)
     {
         _areaLevel.remove(area);
     }
@@ -245,7 +243,7 @@ public:
        * \li [area] ":" "debug" | "warning" | "error" | "deepdebug" <br>
        * \li "output" ":" [filename]<br>
       **/
-    void parseRcfile(const char * filename);
+    void parseRcfile(const char *filename);
 
     /** Parse default rc file.
       *
@@ -253,7 +251,6 @@ public:
       * directory where yzis is executed.
       */
     void parseRcfile();
-
 
     /** Parses argv to check for debug directives.
       *
@@ -269,14 +266,14 @@ public:
       * Example:
       * nyzis --level=warning --area-level=LuaEngine,debug --area-level=YSession,debug
       */
-    void parseArgv(QStringList & argv);
+    void parseArgv(QStringList &argv);
 
     /** Parses argc/argv to check for debug directives.
       *
       * The argument list is not modified. Internally, a QStringList
       * is build and the previous function is called
       */
-    void parseArgv(int argc, const char * const * argv);
+    void parseArgv(int argc, const char *const *argv);
 
     /** Returns a string describing the YDebugBackend current configuration
       */
@@ -293,13 +290,13 @@ public:
       *
       * See \ref yzmalloc for details.
       */
-    void * operator new(size_t tSize);
+    void *operator new(size_t tSize);
 
     /** Free memory of the object from libyzis.
       *
       * See \ref yzmalloc for details.
       */
-    void operator delete(void* p);
+    void operator delete(void *p);
 
 private:
     /** Initialise the YDebugBackend(), set a few internal variables
@@ -313,16 +310,16 @@ private:
     YDebugBackend();
 
     /** Private copy constructors for a singleton */
-    YDebugBackend(YDebugBackend & other);
+    YDebugBackend(YDebugBackend &other);
 
     /** Private copy assignment for a singleton */
-    YDebugBackend & operator=(YDebugBackend & other);
+    YDebugBackend &operator=(YDebugBackend &other);
 
     /** Private destructor for a singleton */
     ~YDebugBackend();
 
     /** Singleton instance holder */
-    static YDebugBackend * me;
+    static YDebugBackend *me;
 
     /** debug level assigned to each area */
     QMap<QString, int> _areaLevel;
@@ -338,7 +335,7 @@ private:
 
     /** File output of the debugging (may be stderr, stdout or any open file
       * descriptor */
-    QFile* _output;
+    QFile *_output;
 };
 
 /** Special function to allocate memory.
@@ -353,15 +350,15 @@ private:
   * too, some objects in libyzis have a new() and delete() operator declared.
   * Those new/delete will call yzmalloc() and yzfree().
   */
-void * yzmalloc(size_t tSize);
+void *yzmalloc(size_t tSize);
 
 /** Free memory allocated by yzmalloc(). */
-void yzfree(void * p);
+void yzfree(void *p);
 
 class YDebugStream;
 
 /** A function that manipulates the debug stream */
-typedef YDebugStream & (*YDBGFUNC)(YDebugStream &);
+typedef YDebugStream &(*YDBGFUNC)(YDebugStream &);
 
 /**
  * A Stream to send debug output.
@@ -418,59 +415,59 @@ public:
     /** Constrctor for the stream.
             *
             * The debug \p area and debug \p level are fixed by stream. */
-    explicit YDebugStream(const char * area = "", int level = 0);
+    explicit YDebugStream(const char *area = "", int level = 0);
 
     /** Destructor */
     ~YDebugStream();
 
     /** Operator to output a boolean */
-    YDebugStream& operator << (bool i);
+    YDebugStream &operator<<(bool i);
 
     /** Operator to output a char */
-    YDebugStream& operator << (char i);
+    YDebugStream &operator<<(char i);
 
     /** Operator to output an unsigned char */
-    YDebugStream& operator << (unsigned char i);
+    YDebugStream &operator<<(unsigned char i);
 
     /** Operator to output a string */
-    YDebugStream& operator << (const QString& string);
+    YDebugStream &operator<<(const QString &string);
 
     /** Operator to output a string list */
-    YDebugStream& operator << (const QStringList& string);
+    YDebugStream &operator<<(const QStringList &string);
 
     /** Operator to output a string list */
-    YDebugStream& operator << (const char* string);
+    YDebugStream &operator<<(const char *string);
 
     /** Operator to output an int */
-    YDebugStream& operator << (int i);
+    YDebugStream &operator<<(int i);
 
     /** Operator to output an unsigned int */
-    YDebugStream& operator << (unsigned int i);
+    YDebugStream &operator<<(unsigned int i);
 
     /** Operator to output a long */
-    YDebugStream& operator << (long i);
+    YDebugStream &operator<<(long i);
 
     /** Operator to output an unsigned long */
-    YDebugStream& operator << (unsigned long i);
+    YDebugStream &operator<<(unsigned long i);
 
     /** Operator to output a short */
-    YDebugStream& operator << (short i);
+    YDebugStream &operator<<(short i);
 
     /** Operator to output a unsigned short */
-    YDebugStream& operator << (unsigned short i);
+    YDebugStream &operator<<(unsigned short i);
 
     /** Operator to output a unsigned double */
-    YDebugStream& operator << (double d);
+    YDebugStream &operator<<(double d);
 
     /** Operator that execute the YDebugStream() manipulator function \p
             * f */
-    YDebugStream& operator << (YDBGFUNC f)
+    YDebugStream &operator<<(YDBGFUNC f)
     {
         return (*f)(*this);
     }
 
     /** Convenient SPrintf function on debug streams */
-    void SPrintf(const char * fmt, ...);
+    void SPrintf(const char *fmt, ...);
 
     /** Flushes the current debug text to the debug output.
       *
@@ -480,21 +477,20 @@ public:
     void flush();
 
 private:
-    QString output;     //!< Temporary stored the debug output
-    int level;          //!< debugging level of the stream
-    QString area;       //!< debugging area of the stream
-
+    QString output; //!< Temporary stored the debug output
+    int level; //!< debugging level of the stream
+    QString area; //!< debugging area of the stream
 };
 
 /** Output a \\n */
-inline YDebugStream & endl(YDebugStream& s)
+inline YDebugStream &endl(YDebugStream &s)
 {
     s << "\n";
     return s;
 }
 
 /** Flush the debug stream */
-inline YDebugStream& flush(YDebugStream& s)
+inline YDebugStream &flush(YDebugStream &s)
 {
     s.flush();
     return s;
@@ -507,20 +503,19 @@ inline YDebugStream& flush(YDebugStream& s)
   * yzDebug("some_area") << some_debug << some_more_debug << endl;
   * \endcode
   */
-YZIS_EXPORT YDebugStream yzDeepDebug(const char * area = "");
+YZIS_EXPORT YDebugStream yzDeepDebug(const char *area = "");
 
 /** Convenient function to build an deep debug stream. */
-YZIS_EXPORT YDebugStream yzDebug(const char * area = "");
+YZIS_EXPORT YDebugStream yzDebug(const char *area = "");
 
 /** Convenient function to build a warning stream. */
-YZIS_EXPORT YDebugStream yzWarning(const char * area = "");
+YZIS_EXPORT YDebugStream yzWarning(const char *area = "");
 
 /** Convenient function to build an error stream. */
-YZIS_EXPORT YDebugStream yzError(const char * area = "");
+YZIS_EXPORT YDebugStream yzError(const char *area = "");
 
 /** Convenient function to build an fatal stream. */
-YZIS_EXPORT YDebugStream yzFatal(const char * area = "");
-
+YZIS_EXPORT YDebugStream yzFatal(const char *area = "");
 
 //! \name Assertion macros
 //! @{
@@ -532,7 +527,12 @@ YZIS_EXPORT YDebugStream yzFatal(const char * area = "");
   *
   * If the assertion fails, an error is displayed in the empty area.
   */
-#define YASSERT_MSG( assertion, msg ) { if (! (assertion) ) { yzError() << QString("%1:%2 assertion '%3' failed : %4\n").arg(__FILE__).arg( __LINE__).arg(#assertion).arg( msg ); } }
+#define YASSERT_MSG(assertion, msg)                                                                                          \
+    {                                                                                                                        \
+        if (!(assertion)) {                                                                                                  \
+            yzError() << QString("%1:%2 assertion '%3' failed : %4\n").arg(__FILE__).arg(__LINE__).arg(#assertion).arg(msg); \
+        }                                                                                                                    \
+    }
 
 /** Truth assertion with empty message.
   *
@@ -541,8 +541,7 @@ YZIS_EXPORT YDebugStream yzFatal(const char * area = "");
   *
   * If the assertion fails, an error is displayed in the empty area.
   */
-#define YASSERT( assertion ) YASSERT_MSG( assertion, "" )
-
+#define YASSERT(assertion) YASSERT_MSG(assertion, "")
 
 /** Equality assertion
   *
@@ -551,7 +550,12 @@ YZIS_EXPORT YDebugStream yzFatal(const char * area = "");
   *
   * If the assertion fails, an error is displayed in the empty area.
   */
-#define YASSERT_EQUALS( a, b ) { if (a != b) { yzError() << QString("%1:%2 - %3 == %4 failed : '%5' != '%6'\n").arg(__FILE__).arg( __LINE__).arg(#a).arg(#b).arg(a).arg(b); } }
+#define YASSERT_EQUALS(a, b)                                                                                                            \
+    {                                                                                                                                   \
+        if (a != b) {                                                                                                                   \
+            yzError() << QString("%1:%2 - %3 == %4 failed : '%5' != '%6'\n").arg(__FILE__).arg(__LINE__).arg(#a).arg(#b).arg(a).arg(b); \
+        }                                                                                                                               \
+    }
 
 //! @}
 
@@ -561,7 +565,7 @@ YZIS_EXPORT YDebugStream yzFatal(const char * area = "");
   *
   * qp() provides a shortcut for qPrintable.
   */
-#define qp(s)   qPrintable(s)
+#define qp(s) qPrintable(s)
 
 /** Returns a string composed of the current function name and the current
   * line number. Quite convenienent to quickly trace some code execution:
@@ -585,9 +589,9 @@ YZIS_EXPORT YDebugStream yzFatal(const char * area = "");
   * will help to distinguish between the two calls.
   */
 #ifdef YZIS_WIN32_MSVC
-# define HERE() qp(QString("%1:%2 ").arg(__FUNCDNAME__).arg(__LINE__))
+#define HERE() qp(QString("%1:%2 ").arg(__FUNCDNAME__).arg(__LINE__))
 #else
-# define HERE() qp(QString("%1:%2 ").arg(__PRETTY_FUNCTION__).arg(__LINE__))
+#define HERE() qp(QString("%1:%2 ").arg(__PRETTY_FUNCTION__).arg(__LINE__))
 #endif
 
 /** Returns a string composed of the filename, a colon and the current line

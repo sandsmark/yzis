@@ -30,7 +30,7 @@
 class YZIS_EXPORT YFont
 {
 
-public :
+public:
     enum Weight {
         Light,
         Normal,
@@ -54,18 +54,17 @@ public :
     bool overline() const;
     bool strikeOut() const;
 
-    bool operator!=(const YFont& color) const;
-    bool operator==(const YFont& color) const;
+    bool operator!=(const YFont &color) const;
+    bool operator==(const YFont &color) const;
 
-    YFont& operator=(const YFont& color);
+    YFont &operator=(const YFont &color);
 
-private :
+private:
     int m_weight;
     bool m_italic;
     bool m_underline;
     bool m_overline;
     bool m_strikeOut;
-
 };
 
 #endif

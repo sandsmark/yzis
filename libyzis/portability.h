@@ -39,7 +39,7 @@
 #undef printf
 
 // make geteuid work
-#define CHECK_GETEUID( v )  (1)
+#define CHECK_GETEUID(v) (1)
 
 #endif /* YZIS_WIN32 */
 
@@ -52,19 +52,18 @@
 #include <unistd.h>
 //#include <libintl.h>
 
-#define CHECK_GETEUID( v )  (v == geteuid())
+#define CHECK_GETEUID(v) (v == geteuid())
 #endif /* YZIS_UNIX || YZIS_APPLE */
-
 
 #ifdef YZIS_WIN32_MSVC
 // windows msvc
 
 #ifndef S_ISREG
-#define S_ISREG(x) (((x) & S_IFMT) == S_IFREG)
+#define S_ISREG(x) (((x)&S_IFMT) == S_IFREG)
 #endif
 
 #ifndef S_ISDIR
-#define S_ISDIR(m)  (((m)& S_IFMT) == S_IFDIR)
+#define S_ISDIR(m) (((m)&S_IFMT) == S_IFDIR)
 #endif
 
 #ifndef S_IRUSR
@@ -91,15 +90,17 @@
  * http://lists.trolltech.com/qt-interest/2006-02/thread00180-0.html
  */
 #ifdef YZIS_WIN32_MSVC
-#define YZIS_DUMMY_COMPARISON_OPERATOR(C) \
-    bool operator==(const C&) const { \
-        qWarning(#C"::operator==(const "#C"&) was called"); \
-        return false; \
+#define YZIS_DUMMY_COMPARISON_OPERATOR(C)                      \
+    bool operator==(const C &) const                           \
+    {                                                          \
+        qWarning(#C "::operator==(const " #C "&) was called"); \
+        return false;                                          \
     }
-#define YZIS_DUMMY_QHASH_FUNCTION(C) \
-    inline uint qHash(const C) { \
-        qWarning("inline uint qHash(const "#C") was called"); \
-        return 0; \
+#define YZIS_DUMMY_QHASH_FUNCTION(C)                            \
+    inline uint qHash(const C)                                  \
+    {                                                           \
+        qWarning("inline uint qHash(const " #C ") was called"); \
+        return 0;                                               \
     }
 #else /* YZIS_WIN32_MSVC */
 #define YZIS_DUMMY_COMPARISON_OPERATOR(C)
@@ -107,4 +108,3 @@
 #endif /* YZIS_WIN32_MSVC */
 
 #endif // PORTABILITY_H
-

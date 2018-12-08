@@ -35,18 +35,18 @@ class YZIS_EXPORT YDrawCell
 {
 public:
     YDrawCell();
-    YDrawCell(const YDrawCell& cell);
+    YDrawCell(const YDrawCell &cell);
     ~YDrawCell();
 
     /* change properties for the whole cell */
     void addSelection(yzis::SelectionType selType);
     void delSelection(yzis::SelectionType selType);
-    void setForegroundColor(const YColor& color);
-    void setBackgroundColor(const YColor& color);
-    void setFont(const YFont& font);
+    void setForegroundColor(const YColor &color);
+    void setBackgroundColor(const YColor &color);
+    void setFont(const YFont &font);
     void clear();
 
-    int step(const QString& data);
+    int step(const QString &data);
 
     /* properties accessors */
     inline bool hasSelection(yzis::SelectionType selType) const

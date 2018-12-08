@@ -22,8 +22,8 @@
 #include "drawbuffer.h"
 
 #include "debug.h"
-#define dbg()    yzDebug("YDrawLine")
-#define err()    yzError("YDrawLine")
+#define dbg() yzDebug("YDrawLine")
+#define err() yzError("YDrawLine")
 
 /************************
  * YDrawLine
@@ -47,7 +47,7 @@ void YDrawLine::clear()
     changed = true;
 }
 
-void YDrawLine::setFont(const YFont& f)
+void YDrawLine::setFont(const YFont &f)
 {
     /* TODO */
     /* if ( f != mCur.font ) {  */
@@ -57,26 +57,26 @@ void YDrawLine::setFont(const YFont& f)
      } */
 }
 
-void YDrawLine::setColor(const YColor& c)
+void YDrawLine::setColor(const YColor &c)
 {
-    if(mCur.foregroundColor() != c) {
+    if (mCur.foregroundColor() != c) {
         mCur.setForegroundColor(c);
         changed = true;
     }
 }
-void YDrawLine::setBackgroundColor(const YColor& c)
+void YDrawLine::setBackgroundColor(const YColor &c)
 {
-    if(mCur.backgroundColor() != c) {
+    if (mCur.backgroundColor() != c) {
         mCur.setBackgroundColor(c);
         changed = true;
     }
 }
 
-int YDrawLine::step(const QString& c)
+int YDrawLine::step(const QString &c)
 {
-    if(changed) {
+    if (changed) {
         append(YDrawCell(mCur));
-        mCell = & (*this)[size() - 1];
+        mCell = &(*this)[size() - 1];
         changed = false;
     }
 
@@ -87,15 +87,15 @@ void YDrawLine::flush()
     mWidth = 0;
     mLength = 0;
 
-    for(int i = 0; i < count(); ++i) {
-        mWidth +=  at(i).width();
+    for (int i = 0; i < count(); ++i) {
+        mWidth += at(i).width();
         mLength += at(i).length();
     }
 }
 
-YDebugStream& operator<< (YDebugStream& out, const YDrawLine& dl)
+YDebugStream &operator<<(YDebugStream &out, const YDrawLine &dl)
 {
-    for(int i = 0; i < dl.size(); ++i) {
+    for (int i = 0; i < dl.size(); ++i) {
         out << "'" << dl[i].content() << "' ";
     }
 
@@ -104,7 +104,7 @@ YDebugStream& operator<< (YDebugStream& out, const YDrawLine& dl)
 
 YDrawSection YDrawLine::arrange(int columns) const
 {
-    if(count() == 0) {
+    if (count() == 0) {
         return YDrawSection() << YDrawLine();
     }
 
@@ -112,17 +112,17 @@ YDrawSection YDrawLine::arrange(int columns) const
     YDrawLine line;
     int line_width = 0;
 
-    foreach(YDrawCell c, *this) {
+    foreach (YDrawCell c, *this) {
         int w = c.width();
 
-        if(line_width + w <= columns) {
+        if (line_width + w <= columns) {
             line << c;
             line_width += w;
         } else {
             /* split current cell */
             int r = columns - line_width;
 
-            if(r) {
+            if (r) {
                 line << c.left(r);
             }
 
@@ -135,11 +135,10 @@ YDrawSection YDrawLine::arrange(int columns) const
         }
     }
 
-    if(line.count() > 0) {
+    if (line.count() > 0) {
         line.flush();
         ds << line;
     }
 
     return ds;
 }
-

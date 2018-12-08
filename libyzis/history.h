@@ -78,7 +78,7 @@ public:
      * write the history out to text stream
      * useful for saving to .yzisinfo
      */
-    QTextStream& writeToStream(QTextStream &stream) const;
+    QTextStream &writeToStream(QTextStream &stream) const;
 
 private:
     struct Private;

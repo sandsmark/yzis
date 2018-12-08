@@ -18,11 +18,11 @@ public:
 
     /** Used to display the mode we are currently in.
      */
-    virtual void setMode(const QString& mode) = 0;
+    virtual void setMode(const QString &mode) = 0;
 
     /** Used to display current buffer's file name.
      */
-    virtual void setFileName(const QString& fileName) = 0;
+    virtual void setFileName(const QString &fileName) = 0;
 
     /** Used to display current buffer's status information.
      * @param isNew the buffer is associated to a temporary file
@@ -49,8 +49,7 @@ public:
 
     /** Used to display informational messages to the user.
      */
-    virtual void setMessage(const QString& message) = 0;
+    virtual void setMessage(const QString &message) = 0;
 };
 
 #endif
-

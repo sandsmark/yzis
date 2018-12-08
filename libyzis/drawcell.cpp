@@ -20,8 +20,8 @@
 #include "drawcell.h"
 #include "debug.h"
 
-#define dbg()    yzDebug("YDrawCell")
-#define err()    yzError("YDrawCell")
+#define dbg() yzDebug("YDrawCell")
+#define err() yzError("YDrawCell")
 
 /************************
  * YDrawCell
@@ -37,7 +37,7 @@ YDrawCell::YDrawCell() :
     mStepsShift(0)
 {
 }
-YDrawCell::YDrawCell(const YDrawCell& cell) :
+YDrawCell::YDrawCell(const YDrawCell &cell) :
     mSelections(cell.mSelections),
     mColorForeground(cell.mColorForeground),
     mColorBackground(cell.mColorBackground),
@@ -57,23 +57,23 @@ void YDrawCell::addSelection(yzis::SelectionType selType)
 }
 void YDrawCell::delSelection(yzis::SelectionType selType)
 {
-    if(hasSelection(selType)) {
+    if (hasSelection(selType)) {
         mSelections -= selType;
     }
 }
-void YDrawCell::setForegroundColor(const YColor& color)
+void YDrawCell::setForegroundColor(const YColor &color)
 {
     mColorForeground = color;
 }
-void YDrawCell::setBackgroundColor(const YColor& color)
+void YDrawCell::setBackgroundColor(const YColor &color)
 {
     mColorBackground = color;
 }
-void YDrawCell::setFont(const YFont& font)
+void YDrawCell::setFont(const YFont &font)
 {
     mFont = font;
 }
-int YDrawCell::step(const QString& data)
+int YDrawCell::step(const QString &data)
 {
     mContent += data;
     mSteps.append(data.length());
@@ -95,7 +95,7 @@ int YDrawCell::widthForLength(int length) const
     int w = 0;
     length = qMin(length, mSteps.count());
 
-    while(length--) {
+    while (length--) {
         w += mSteps.at(length);
     }
 
@@ -108,7 +108,7 @@ int YDrawCell::lengthForWidth(int width) const
     int w = mStepsShift;
     int l = 0;
 
-    for(; w < width; ++l) {
+    for (; w < width; ++l) {
         w += mSteps[l];
     }
 
@@ -119,11 +119,11 @@ YDrawCell YDrawCell::left_steps(int steps) const
 {
     YDrawCell c(*this);
 
-    if(steps < length()) {
+    if (steps < length()) {
         c.mSteps.clear();
         int w = mStepsShift;
 
-        for(int i = 0; i < steps; i++) {
+        for (int i = 0; i < steps; i++) {
             c.mSteps << mSteps[i];
             w += mSteps[i];
         }
@@ -137,11 +137,11 @@ YDrawCell YDrawCell::mid_steps(int steps) const
 {
     YDrawCell c(*this);
 
-    if(steps > 0) {
+    if (steps > 0) {
         c.mStepsShift = 0;
         int w = mStepsShift;
 
-        for(int i = 0; i < steps; i++) {
+        for (int i = 0; i < steps; i++) {
             w += mSteps[i];
         }
 
@@ -156,18 +156,18 @@ YDrawCell YDrawCell::left(int column) const
 {
     YDrawCell c(*this);
 
-    if(column < width()) {
+    if (column < width()) {
         c.mContent = mContent.left(column);
         c.mSteps.clear();
         int w = 0;
         int r = column;
 
-        foreach(int s, mSteps) {
-            if(r == 0) {
+        foreach (int s, mSteps) {
+            if (r == 0) {
                 break;
             }
 
-            if(s > r) {
+            if (s > r) {
                 c.mSteps << r;
                 r = 0;
             } else {
@@ -184,16 +184,16 @@ YDrawCell YDrawCell::mid(int column) const
 {
     YDrawCell c(*this);
 
-    if(column > 0) {
+    if (column > 0) {
         c.mContent = mContent.mid(column);
         c.mSteps.clear();
         int r = column;
 
-        foreach(int s, mSteps) {
-            if(r == 0) {
+        foreach (int s, mSteps) {
+            if (r == 0) {
                 c.mSteps << s;
             } else {
-                if(s > r) {
+                if (s > r) {
                     c.mStepsShift = s - r;
                     r = 0;
                 } else {
@@ -205,6 +205,3 @@ YDrawCell YDrawCell::mid(int column) const
 
     return c;
 }
-
-
-

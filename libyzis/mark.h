@@ -28,7 +28,6 @@
 
 typedef QMap<QString, YViewCursor> YViewMarker;
 
-
 // struct YZMarkPos{
 //  YZMarkPos(): line(0), col(0)
 //  YZMarkPos(int l, int c): line(l), col(c) {}
@@ -39,14 +38,14 @@ typedef QMap<QString, YViewCursor> YViewMarker;
 //line <-> marks
 typedef QMap<uint, uint> YDocMarker;
 
-
 /**Contains document marks (integers) like KTE bookmarks, breakpoints, etc.*/
 class YZIS_EXPORT YDocMark
 {
 
 public:
     YDocMark()
-    {}
+    {
+    }
 
     void clear()
     {
@@ -66,8 +65,6 @@ public:
 
 private:
     YDocMarker marker;
-
 };
 
 #endif
-

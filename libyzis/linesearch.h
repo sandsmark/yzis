@@ -52,22 +52,22 @@ public:
     /**
      * Search from cursor to end of line for times instances of ch
      */
-    YCursor forward(const QString& ch, bool& found, unsigned int times);
+    YCursor forward(const QString &ch, bool &found, unsigned int times);
 
     /**
      * Search from cursor to end of line for times instances of ch
      */
-    YCursor forwardBefore(const QString& ch, bool& found, unsigned int times);
+    YCursor forwardBefore(const QString &ch, bool &found, unsigned int times);
 
     /**
      * Return location of ch searching backwards
      */
-    YCursor reverse(const QString& ch, bool& found, unsigned int times);
+    YCursor reverse(const QString &ch, bool &found, unsigned int times);
 
     /**
      * Return locate right after ch
      */
-    YCursor reverseAfter(const QString& ch, bool& found, unsigned int times);
+    YCursor reverseAfter(const QString &ch, bool &found, unsigned int times);
 
     /**
      * Searches for the next instance of a previously searched character
@@ -91,11 +91,10 @@ public:
     };
 
 private:
-
     /**
      * View we are working for
      */
-    const YView* mView;
+    const YView *mView;
 
     /**
      * Have we searched for anything yet?
@@ -115,7 +114,7 @@ private:
     /**
      * Record search information
      */
-    void updateHistory(const QString&, SearchType);
+    void updateHistory(const QString &, SearchType);
 };
 
 #endif /*  YZ_LINE_SEARCH_H */

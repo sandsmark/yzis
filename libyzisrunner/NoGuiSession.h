@@ -17,7 +17,6 @@
 *  Boston, MA 02110-1301, USA.
 **/
 
-
 #ifndef NOGUI_SESSION_H
 #define NOGUI_SESSION_H
 
@@ -35,20 +34,20 @@ class NoGuiSession : public QObject, public YSession
 public:
     static void createInstance();
 
-    virtual void guiPopupMessage(const QString& message);
+    virtual void guiPopupMessage(const QString &message);
 
     virtual void guiQuit(bool /*savePopup=true */);
 
-    virtual void guiChangeCurrentView(YView*);
+    virtual void guiChangeCurrentView(YView *);
     virtual void guiSetFocusCommandLine();
     virtual void guiSetFocusMainWindow();
     virtual bool guiQuit(int);
-    virtual bool guiPromptYesNo(const QString&, const QString&);
-    virtual int guiPromptYesNoCancel(const QString&, const QString&);
-    virtual void guiSplitHorizontally(YView*);
-    virtual YView *guiCreateView(YBuffer*b);
-    virtual void guiDeleteView(YView*v);
-    virtual void guiSetClipboardText(const QString&, Clipboard::Mode);
+    virtual bool guiPromptYesNo(const QString &, const QString &);
+    virtual int guiPromptYesNoCancel(const QString &, const QString &);
+    virtual void guiSplitHorizontally(YView *);
+    virtual YView *guiCreateView(YBuffer *b);
+    virtual void guiDeleteView(YView *v);
+    virtual void guiSetClipboardText(const QString &, Clipboard::Mode);
 
 public slots:
     /** To be called by single shot timer, when the gui is ready
@@ -58,7 +57,6 @@ public slots:
 
 private:
     NoGuiSession();
-
 };
 
 #endif // NOGUI_YZ_SESSION_H

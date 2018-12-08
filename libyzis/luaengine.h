@@ -22,8 +22,7 @@
 
 #include "yzismacros.h"
 
-extern "C"
-{
+extern "C" {
 #include <lua.h>
 }
 
@@ -64,7 +63,7 @@ class YZIS_EXPORT YLuaEngine
 {
 public:
     /** Get the pointer to the singleton YLuaEngine */
-    static YLuaEngine * self();
+    static YLuaEngine *self();
 
     ~YLuaEngine();
 
@@ -79,7 +78,7 @@ public:
            * \return "" if file isn't found, or Script raised an error, else returns the return value of the script
            *
      */
-    QString source(const QString& filename);
+    QString source(const QString &filename);
 
     /**
      * Execute some lua code.
@@ -89,7 +88,7 @@ public:
            *
            * The method will call execInLua().
      */
-    QString lua(YView *view, const QString& args);
+    QString lua(YView *view, const QString &args);
 
     /** Calls a lua function.
       *
@@ -101,7 +100,7 @@ public:
       * The function is used by the event stuff, which actually does not
       * put any stuff on the stack.
       */
-    void execute(const QString& function, int nbArgs, int nbResults);
+    void execute(const QString &function, int nbArgs, int nbResults);
 
     /**
      * Return the results of the last Lua method invoked.
@@ -172,7 +171,7 @@ public:
       * @param function function to call
       * @param sig signature of the function
       */
-    void exe(const QString& function, const char* sig, ...);
+    void exe(const QString &function, const char *sig, ...);
 
     /** Execute the given lua code.
             *
@@ -190,10 +189,10 @@ public:
             * @param luacode lua code to execute
             * @return 0 in case of success, 1 in case of error
             */
-    int execInLua(const QString & luacode);
+    int execInLua(const QString &luacode);
 
     /** Called when lua wants to print */
-    void yzisprint(const QString & text);
+    void yzisprint(const QString &text);
 
     /** Empty the lua stack.
            *
@@ -201,7 +200,7 @@ public:
            * this function because you should pop the lua stack items by items
            * and you should know exactly how many items were put on the stack.
      */
-    static void cleanLuaStack(lua_State * L);
+    static void cleanLuaStack(lua_State *L);
 
     /** Wrapper around lua_pcall()
       *
@@ -217,7 +216,7 @@ public:
       *  displayed when an error occurs.
       *  @return true if the call is without error
       */
-    bool yzpcall(int nbArg, int nbReturn, const QString & context = QString());
+    bool yzpcall(int nbArg, int nbReturn, const QString &context = QString());
 
     /**
       * Check that the lua stack contains the number of expected argument.
@@ -235,11 +234,11 @@ public:
             *
             * @return true if everything is correct.
       */
-    static bool checkFunctionArguments(lua_State*L,
+    static bool checkFunctionArguments(lua_State *L,
                                        int argNbMin,
                                        int argNbMax,
-                                       const char * functionName,
-                                       const char * functionArgDesc);
+                                       const char *functionName,
+                                       const char *functionArgDesc);
 
     /** Print one stack element on the debug interface.
       *
@@ -251,7 +250,7 @@ public:
       * @param index the position of the element on the stack
       * @param type_only whether to output table content (false) or just the type name (true)
       */
-    static void print_lua_stack_value(lua_State*L, int index, bool type_only = false);
+    static void print_lua_stack_value(lua_State *L, int index, bool type_only = false);
 
     /** Print the content of the stack on the debug interface.
       *
@@ -264,7 +263,7 @@ public:
       * is called.
       * @param type_only whether to output table content (false) or just the type name (true)
       */
-    static void print_lua_stack(lua_State *L, const char * msg, bool type_only = false);
+    static void print_lua_stack(lua_State *L, const char *msg, bool type_only = false);
 
     /** Convert an element of the stack into a string.
       *
@@ -275,7 +274,7 @@ public:
       * @param type_only whether to output table content (false) or just the type name (true)
       * @param index the position of the element on the stack
       */
-    static QString lua_value_to_string(lua_State*L, int index, int depth = 0, bool type_only = false);
+    static QString lua_value_to_string(lua_State *L, int index, int depth = 0, bool type_only = false);
 
     /** Convert a lua table on the stack into a string.
       *
@@ -286,9 +285,9 @@ public:
       * @param index the position of the element on the stack
       * @param depth indentation added to the content of the element
       */
-    static QString lua_table_to_string(lua_State*L, int index, int depth);
+    static QString lua_table_to_string(lua_State *L, int index, int depth);
 
-    void setLuaReturnValue(const QString & value);
+    void setLuaReturnValue(const QString &value);
 
 protected:
     /** Lua state.
@@ -299,7 +298,6 @@ protected:
 
     QString luaReturnValue;
 
-
     /**
      * Init core lua stuff (functions, regexps...)
      */
@@ -308,9 +306,7 @@ protected:
 private:
     /** Private constructor for a singleton */
     YLuaEngine();
-    static YLuaEngine * me; //!< Singleton instance holder
-
-
+    static YLuaEngine *me; //!< Singleton instance holder
 };
 
 #endif // YZ_LUA_ENGINE

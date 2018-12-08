@@ -31,13 +31,12 @@
 
 #include <kxmlguifactory.h>
 
-
-KTEView::KTEView(KTEDocument* doc, QWidget* parent)
-    : KTextEditor::View(parent), m_doc(doc), m_popup(0)
+KTEView::KTEView(KTEDocument *doc, QWidget *parent) :
+    KTextEditor::View(parent), m_doc(doc), m_popup(0)
 {
-    m_view = static_cast<KYView*>(KYSession::self()->createView(doc->buffer()));
+    m_view = static_cast<KYView *>(KYSession::self()->createView(doc->buffer()));
     m_view->setParent(this);
-    QGridLayout* g = new QGridLayout(this);
+    QGridLayout *g = new QGridLayout(this);
     g->addWidget(m_view, 0, 0);
     setXMLFile("yzis_kpart/yzis_kpart.rc");
     m_view->show();
@@ -48,7 +47,7 @@ KTEView::~KTEView()
     delete m_view;
 }
 
-KTextEditor::Document* KTEView::document() const
+KTextEditor::Document *KTEView::document() const
 {
     return m_doc;
 }
@@ -65,21 +64,21 @@ enum KTextEditor::View::EditMode KTEView::viewEditMode() const
     return KTextEditor::View::EditInsert;
 }
 
-void KTEView::setContextMenu(QMenu* menu)
+void KTEView::setContextMenu(QMenu *menu)
 {
     m_popup = menu;
 }
 
-QMenu* KTEView::contextMenu() const
+QMenu *KTEView::contextMenu() const
 {
     return m_popup;
 }
 
-QMenu* KTEView::defaultContextMenu(QMenu* menu) const
+QMenu *KTEView::defaultContextMenu(QMenu *menu) const
 {
-    QMenu * popup = 0;
+    QMenu *popup = 0;
 
-    if(m_popup) {
+    if (m_popup) {
         popup = m_popup;
     } else {
         popup = menu;
@@ -105,7 +104,7 @@ KTextEditor::Cursor KTEView::cursorPositionVirtual() const
     return KTextEditor::Cursor(m_view->getLinePositionCursor().y(), m_view->getLinePositionCursor().x());
 }
 
-QPoint KTEView::cursorToCoordinate(const KTextEditor::Cursor& cursor) const
+QPoint KTEView::cursorToCoordinate(const KTextEditor::Cursor &cursor) const
 {
     return QPoint(cursor.column(), cursor.line());
 }
@@ -139,7 +138,7 @@ bool KTEView::selection() const
     return false;
 }
 
-const KTextEditor::Range& KTEView::selectionRange() const
+const KTextEditor::Range &KTEView::selectionRange() const
 {
     // TODO: implement
     static KTextEditor::Range remove_me;

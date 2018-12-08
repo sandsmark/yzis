@@ -35,7 +35,7 @@ public:
     YLine();
     ~YLine();
 
-    const QString& data() const
+    const QString &data() const
     {
         return mData;
     }
@@ -59,10 +59,10 @@ public:
 
     inline void setHlLineContinue(bool cont)
     {
-        if(cont) {
+        if (cont) {
             m_flags = m_flags | YLine::FlagHlContinue;
         } else {
-            m_flags = m_flags & ~ YLine::FlagHlContinue;
+            m_flags = m_flags & ~YLine::FlagHlContinue;
         }
     }
 
@@ -71,7 +71,6 @@ public:
         mAttributesList.clear();
     }
     void addAttribute(int start, int length, int attribute);
-
 
     inline uchar *attributes()
     {

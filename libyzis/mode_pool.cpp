@@ -36,7 +36,7 @@ using namespace yzis;
 #define dbg() yzDebug("YModePool")
 #define err() yzError("YModePool")
 
-YModePool::YModePool(YView* view)
+YModePool::YModePool(YView *view)
 {
     mView = view;
     mModes = YSession::self()->getModes();
@@ -68,11 +68,11 @@ CmdState YModePool::sendKey(const YKey &key)
     dbg() << "Looking mappings for " << mapped << endl;
     bool pendingMapp = YZMapping::self()->applyMappings(mapped, mapMode, &map);
 
-    if(pendingMapp) {
+    if (pendingMapp) {
         dbg() << "Pending mapping on " << mapped << endl;
     }
 
-    if(map) {
+    if (map) {
         dbg() << "input buffer was remapped to: " << mapped << endl;
         mView->purgeInputBuffer();
         mapMode = 0;
@@ -85,15 +85,15 @@ CmdState YModePool::sendKey(const YKey &key)
     YKeySequence::const_iterator parsePos = mView->getInputBuffer().begin();
     state = stack.front()->execCommand(mView, mView->getInputBuffer(), parsePos);
 
-    if(mStop) {
+    if (mStop) {
         return CmdStopped;
     }
 
-    switch(state) {
+    switch (state) {
     case CmdError:
         dbg() << "CmdState = CmdError" << endl;
 
-        if(pendingMapp) {
+        if (pendingMapp) {
             break;
         }
 
@@ -122,7 +122,7 @@ CmdState YModePool::replayKey()
 {
     return YSession::self()->sendKey(mView, mKey);
 }
-YMode* YModePool::current() const
+YMode *YModePool::current() const
 {
     return stack.front();
 }
@@ -132,14 +132,14 @@ ModeType YModePool::currentType() const
 }
 void YModePool::registerModifierKeys()
 {
-    if(mStop) {
-        return ;
+    if (mStop) {
+        return;
     }
 
     QStringList mModifierKeys;
     YModeMap::Iterator it;
 
-    for(it = mModes.begin(); it != mModes.end(); ++it) {
+    for (it = mModes.begin(); it != mModes.end(); ++it) {
         mModifierKeys += it.value()->modifierKeys();
     }
 
@@ -147,10 +147,10 @@ void YModePool::registerModifierKeys()
     unsigned int size = mModifierKeys.size();
     QString last, current;
 
-    for(unsigned int i = 0; i < size; i++) {
+    for (unsigned int i = 0; i < size; i++) {
         current = mModifierKeys.at(i);
 
-        if(current != last) {
+        if (current != last) {
             mView->registerModifierKeys(current);
             last = current;
         }
@@ -176,19 +176,19 @@ void YModePool::registerModifierKeys()
 }
 void YModePool::unregisterModifierKeys()
 {
-    if(mStop) {
-        return ;
+    if (mStop) {
+        return;
     }
 
-    if(stack.isEmpty() || !stack.front()->registered()) {
-        return ;
+    if (stack.isEmpty() || !stack.front()->registered()) {
+        return;
     }
 
     QStringList keys = stack.front()->modifierKeys();
     unsigned int size = keys.size();
     dbg() << "unregister keys " << keys << endl;
 
-    for(unsigned i = 0; i < size; i++) {
+    for (unsigned i = 0; i < size; i++) {
         mView->unregisterModifierKeys(keys.at(i));
     }
 
@@ -204,9 +204,9 @@ void YModePool::push(ModeType mode)
 {
     dbg() << "push( " << mode << " )" << endl;
     // unregisterModifierKeys();
-    stack.push_front(mModes[ mode ]);
+    stack.push_front(mModes[mode]);
 
-    if(mRegisterKeys) {
+    if (mRegisterKeys) {
         registerModifierKeys();
     }
 
@@ -219,16 +219,16 @@ void YModePool::pop(bool leave_me)
 {
     dbg() << "pop( leave_me=" << leave_me << " )" << endl;
 
-    if(mStop) {
-        return ;
+    if (mStop) {
+        return;
     }
 
     mView->commitUndoItem();
     mView->purgeInputBuffer();
 
     // unregisterModifierKeys();
-    if(! stack.isEmpty()) {
-        if(leave_me) {
+    if (!stack.isEmpty()) {
+        if (leave_me) {
             dbg() << "pop(): leaving mode " << stack.front()->toString() << endl;
             stack.front()->leave(mView);
         }
@@ -236,13 +236,13 @@ void YModePool::pop(bool leave_me)
         stack.pop_front();
     }
 
-    if(stack.isEmpty()) {
+    if (stack.isEmpty()) {
         push(YMode::ModeCommand);
     } else {
         mView->updateMode();
     }
 
-    if(mRegisterKeys) {
+    if (mRegisterKeys) {
         registerModifierKeys();
     }
 }
@@ -251,19 +251,19 @@ void YModePool::pop(ModeType mode)
 {
     dbg() << "pop( " << mode << " )" << endl;
 
-    if(mStop) {
+    if (mStop) {
         dbg() << "pop(): stop!" << endl;
-        return ;
+        return;
     }
 
     // unregisterModifierKeys();
     mView->commitUndoItem();
     mView->purgeInputBuffer();
     // do not leave two times the same mode
-    QList<YMode*> leaved;
+    QList<YMode *> leaved;
 
-    while(stack.size() > 0 && stack.front()->modeType() != mode) {
-        if(! leaved.contains(stack.front())) {
+    while (stack.size() > 0 && stack.front()->modeType() != mode) {
+        if (!leaved.contains(stack.front())) {
             dbg() << "leaving mode " << stack.front()->toString() << endl;
             stack.front()->leave(mView);
             leaved.append(stack.front());
@@ -272,18 +272,15 @@ void YModePool::pop(ModeType mode)
         stack.pop_front();
     }
 
-    if(stack.isEmpty()) {
+    if (stack.isEmpty()) {
         push(YMode::ModeCommand);
     } else {
         mView->updateMode();
     }
 
-    if(mRegisterKeys) {
+    if (mRegisterKeys) {
         registerModifierKeys();
     }
 
     dbg() << "pop() done" << endl;
 }
-
-
-

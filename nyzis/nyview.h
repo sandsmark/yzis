@@ -64,9 +64,9 @@ public:
     {
         return commandline;
     }
-    virtual void guiSetCommandLineText(const QString&);
+    virtual void guiSetCommandLineText(const QString &);
     virtual void guiSetup();
-    virtual void guiPaintEvent(const YSelection& drawMap);
+    virtual void guiPaintEvent(const YSelection &drawMap);
 
     void guiScroll(int dx, int dy);
 
@@ -79,42 +79,42 @@ public:
       * This view is not the front one anymore, hide it
       */
     void unmap(void);
-    virtual void registerModifierKeys(const QString&)
-    { }
-    virtual void unregisterModifierKeys(const QString&)
-    { }
+    virtual void registerModifierKeys(const QString &)
+    {
+    }
+    virtual void unregisterModifierKeys(const QString &)
+    {
+    }
 
     bool guiPopupFileSaveAs();
 
     /** Returns the status bar */
-    virtual YStatusBarIface* guiStatusBar();
+    virtual YStatusBarIface *guiStatusBar();
     virtual void guiUpdateFileName();
     virtual void guiUpdateMode();
     virtual void guiUpdateFileInfo();
     virtual void guiUpdateCursorPosition();
-    virtual void guiDisplayInfo(const QString&);
+    virtual void guiDisplayInfo(const QString &);
 
     virtual void guiSetFocusCommandLine();
     virtual void guiSetFocusMainWindow();
     void restoreFocus();
 
-protected :
-
+protected:
 public slots:
 
-protected :
-    virtual void guiDrawCell(YCursor pos, const YDrawCell& cell);
+protected:
+    virtual void guiDrawCell(YCursor pos, const YDrawCell &cell);
 
-    virtual void guiNotifyContentChanged(const YSelection& s);
+    virtual void guiNotifyContentChanged(const YSelection &s);
 
     void guiPreparePaintEvent();
     void guiEndPaintEvent();
-    virtual void guiDrawClearToEOL(YCursor pos, const YDrawCell& cell);
+    virtual void guiDrawClearToEOL(YCursor pos, const YDrawCell &cell);
     virtual void guiDrawSetMaxLineNumber(int max);
     virtual void guiDrawSetLineNumber(int y, int n, int h);
 
     bool fakeLine; /* true if current line is a fake one (eg: ~) */
-
 
 private:
     WINDOW *window; /* ncurses window to write to */
@@ -161,6 +161,3 @@ private:
 };
 
 #endif // NYZ_VIEW_H
-
-
-

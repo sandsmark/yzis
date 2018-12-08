@@ -26,8 +26,8 @@
 
 #define dbg() yzDebug("KYView")
 
-KYView::KYView(YBuffer* buffer)
-    : QYView(buffer, KYSession::self())
+KYView::KYView(YBuffer *buffer) :
+    QYView(buffer, KYSession::self())
 {
 }
 

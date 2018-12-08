@@ -32,11 +32,11 @@
 /* Std */
 #include <math.h>
 
+#define dbg() yzDebug("YZQtPrinter")
+#define err() yzError("YZQtPrinter")
 
-#define dbg()    yzDebug("YZQtPrinter")
-#define err()    yzError("YZQtPrinter")
-
-YZQtPrinter::YZQtPrinter(YView *view) : QPrinter(QPrinter::PrinterResolution)
+YZQtPrinter::YZQtPrinter(YView *view) :
+    QPrinter(QPrinter::PrinterResolution)
 {
     mView = view;
     setPageSize(QPrinter::A4);
@@ -44,9 +44,10 @@ YZQtPrinter::YZQtPrinter(YView *view) : QPrinter(QPrinter::PrinterResolution)
 }
 
 YZQtPrinter::~YZQtPrinter()
-{}
+{
+}
 
-void YZQtPrinter::printToFile(const QString& path)
+void YZQtPrinter::printToFile(const QString &path)
 {
     setOutputFileName(path);
 }
@@ -75,11 +76,11 @@ void YZQtPrinter::doPrint()
     bool rightleft = mView->getLocalBooleanOption("rightleft");
     unsigned int marginLeft = 0;
 
-    if(number) {
+    if (number) {
         marginLeft = (2 + QString::number(mView->buffer()->lineCount()).length());
     }
 
-    YOptionValue* ov_wrap = mView->getLocalOption("wrap");
+    YOptionValue *ov_wrap = mView->getLocalOption("wrap");
     bool oldWrap = ov_wrap->boolean();
     ov_wrap->setBoolean(true);
     mView->setVisibleArea(clipw - marginLeft, cliph, false);
@@ -95,9 +96,9 @@ void YZQtPrinter::doPrint()
     cliph = (height - topY) / linespace;
     int nbPages = totalHeight / cliph + (totalHeight % cliph ? 1 : 0);
 
-    while(mView->drawNextLine()) {
-        if(curY == topY) {
-            if(pageNumber) {
+    while (mView->drawNextLine()) {
+        if (curY == topY) {
+            if (pageNumber) {
                 newPage();
             }
 
@@ -107,14 +108,14 @@ void YZQtPrinter::doPrint()
             p.drawText(titleRect, Qt::AlignRight | Qt::AlignVCenter, QString::number(pageNumber) + '/' + QString::number(nbPages) + ' ');
         }
 
-        if(number) {
+        if (number) {
             unsigned int lineNumber = mView->drawLineNumber();
 
-            if(lineNumber != lastLineNumber) {
+            if (lineNumber != lastLineNumber) {
                 p.setPen(Qt::gray);
                 QString num = QString::number(lineNumber);
 
-                if(rightleft) {
+                if (rightleft) {
                     x = width - (marginLeft - 1) * maxwidth;
                 } else {
                     num = num.rightJustified(marginLeft - 1, ' ');
@@ -128,10 +129,10 @@ void YZQtPrinter::doPrint()
 
         curX = marginLeft * maxwidth;
 
-        while(mView->drawNextCol()) {
+        while (mView->drawNextCol()) {
             QColor c = mView->drawColor().rgb();
 
-            if(c.isValid() && c != Qt::white) {
+            if (c.isValid() && c != Qt::white) {
                 p.setPen(c);
             } else {
                 p.setPen(Qt::black);
@@ -139,7 +140,7 @@ void YZQtPrinter::doPrint()
 
             QString disp = QString(mView->drawChar());
 
-            if(rightleft) {
+            if (rightleft) {
                 disp = disp.rightJustified(mView->drawLength(), mView->fillChar());
             } else {
                 disp = disp.leftJustified(mView->drawLength(), mView->fillChar());
@@ -151,15 +152,15 @@ void YZQtPrinter::doPrint()
 
         curY += linespace * mView->drawHeight();
 
-        if(curY >= cliph * linespace + topY) {
+        if (curY >= cliph * linespace + topY) {
             // draw Rect
             p.setPen(Qt::black);
             p.drawRect(0, 0, width, curY);
 
-            if(number) {
+            if (number) {
                 x = marginLeft * maxwidth - maxwidth / 2;
 
-                if(rightleft) {
+                if (rightleft) {
                     x = width - x;
                 }
 
@@ -171,15 +172,15 @@ void YZQtPrinter::doPrint()
         }
     }
 
-    if(curY != topY) {
+    if (curY != topY) {
         // draw Rect
         p.setPen(Qt::black);
         p.drawRect(0, 0, width, curY);
 
-        if(number) {
+        if (number) {
             x = marginLeft * maxwidth - maxwidth / 2;
 
-            if(rightleft) {
+            if (rightleft) {
                 x = width - x;
             }
 
@@ -193,4 +194,3 @@ void YZQtPrinter::doPrint()
     ov_wrap->setBoolean(oldWrap);
     mView->setVisibleArea(oldColumnsVis, oldLinesVis, false);
 }
-

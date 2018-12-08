@@ -32,20 +32,21 @@
 /* Qt */
 #include <QList>
 
-#define dbg()    yzDebug("YSearch")
-#define err()    yzError("YSearch")
+#define dbg() yzDebug("YSearch")
+#define err() yzError("YSearch")
 
-struct YSearch::Private {
-    void setCurrentSearch(const QString& pattern);
-    YCursor doSearch(YBuffer *buffer, const YCursor from, const QString& pattern, bool reverse, bool skipline, bool* found);
+struct YSearch::Private
+{
+    void setCurrentSearch(const QString &pattern);
+    YCursor doSearch(YBuffer *buffer, const YCursor from, const QString &pattern, bool reverse, bool skipline, bool *found);
     void highlightSearch(YView *view, YSelectionMap searchMap);
     bool active();
 
     QString mCurrentSearch;
 };
 
-YSearch::YSearch()
-    : d(new Private)
+YSearch::YSearch() :
+    d(new Private)
 {
     d->mCurrentSearch = QString();
 }
@@ -55,30 +56,30 @@ YSearch::~YSearch()
     delete d;
 }
 
-YCursor YSearch::forward(YBuffer *buffer, const QString& pattern, bool* found, const YCursor from)
+YCursor YSearch::forward(YBuffer *buffer, const QString &pattern, bool *found, const YCursor from)
 {
     YCursor tmp = d->doSearch(buffer, from, pattern, false, false, found);
     YSession::self()->saveJumpPosition(tmp);
     return tmp;
 }
 
-YCursor YSearch::backward(YBuffer *buffer, const QString& pattern, bool* found, const YCursor from)
+YCursor YSearch::backward(YBuffer *buffer, const QString &pattern, bool *found, const YCursor from)
 {
     YCursor tmp = d->doSearch(buffer, from, pattern, true, false, found);
     YSession::self()->saveJumpPosition(tmp);
     return tmp;
 }
 
-YCursor YSearch::replayForward(YBuffer *buffer, bool* found, const YCursor from, bool skipline /*=false*/)
+YCursor YSearch::replayForward(YBuffer *buffer, bool *found, const YCursor from, bool skipline /*=false*/)
 {
     return d->doSearch(buffer, from, d->mCurrentSearch, false, skipline, found);
 }
-YCursor YSearch::replayBackward(YBuffer *buffer, bool* found, const YCursor from, bool skipline /*=false*/)
+YCursor YSearch::replayBackward(YBuffer *buffer, bool *found, const YCursor from, bool skipline /*=false*/)
 {
     return d->doSearch(buffer, from, d->mCurrentSearch, true, skipline, found);
 }
 
-const QString& YSearch::currentSearch() const
+const QString &YSearch::currentSearch() const
 {
     return d->mCurrentSearch;
 }
@@ -93,22 +94,22 @@ bool YSearch::Private::active()
     return !(mCurrentSearch.isNull() || mCurrentSearch.isEmpty());
 }
 
-YCursor YSearch::Private::doSearch(YBuffer *buffer, const YCursor from, const QString& pattern, bool reverse, bool skipline, bool* found)
+YCursor YSearch::Private::doSearch(YBuffer *buffer, const YCursor from, const QString &pattern, bool reverse, bool skipline, bool *found)
 {
     dbg() << "YSearch::doSearch " << pattern << ", " << reverse << ", " << endl;
     *found = false;
     setCurrentSearch(pattern);
     int direction = reverse ? 0 : 1;
-    YCursor cur(from);   // there used to be a null check here, but passing in a null cursor doesn't make sense
+    YCursor cur(from); // there used to be a null check here, but passing in a null cursor doesn't make sense
 
-    if(! active()) {
+    if (!active()) {
         return cur;
     }
 
-    if(skipline) {
+    if (skipline) {
         cur.setX(0);
 
-        if(! reverse) {
+        if (!reverse) {
             cur.setY(qMin((int)(cur.y() + 1), (int)(buffer->lineCount() - 1)));
         }
     } else {
@@ -123,7 +124,7 @@ YCursor YSearch::Private::doSearch(YBuffer *buffer, const YCursor from, const QS
     // cursor for the end of the search range
     YCursor end(bottom);
 
-    if(reverse) {
+    if (reverse) {
         end = top;
     }
 
@@ -133,12 +134,12 @@ YCursor YSearch::Private::doSearch(YBuffer *buffer, const YCursor from, const QS
     YCursor ret = buffer->action()->search(buffer, pattern, cur, end, &matchedLength, found);
 
     // check to see if we need to wrap
-    if(! *found) {
+    if (!*found) {
         dbg() << "search hits top or bottom" << endl;
         // adjust the cursors for the next search
         end = cur;
 
-        if(reverse) {
+        if (reverse) {
             cur = bottom;
         } else {
             cur = top;
@@ -148,12 +149,12 @@ YCursor YSearch::Private::doSearch(YBuffer *buffer, const YCursor from, const QS
         // repeat the search with the new bounds
         ret = buffer->action()->search(buffer, pattern, cur, end, &matchedLength, found);
 
-        if(*found) {
+        if (*found) {
             YView *view = YSession::self()->findViewByBuffer(buffer);
 
-            if(view && reverse) {
+            if (view && reverse) {
                 view->displayInfo(_("search hit TOP, continuing at BOTTOM"));
-            } else if(view) {
+            } else if (view) {
                 view->displayInfo(_("search hit BOTTOM, continuing at TOP"));
             }
         }
@@ -163,23 +164,23 @@ YCursor YSearch::Private::doSearch(YBuffer *buffer, const YCursor from, const QS
     return ret;
 }
 
-void YSearch::Private::setCurrentSearch(const QString& pattern)
+void YSearch::Private::setCurrentSearch(const QString &pattern)
 {
-    if(mCurrentSearch == pattern) {
-        return ;
+    if (mCurrentSearch == pattern) {
+        return;
     }
 
     mCurrentSearch = pattern;
     YSelectionMap searchMap;
 
-    foreach(YBuffer *b, YSession::self()->buffers()) {
-        QList<YView*> views = b->views();
+    foreach (YBuffer *b, YSession::self()->buffers()) {
+        QList<YView *> views = b->views();
         searchMap.clear();
         /** search all **/
         bool doIt = YSession::self()->getBooleanOption("hlsearch");
 
-        if(doIt) {
-            YView* v = views.front();
+        if (doIt) {
+            YView *v = views.front();
             YCursor from(0, 0);
             YCursor cur(from);
             YCursor end;
@@ -192,33 +193,33 @@ void YSearch::Private::setCurrentSearch(const QString& pattern)
             do {
                 from = b->action()->search(v->buffer(), mCurrentSearch, cur, end, &matchedLength, &found);
 
-                if(found && matchedLength > 0) {
+                if (found && matchedLength > 0) {
                     cur = from;
                     cur.setX(cur.x() + matchedLength - 1);
                     YInterval sel(from, cur);
                     cur.setX(cur.x() + 1);
                     searchMap.insert(pos++, sel);
                 }
-            } while(found);
+            } while (found);
         }
 
-        foreach(YView *view, views) {
+        foreach (YView *view, views) {
             highlightSearch(view, searchMap);
         }
     }
 }
 
-void YSearch::highlightLine(YBuffer* buffer, int line)
+void YSearch::highlightLine(YBuffer *buffer, int line)
 {
-    if(d->mCurrentSearch.isNull() || d->mCurrentSearch.isEmpty()) {
-        return ;
+    if (d->mCurrentSearch.isNull() || d->mCurrentSearch.isEmpty()) {
+        return;
     }
 
     bool doIt = YSession::self()->getBooleanOption("hlsearch");
 
-    if(doIt) {
-        QList<YView*> views = buffer->views();
-        YView* v = views.front();
+    if (doIt) {
+        QList<YView *> views = buffer->views();
+        YView *v = views.front();
         YCursor from(0, line);
         YCursor cur(from);
         YCursor end(buffer->textline(line).length(), line);
@@ -226,7 +227,7 @@ void YSearch::highlightLine(YBuffer* buffer, int line)
         //XXX YSelection* searchMap = v->getSelectionPool()->search();
         //XXX searchMap->delInterval( YInterval( from, end ) );
 
-        if(end.x() > 0) {
+        if (end.x() > 0) {
             end.setX(end.x() - 1);
         }
 
@@ -236,14 +237,14 @@ void YSearch::highlightLine(YBuffer* buffer, int line)
         do {
             from = buffer->action()->search(v->buffer(), d->mCurrentSearch, cur, end, &matchedLength, &found);
 
-            if(found && matchedLength > 0) {
+            if (found && matchedLength > 0) {
                 cur = from;
                 cur.setX(cur.x() + matchedLength - 1);
                 //XXX searchMap->addInterval( YInterval( from, cur ) );
                 cur.setX(cur.x() + 1);
                 //    dbg() << "cur = " << cur << "; end = " << end << endl;
             }
-        } while(found);
+        } while (found);
 
         /*
         foreach( YView *view, views ) {
@@ -253,17 +254,17 @@ void YSearch::highlightLine(YBuffer* buffer, int line)
     }
 }
 
-void YSearch::shiftHighlight(YBuffer* buffer, int fromLine, int shift)
+void YSearch::shiftHighlight(YBuffer *buffer, int fromLine, int shift)
 {
-    QList<YView*> views = buffer->views();
+    QList<YView *> views = buffer->views();
 
-    if(views.isEmpty()) {  // no views
-        return ;
+    if (views.isEmpty()) { // no views
+        return;
     }
 
-    YView* v = views.front();
+    YView *v = views.front();
 
-    if(v) {
+    if (v) {
         //TODO
 #if 0
         YSelectionMap searchMap = v->getSelectionPool()->search()->map();
@@ -321,11 +322,11 @@ void YSearch::Private::highlightSearch(YView *view, YSelectionMap searchMap)
 
 void YSearch::update()
 {
-    if(! active()) {
-        return ;
+    if (!active()) {
+        return;
     }
 
-    if(YSession::self()->getBooleanOption("hlsearch")) {
+    if (YSession::self()->getBooleanOption("hlsearch")) {
         // force creating hl selection
         QString pattern = d->mCurrentSearch;
         d->mCurrentSearch = "";
@@ -334,10 +335,9 @@ void YSearch::update()
         YSelectionMap searchMap;
 
         // clear current hl search selection
-        foreach(YBuffer *b, YSession::self()->buffers())
-            foreach(YView *view, b->views()) {
+        foreach (YBuffer *b, YSession::self()->buffers())
+            foreach (YView *view, b->views()) {
                 d->highlightSearch(view, searchMap);
             }
     }
 }
-

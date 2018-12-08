@@ -27,7 +27,8 @@
 class YDrawBuffer;
 class YCursor;
 
-struct YZIS_EXPORT YDrawCellInfo {
+struct YZIS_EXPORT YDrawCellInfo
+{
     enum YDrawCellType {
         Data,
         EOL
@@ -57,8 +58,8 @@ public:
     /* TODO: screenColumn */
 
 protected:
-    YDrawBufferAbstractIterator(YDrawBuffer* db);
-    void setup(const YInterval& i, yzis::IntervalType itype);
+    YDrawBufferAbstractIterator(YDrawBuffer *db);
+    void setup(const YInterval &i, yzis::IntervalType itype);
     void step();
 
     virtual void setupCell(int cut) = 0;
@@ -66,7 +67,7 @@ protected:
 
     int getCut();
 
-    YDrawBuffer* mDrawBuffer;
+    YDrawBuffer *mDrawBuffer;
     YInterval mI;
     yzis::IntervalType mIntervalType;
     bool mStopped;
@@ -83,10 +84,11 @@ public:
     virtual ~YDrawBufferConstIterator() {}
     const YDrawCellInfo drawCellInfo() const;
 
-protected :
+protected:
     virtual void setupCell(int cut);
     virtual void setupEOLCell();
-    YDrawBufferConstIterator(YDrawBuffer* db) : YDrawBufferAbstractIterator(db) {}
+    YDrawBufferConstIterator(YDrawBuffer *db) :
+        YDrawBufferAbstractIterator(db) {}
     YDrawCellInfo mNext;
 
     friend class YDrawBuffer;
@@ -96,7 +98,7 @@ class YZIS_EXPORT YDrawBufferIterator : public YDrawBufferAbstractIterator
 {
 public:
     virtual ~YDrawBufferIterator() {}
-    inline YDrawCell* cell() const
+    inline YDrawCell *cell() const
     {
         return mNext;
     }
@@ -105,11 +107,11 @@ public:
 protected:
     virtual void setupCell(int cut);
     virtual void setupEOLCell();
-    YDrawBufferIterator(YDrawBuffer* db) : YDrawBufferAbstractIterator(db) {}
-    YDrawCell* mNext;
+    YDrawBufferIterator(YDrawBuffer *db) :
+        YDrawBufferAbstractIterator(db) {}
+    YDrawCell *mNext;
 
     friend class YDrawBuffer;
 };
-
 
 #endif

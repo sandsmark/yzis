@@ -40,9 +40,9 @@ using namespace yzis;
 #define dbg() yzDebug("YMode")
 #define err() yzError("YMode")
 
-YDebugStream& operator<<(YDebugStream& out, const CmdState & state)
+YDebugStream &operator<<(YDebugStream &out, const CmdState &state)
 {
-    switch(state) {
+    switch (state) {
     case CmdStopped:
         out << "CmdStopped";
         break;
@@ -71,9 +71,9 @@ YDebugStream& operator<<(YDebugStream& out, const CmdState & state)
     return out;
 }
 
-YDebugStream& operator<<(YDebugStream& out, const YMode::ModeType & type)
+YDebugStream &operator<<(YDebugStream &out, const YMode::ModeType &type)
 {
-    switch(type) {
+    switch (type) {
     case YMode::ModeCommand:
         out << "ModeCommand";
         break;
@@ -136,7 +136,7 @@ ModeType YMode::modeType() const
 {
     return mType;
 }
-const QString& YMode::toString() const
+const QString &YMode::toString() const
 {
     return mString;
 }
@@ -177,20 +177,26 @@ void YMode::init()
     initModifierKeys();
 }
 void YMode::initModifierKeys()
-{}
-void YMode::enter(YView*)
-{}
-void YMode::leave(YView*)
-{}
-void YMode::cursorMoved(YView*)
-{}
-void YMode::imBegin(YView*)
-{}
-void YMode::imCompose(YView*, const QString&)
-{}
-void YMode::imEnd(YView*, const QString&)
-{}
-
+{
+}
+void YMode::enter(YView *)
+{
+}
+void YMode::leave(YView *)
+{
+}
+void YMode::cursorMoved(YView *)
+{
+}
+void YMode::imBegin(YView *)
+{
+}
+void YMode::imCompose(YView *, const QString &)
+{
+}
+void YMode::imEnd(YView *, const QString &)
+{
+}
 
 // ====================================================================
 //
@@ -203,7 +209,8 @@ void YMode::imEnd(YView*, const QString&)
 #define dbg() yzDebug("YModeIntro")
 #define err() yzError("YModeIntro")
 
-YModeIntro::YModeIntro() : YMode()
+YModeIntro::YModeIntro() :
+    YMode()
 {
     mType = ModeIntro;
     mString = _("[ Introduction ]");
@@ -211,7 +218,7 @@ YModeIntro::YModeIntro() : YMode()
     mIsCmdLineMode = false;
     mIsSelMode = false;
 }
-void YModeIntro::enter(YView* mView)
+void YModeIntro::enter(YView *mView)
 {
     YRawData content;
     content << mView->centerLine(VERSION_CHAR_LONG);
@@ -229,11 +236,11 @@ void YModeIntro::enter(YView* mView)
     int spaceh = mView->getLinesVisible() - content.count();
     int i = 0;
 
-    for(; i < spaceh / 2; ++i) {
+    for (; i < spaceh / 2; ++i) {
         content.insert(0, "");
     }
 
-    for(; i < spaceh; ++i) {
+    for (; i < spaceh; ++i) {
         content << "";
     }
 
@@ -245,21 +252,20 @@ void YModeIntro::enter(YView* mView)
     mView->buffer()->setChanged(false);
     mView->buffer()->undoBuffer()->setInsideUndo(false);
 }
-void YModeIntro::leave(YView* mView)
+void YModeIntro::leave(YView *mView)
 {
-    YBuffer* mBuffer = mView->buffer();
+    YBuffer *mBuffer = mView->buffer();
     mBuffer->undoBuffer()->setInsideUndo(true);
-    mView->gotoLinePosition(0 , 0);
+    mView->gotoLinePosition(0, 0);
     mBuffer->clearText();
     mBuffer->undoBuffer()->setInsideUndo(false);
     mBuffer->setChanged(false);
     mView->recalcScreen();
 }
-CmdState YModeIntro::execCommand(YView* mView, const YKeySequence &keys, YKeySequence::const_iterator &parsePos)
+CmdState YModeIntro::execCommand(YView *mView, const YKeySequence &keys, YKeySequence::const_iterator &parsePos)
 {
     Q_UNUSED(keys);
     Q_UNUSED(parsePos);
     mView->modePool()->change(ModeCommand);
     return mView->modePool()->replayKey();
 }
-

@@ -34,12 +34,13 @@
 
 #include <algorithm>
 
-#define dbg()    yzDebug("YModeVisual")
-#define err()    yzError("YModeVisual")
+#define dbg() yzDebug("YModeVisual")
+#define err() yzError("YModeVisual")
 
 using namespace yzis;
 
-YModeVisual::YModeVisual() : YModeCommand(),
+YModeVisual::YModeVisual() :
+    YModeCommand(),
     mStartViewCursor()
 {
     mType = YMode::ModeVisual;
@@ -53,43 +54,43 @@ YModeVisual::YModeVisual() : YModeCommand(),
 }
 YModeVisual::~YModeVisual()
 {
-    for(int ab = 0 ; ab < commands.size(); ++ab) {
+    for (int ab = 0; ab < commands.size(); ++ab) {
         delete commands.at(ab);
     }
 
     commands.clear();
 }
 
-void YModeVisual::enter(YView* mView)
+void YModeVisual::enter(YView *mView)
 {
-    if(!mStartViewCursor.contains(mView)) {
+    if (!mStartViewCursor.contains(mView)) {
         mStartViewCursor[mView] = mView->viewCursor();
         mView->acquireLine(mStartViewCursor[mView].line());
     }
 
     cursorMoved(mView);
 }
-void YModeVisual::leave(YView* mView)
+void YModeVisual::leave(YView *mView)
 {
     YASSERT(mStartViewCursor.contains(mView));
     mView->setSelection(mSelectionType, YInterval());
     mView->releaseLine(mStartViewCursor[mView].line());
     mStartViewCursor.remove(mView);
 }
-void YModeVisual::cursorMoved(YView* mView)
+void YModeVisual::cursorMoved(YView *mView)
 {
     YInterval bufferSelection = buildBufferInterval(mView);
     YRawData selectedData = mView->setSelection(mSelectionType, bufferSelection);
     YSession::self()->guiSetClipboardText(selectedData.join("\n"), Clipboard::Selection);
 }
 
-YInterval YModeVisual::buildBufferInterval(YView* mView)
+YInterval YModeVisual::buildBufferInterval(YView *mView)
 {
     YASSERT(mStartViewCursor.contains(mView));
     YViewCursor beginPos = mStartViewCursor[mView];
     YViewCursor endPos = mView->viewCursor();
 
-    if(beginPos > endPos) {
+    if (beginPos > endPos) {
         std::swap(beginPos, endPos);
     }
 
@@ -98,26 +99,26 @@ YInterval YModeVisual::buildBufferInterval(YView* mView)
 
 void YModeVisual::initCommandPool()
 {
-    commands.append(new YCommand(YKeySequence("<A-:>"), (PoolMethod) &YModeVisual::movetoExMode));
-    commands.append(new YCommand(YKeySequence("<A-i>"), (PoolMethod) &YModeVisual::movetoInsertMode));
+    commands.append(new YCommand(YKeySequence("<A-:>"), (PoolMethod)&YModeVisual::movetoExMode));
+    commands.append(new YCommand(YKeySequence("<A-i>"), (PoolMethod)&YModeVisual::movetoInsertMode));
     commands.append(new YCommand(YKeySequence("<C-[>"), &YModeCommand::gotoCommandMode));
     commands.append(new YCommand(YKeySequence("<C-l>"), &YModeCommand::redisplay));
     commands.append(new YCommand(YKeySequence("<DEL>"), &YModeCommand::del));
-    commands.append(new YCommand(YKeySequence("<ESC>"), (PoolMethod) &YModeVisual::escape));
-    commands.append(new YCommand(YKeySequence("<C-c>"), (PoolMethod) &YModeVisual::escape));
-    commands.append(new YCommand(YKeySequence(":"), (PoolMethod) &YModeVisual::gotoExMode));
-    commands.append(new YCommand(YKeySequence("A"), (PoolMethod) &YModeVisual::commandAppend));
-    commands.append(new YCommand(YKeySequence("D"), (PoolMethod) &YModeVisual::deleteWholeLines));
-    commands.append(new YCommand(YKeySequence("I"), (PoolMethod) &YModeVisual::commandInsert));
-    commands.append(new YCommand(YKeySequence("S"), (PoolMethod) &YModeVisual::changeWholeLines));
-    commands.append(new YCommand(YKeySequence("u"), (PoolMethod) &YModeVisual::toLowerCase));
-    commands.append(new YCommand(YKeySequence("U"), (PoolMethod) &YModeVisual::toUpperCase));
-    commands.append(new YCommand(YKeySequence("X"), (PoolMethod) &YModeVisual::deleteWholeLines));
-    commands.append(new YCommand(YKeySequence("Y"), (PoolMethod) &YModeVisual::yankWholeLines));
+    commands.append(new YCommand(YKeySequence("<ESC>"), (PoolMethod)&YModeVisual::escape));
+    commands.append(new YCommand(YKeySequence("<C-c>"), (PoolMethod)&YModeVisual::escape));
+    commands.append(new YCommand(YKeySequence(":"), (PoolMethod)&YModeVisual::gotoExMode));
+    commands.append(new YCommand(YKeySequence("A"), (PoolMethod)&YModeVisual::commandAppend));
+    commands.append(new YCommand(YKeySequence("D"), (PoolMethod)&YModeVisual::deleteWholeLines));
+    commands.append(new YCommand(YKeySequence("I"), (PoolMethod)&YModeVisual::commandInsert));
+    commands.append(new YCommand(YKeySequence("S"), (PoolMethod)&YModeVisual::changeWholeLines));
+    commands.append(new YCommand(YKeySequence("u"), (PoolMethod)&YModeVisual::toLowerCase));
+    commands.append(new YCommand(YKeySequence("U"), (PoolMethod)&YModeVisual::toUpperCase));
+    commands.append(new YCommand(YKeySequence("X"), (PoolMethod)&YModeVisual::deleteWholeLines));
+    commands.append(new YCommand(YKeySequence("Y"), (PoolMethod)&YModeVisual::yankWholeLines));
     commands.append(new YCommand(YKeySequence("c"), &YModeCommand::change));
     commands.append(new YCommand(YKeySequence("s"), &YModeCommand::change));
     commands.append(new YCommand(YKeySequence("d"), &YModeCommand::del));
-    commands.append(new YCommand(YKeySequence("y"), (PoolMethod) &YModeVisual::yank));
+    commands.append(new YCommand(YKeySequence("y"), (PoolMethod)&YModeVisual::yank));
     commands.append(new YCommand(YKeySequence("x"), &YModeCommand::del));
     commands.append(new YCommand(YKeySequence(">"), &YModeCommand::indent));
     commands.append(new YCommand(YKeySequence("<"), &YModeCommand::indent));
@@ -127,46 +128,46 @@ void YModeVisual::initCommandPool()
 }
 void YModeVisual::initVisualCommandPool()
 {
-    if(modeType() == ModeVisual) {
-        commands.append(new YCommand(YKeySequence("v"), (PoolMethod) &YModeVisual::escape));
+    if (modeType() == ModeVisual) {
+        commands.append(new YCommand(YKeySequence("v"), (PoolMethod)&YModeVisual::escape));
     } else {
-        commands.append(new YCommand(YKeySequence("v"), (PoolMethod) &YModeVisual::translateToVisual));
+        commands.append(new YCommand(YKeySequence("v"), (PoolMethod)&YModeVisual::translateToVisual));
     }
 
-    if(modeType() == ModeVisualLine) {
-        commands.append(new YCommand(YKeySequence("V"), (PoolMethod) &YModeVisual::escape));
+    if (modeType() == ModeVisualLine) {
+        commands.append(new YCommand(YKeySequence("V"), (PoolMethod)&YModeVisual::escape));
     } else {
-        commands.append(new YCommand(YKeySequence("V"), (PoolMethod) &YModeVisual::translateToVisualLine));
+        commands.append(new YCommand(YKeySequence("V"), (PoolMethod)&YModeVisual::translateToVisualLine));
     }
 
-    if(modeType() == ModeVisualBlock) {
-        commands.append(new YCommand(YKeySequence("<C-v>"), (PoolMethod) &YModeVisual::escape));
+    if (modeType() == ModeVisualBlock) {
+        commands.append(new YCommand(YKeySequence("<C-v>"), (PoolMethod)&YModeVisual::escape));
     } else {
-        commands.append(new YCommand(YKeySequence("<C-v>"), (PoolMethod) &YModeVisual::translateToVisualBlock));
+        commands.append(new YCommand(YKeySequence("<C-v>"), (PoolMethod)&YModeVisual::translateToVisualBlock));
     }
 }
-CmdState YModeVisual::commandAppend(const YCommandArgs& args)
+CmdState YModeVisual::commandAppend(const YCommandArgs &args)
 {
     YCursor pos = qMax(mStartViewCursor[args.view], args.view->viewCursor()).buffer();
     args.view->modePool()->change(ModeInsert);
-    args.view->gotoLinePosition(pos.y() , pos.x());
+    args.view->gotoLinePosition(pos.y(), pos.x());
     return CmdOk;
 }
-CmdState YModeVisual::commandInsert(const YCommandArgs& args)
+CmdState YModeVisual::commandInsert(const YCommandArgs &args)
 {
     YCursor pos = qMin(mStartViewCursor[args.view], args.view->viewCursor()).buffer();
     args.view->modePool()->change(ModeInsert);
-    args.view->gotoLinePosition(pos.y() , pos.x());
+    args.view->gotoLinePosition(pos.y(), pos.x());
     return CmdOk;
 }
-CmdState YModeVisual::toLowerCase(const YCommandArgs& args)
+CmdState YModeVisual::toLowerCase(const YCommandArgs &args)
 {
     CmdState state;
     YInterval inter = interval(args, &state);
     YRawData t = args.view->buffer()->dataRegion(inter);
     YRawData lt;
 
-    for(int i = 0; i < t.size(); i++) {
+    for (int i = 0; i < t.size(); i++) {
         lt << t[i].toLower();
     }
 
@@ -174,14 +175,14 @@ CmdState YModeVisual::toLowerCase(const YCommandArgs& args)
     args.view->commitNextUndo();
     return CmdOk;
 }
-CmdState YModeVisual::toUpperCase(const YCommandArgs& args)
+CmdState YModeVisual::toUpperCase(const YCommandArgs &args)
 {
     CmdState state;
     YInterval inter = interval(args, &state);
     YRawData t = args.view->buffer()->dataRegion(inter);
     YRawData lt;
 
-    for(int i = 0; i < t.size(); i++) {
+    for (int i = 0; i < t.size(); i++) {
         lt << t[i].toUpper();
     }
 
@@ -206,7 +207,7 @@ CmdState YModeVisual::deleteWholeLines(const YCommandArgs &args)
     YInterval i = interval(args, &state);
     unsigned int lines = i.toPos().y() - i.fromPos().y() + 1;
 
-    if(modeType() == ModeVisualLine) {
+    if (modeType() == ModeVisualLine) {
         --lines;
     }
 
@@ -223,7 +224,7 @@ CmdState YModeVisual::yankWholeLines(const YCommandArgs &args)
     YCursor topLeft = i.fromPos();
     unsigned int lines = i.toPos().y() - i.fromPos().y() + 1;
 
-    if(args.view->modePool()->currentType() == YMode::ModeVisualLine) {
+    if (args.view->modePool()->currentType() == YMode::ModeVisualLine) {
         // visual line mode, we don't need to do anything special
         args.view->buffer()->action()->copyArea(args.view, i, args.regs);
     } else {
@@ -233,57 +234,57 @@ CmdState YModeVisual::yankWholeLines(const YCommandArgs &args)
 
     args.view->modePool()->pop();
     // move cursor to top left corner of selection (yes, this is correct behaviour :)
-    args.view->gotoLinePosition(topLeft.y() , topLeft.x());
+    args.view->gotoLinePosition(topLeft.y(), topLeft.x());
     args.view->stickToColumn();
     return CmdOk;
 }
-CmdState YModeVisual::yank(const YCommandArgs& args)
+CmdState YModeVisual::yank(const YCommandArgs &args)
 {
     CmdState state;
     YCursor topLeft = interval(args, &state).fromPos();
     YModeCommand::yank(args);
-    args.view->gotoLinePositionAndStick(topLeft.y() , topLeft.x());
+    args.view->gotoLinePositionAndStick(topLeft.y(), topLeft.x());
     args.view->modePool()->pop();
     return CmdOk;
 }
-CmdState YModeVisual::translateToVisualLine(const YCommandArgs& args)
+CmdState YModeVisual::translateToVisualLine(const YCommandArgs &args)
 {
-    args.view->modePool()->change(ModeVisualLine, false);   // just translate (don't leave current mode)
+    args.view->modePool()->change(ModeVisualLine, false); // just translate (don't leave current mode)
     return CmdOk;
 }
-CmdState YModeVisual::translateToVisual(const YCommandArgs& args)
+CmdState YModeVisual::translateToVisual(const YCommandArgs &args)
 {
     args.view->modePool()->change(ModeVisual, false);
     return CmdOk;
 }
-CmdState YModeVisual::translateToVisualBlock(const YCommandArgs& args)
+CmdState YModeVisual::translateToVisualBlock(const YCommandArgs &args)
 {
     args.view->modePool()->change(ModeVisualBlock, false);
     return CmdOk;
 }
-CmdState YModeVisual::escape(const YCommandArgs& args)
+CmdState YModeVisual::escape(const YCommandArgs &args)
 {
     args.view->modePool()->pop();
     return CmdOk;
 }
-CmdState YModeVisual::gotoExMode(const YCommandArgs& args)
+CmdState YModeVisual::gotoExMode(const YCommandArgs &args)
 {
     args.view->modePool()->push(ModeEx);
     args.view->guiSetCommandLineText("'<,'>");
     return CmdOk;
 }
-CmdState YModeVisual::movetoExMode(const YCommandArgs& args)
+CmdState YModeVisual::movetoExMode(const YCommandArgs &args)
 {
     args.view->modePool()->change(ModeEx);
     return CmdOk;
 }
-CmdState YModeVisual::movetoInsertMode(const YCommandArgs& args)
+CmdState YModeVisual::movetoInsertMode(const YCommandArgs &args)
 {
     args.view->modePool()->change(ModeInsert);
     return CmdOk;
 }
 
-YInterval YModeVisual::interval(const YCommandArgs& args, CmdState *state)
+YInterval YModeVisual::interval(const YCommandArgs &args, CmdState *state)
 {
     *state = CmdOk;
     return buildBufferInterval(args.view);
@@ -293,21 +294,23 @@ YInterval YModeVisual::interval(const YCommandArgs& args, CmdState *state)
  * MODE VISUAL LINES
  */
 
-YModeVisualLine::YModeVisualLine() : YModeVisual()
+YModeVisualLine::YModeVisualLine() :
+    YModeVisual()
 {
     mType = YMode::ModeVisualLine;
     mString = _("[ Visual Line ]");
 }
 YModeVisualLine::~YModeVisualLine()
-{}
+{
+}
 
-YInterval YModeVisualLine::buildBufferInterval(YView* mView)
+YInterval YModeVisualLine::buildBufferInterval(YView *mView)
 {
     YASSERT(mStartViewCursor.contains(mView));
     YViewCursor beginPos = mStartViewCursor[mView];
     YViewCursor endPos = mView->viewCursor();
 
-    if(beginPos > endPos) {
+    if (beginPos > endPos) {
         std::swap(beginPos, endPos);
     }
 
@@ -318,17 +321,18 @@ YInterval YModeVisualLine::buildBufferInterval(YView* mView)
  * MODE VISUAL BLOCK
  */
 
-YModeVisualBlock::YModeVisualBlock() : YModeVisual()
+YModeVisualBlock::YModeVisualBlock() :
+    YModeVisual()
 {
     mType = YMode::ModeVisualBlock;
     mString = _("[ Visual Block ]");
 }
 YModeVisualBlock::~YModeVisualBlock()
-{}
+{
+}
 
-void YModeVisualBlock::cursorMoved(YView* mView)
+void YModeVisualBlock::cursorMoved(YView *mView)
 {
     Q_UNUSED(mView);
     //TODO
 }
-

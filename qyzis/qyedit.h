@@ -48,16 +48,15 @@ class QYEdit : public QWidget
 {
     Q_OBJECT
 
-
-public :
-    QYEdit(QYView * view = nullptr);
+public:
+    QYEdit(QYView *view = nullptr);
     virtual ~QYEdit();
 
     //erase all text, and set new text
-    void setText(const QString&);
+    void setText(const QString &);
 
     //append text
-    void append(const QString&);
+    void append(const QString &);
 
     //move cursor to position column, line relative to viewport
     void setCursor(const YCursor &newPos);
@@ -81,31 +80,30 @@ public :
 
     unsigned int spaceWidth;
 
-    void registerModifierKeys(const QString& keys);
-    void unregisterModifierKeys(const QString& keys);
+    void registerModifierKeys(const QString &keys);
+    void unregisterModifierKeys(const QString &keys);
 
-    QPoint translatePositionToReal(const YCursor& c) const;
-    YCursor translateRealToPosition(const QPoint& p, bool ceil = false) const;
-    YCursor translateRealToAbsolutePosition(const QPoint& p, bool ceil = false) const;
+    QPoint translatePositionToReal(const YCursor &c) const;
+    YCursor translateRealToPosition(const QPoint &p, bool ceil = false) const;
+    YCursor translateRealToAbsolutePosition(const QPoint &p, bool ceil = false) const;
 
     QVariant inputMethodQuery(Qt::InputMethodQuery query) const;
 
-    QYView* view() const;
+    QYView *view() const;
 
     int charWidth() const;
 
-public slots :
-    void sendMappedKey(const QString& keys);
-
+public slots:
+    void sendMappedKey(const QString &keys);
 
 protected:
-    void guiDrawCell(YCursor pos, const YDrawCell& cell, QPainter* p);
+    void guiDrawCell(YCursor pos, const YDrawCell &cell, QPainter *p);
 
     //intercept tabs
-    virtual bool event(QEvent*);
+    virtual bool event(QEvent *);
 
-    void resizeEvent(QResizeEvent*);
-    void paintEvent(QPaintEvent*);
+    void resizeEvent(QResizeEvent *);
+    void paintEvent(QPaintEvent *);
 
     //normal keypressEvents processing
     void keyPressEvent(QKeyEvent *);
@@ -120,7 +118,7 @@ protected:
     //  void mouseReleaseEvent( QMouseEvent *);
 
     //insert text at line
-    void insetTextAt(const QString&, int line);
+    void insetTextAt(const QString &, int line);
 
     //insert a char at idx on line ....
     void insertCharAt(QChar, int);
@@ -134,9 +132,9 @@ protected:
     // for InputMethod
     void inputMethodEvent(QInputMethodEvent *);
 
-private :
+private:
     QSignalMapper signalMapper;
-    QString keysToShortcut(const QString& keys);
+    QString keysToShortcut(const QString &keys);
 
     /* area to use */
     QRect mUseArea;

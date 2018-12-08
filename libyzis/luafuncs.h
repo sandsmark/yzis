@@ -20,8 +20,7 @@
 #ifndef YZLUASCRIPTING
 #define YZLUASCRIPTING
 
-extern "C"
-{
+extern "C" {
 #include <lua.h>
 }
 
@@ -40,7 +39,6 @@ class YLuaFuncs
 {
 
 public:
-
     /** \brief Register all lua functions defined in this class to lua.
       *
       * To be called during initialisation.
@@ -494,7 +492,6 @@ public:
      */
     static int nunmap(lua_State *L);
 
-
     /** \brief
      * Adds a new not remappable global mapping
         *
@@ -628,4 +625,3 @@ public:
 };
 
 #endif // YZLUASCRIPTING
-

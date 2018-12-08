@@ -16,7 +16,6 @@ Copyright (c) 2004-2005 Mickael Marchand <marchand@kde.org>
    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE
 #endif
@@ -48,8 +47,8 @@ Copyright (c) 2004-2005 Mickael Marchand <marchand@kde.org>
 #include <X11/Xlib.h>
 #include <libintl.h>
 
-#define dbg()    yzDebug("NYzis")
-#define err()    yzError("NYzis")
+#define dbg() yzDebug("NYzis")
+#define err() yzError("NYzis")
 
 typedef void (*sighandler_t)(int);
 
@@ -57,24 +56,23 @@ static void sigint(int sig);
 static void sigwinch(int sig);
 static void cleaning(void);
 
-int
-main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
     YSession::initDebug(argc, argv);
     // ==============[ Create application ]=============
 #ifdef Q_WS_X11
-# ifdef ENABLE_X_IN_NYZIS
+#ifdef ENABLE_X_IN_NYZIS
     bool useGUI = getenv("DISPLAY") != 0;
 
-    if(useGUI) {
+    if (useGUI) {
         Display *d = XOpenDisplay(NULL);
 
-        if(d == NULL) { //woups we failed to connect to X
-            useGUI = false;    // so don't try again later ;)
+        if (d == NULL) { //woups we failed to connect to X
+            useGUI = false; // so don't try again later ;)
         }
     }
 
-# endif //ENABLE_X_IN_NYZIS
+#endif //ENABLE_X_IN_NYZIS
 #endif // Q_WS_X11
     QCoreApplication *app;
     /*
@@ -91,17 +89,17 @@ main(int argc, char *argv[])
     // socket notifier created on the file descriptor 0 (stdin)
     // to catch key events
     QSocketNotifier *socket = new QSocketNotifier(0, QSocketNotifier::Read);
-    QObject::connect(socket, SIGNAL(activated(int)), static_cast<NYSession*>(YSession::self()), SLOT(processInput(int)));
+    QObject::connect(socket, SIGNAL(activated(int)), static_cast<NYSession *>(YSession::self()), SLOT(processInput(int)));
     // Signal handling
-    (void) signal(SIGINT, sigint);      /* arrange interrupts to terminate */
+    (void)signal(SIGINT, sigint); /* arrange interrupts to terminate */
     atexit(cleaning);
     (void)signal(SIGWINCH, sigwinch); // ncurses SHOULD handle that
     // we need errorView in order to display error messages if there
     // is a problem loading a file into a buffer
-    YView* errorView = YSession::self()->createBufferAndView();
+    YView *errorView = YSession::self()->createBufferAndView();
     YSession::self()->parseCommandLine(argc, argv);
     YSession::self()->deleteView(errorView);
-    QTimer::singleShot(0, static_cast<NYSession*>(YSession::self()), SLOT(frontendGuiReady()));
+    QTimer::singleShot(0, static_cast<NYSession *>(YSession::self()), SLOT(frontendGuiReady()));
     // ==============[ let's rock ! ]=============
     return app->exec();
 }
@@ -116,7 +114,6 @@ static void cleaning(void)
     printf("\033[2 q\n");
 }
 
-
 static void sigint(int /*sig*/)
 {
     dbg() << "^C caught" << endl;
@@ -124,16 +121,13 @@ static void sigint(int /*sig*/)
     NYSession::self()->sendKey(NYSession::self()->currentView(), Qt::Key_Escape);
 }
 
-
 static void sigwinch(int /*sig*/)
 {
     dbg() << "sigwinch caught" << endl;
     endwin();
     refresh();
-    NYView *view = static_cast<NYView*>(NYSession::self()->currentView());
+    NYView *view = static_cast<NYView *>(NYSession::self()->currentView());
     view->unmap();
     view->map();
     view->recalcScreen();
 }
-
-

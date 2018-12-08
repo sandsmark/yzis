@@ -46,7 +46,7 @@ public:
      * @param pos The cursor position in the current file
      */
 
-    YInfoJumpListRecord(const QString & filename, const QPoint pos);
+    YInfoJumpListRecord(const QString &filename, const QPoint pos);
 
     /**
      * Destructor
@@ -60,7 +60,7 @@ public:
      * @param copy The YInfoJumpListRecord instance to copy
      */
 
-    YInfoJumpListRecord(const YInfoJumpListRecord & copy);
+    YInfoJumpListRecord(const YInfoJumpListRecord &copy);
 
     /**
      * Assignment operator
@@ -68,7 +68,7 @@ public:
      * @param copy The YInfoJumpListRecord instance to assign from
      */
 
-    YInfoJumpListRecord & operator=(const YInfoJumpListRecord & copy);
+    YInfoJumpListRecord &operator=(const YInfoJumpListRecord &copy);
 
     /**
      * Returns the current index position in the mCursorData vector
@@ -80,7 +80,7 @@ public:
      * Returns the current filename
      */
 
-    QString & filename();
+    QString &filename();
     const QString &filename() const;
 
     /**
@@ -102,7 +102,7 @@ public:
      * @param filename The current filename
      */
 
-    void setFilename(const QString & filename);
+    void setFilename(const QString &filename);
 
     /**
      * Sets the cursor position to record

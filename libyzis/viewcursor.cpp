@@ -33,35 +33,34 @@ YViewCursor::YViewCursor(const YViewCursor &c) :
     mBuffer(c.mBuffer), mColumn(c.mColumn) {}
 YViewCursor::~YViewCursor() {}
 
-YViewCursor &YViewCursor::operator=(const YViewCursor& c)
+YViewCursor &YViewCursor::operator=(const YViewCursor &c)
 {
     mBuffer = c.mBuffer;
     mColumn = c.mColumn;
     return *this;
 }
 
-bool YViewCursor::operator== (const YViewCursor right) const
+bool YViewCursor::operator==(const YViewCursor right) const
 {
     return mBuffer == right.mBuffer;
 }
-bool YViewCursor::operator!= (const YViewCursor right) const
+bool YViewCursor::operator!=(const YViewCursor right) const
 {
     return mBuffer != right.mBuffer;
 }
-bool YViewCursor::operator< (const YViewCursor right) const
+bool YViewCursor::operator<(const YViewCursor right) const
 {
     return mBuffer < right.mBuffer;
 }
-bool YViewCursor::operator<= (const YViewCursor right) const
+bool YViewCursor::operator<=(const YViewCursor right) const
 {
     return mBuffer <= right.mBuffer;
 }
-bool YViewCursor::operator> (const YViewCursor right) const
+bool YViewCursor::operator>(const YViewCursor right) const
 {
     return mBuffer > right.mBuffer;
 }
-bool YViewCursor::operator>= (const YViewCursor right) const
+bool YViewCursor::operator>=(const YViewCursor right) const
 {
     return mBuffer >= right.mBuffer;
 }
-

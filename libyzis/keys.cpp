@@ -27,8 +27,8 @@
 #include "keys.h"
 #include "debug.h"
 
-#define dbg()    yzDebug("YKeySequence")
-#define err()    yzError("YKeySequence")
+#define dbg() yzDebug("YKeySequence")
+#define err() yzError("YKeySequence")
 
 using namespace std;
 
@@ -37,7 +37,7 @@ QMap<QString, int> aliasTable;
 
 void initKeyTable()
 {
-    if(!  keyTable.empty()) {
+    if (!keyTable.empty()) {
         return;
     }
 
@@ -59,7 +59,7 @@ void initKeyTable()
     keyTable["PAGEDOWN"] = Qt::Key_PageDown;
     keyTable["LT"] = Qt::Key_Less;
 
-    for(int i = 1; i <= 35; ++i) {
+    for (int i = 1; i <= 35; ++i) {
         keyTable[QString("F%1").arg(i)] = (Qt::Key)(Qt::Key_F1 + i - 1);
     }
 
@@ -84,33 +84,30 @@ void initKeyTable()
     aliasTable["DELETE"] = Qt::Key_Delete;
 }
 
-YKey::YKey(int key, Qt::KeyboardModifiers modifiers, const QString & text)
-    : mKey(key)
-    , mText(text)
-    , mModifiers(modifiers)
+YKey::YKey(int key, Qt::KeyboardModifiers modifiers, const QString &text) :
+    mKey(key), mText(text), mModifiers(modifiers)
 {
     initKeyTable();
 #if 1
 
     // TODO : should be removed, hackish
-    if(mKey <= 0xffff && mKey >= 0) { // is unicode ?
+    if (mKey <= 0xffff && mKey >= 0) { // is unicode ?
         mModifiers &= ~Qt::ShiftModifier;
     }
 
 #endif
 }
 
-
 QString YKey::toBasicRep() const
 {
-    if((mKey <= 0xffff)) {  // Just a unicode char
+    if ((mKey <= 0xffff)) { // Just a unicode char
         return QString(QChar(mKey));
     }
 
     // reverse lookup
     QString s = keyTable.key(mKey);
 
-    if(!s.isNull()) {
+    if (!s.isNull()) {
         return s;
     }
 
@@ -126,7 +123,7 @@ QString YKey::toBasicRep() const
 bool YKey::parseBasicRep(QString rep)
 {
     // First deal with as-is characters
-    if(rep.length() == 1) {
+    if (rep.length() == 1) {
         QChar c(rep.at(0));
         mKey = c.unicode();
         // Assume single unicode keys might be obtained by shift, so no extra info there
@@ -137,13 +134,13 @@ bool YKey::parseBasicRep(QString rep)
     // Multiple-char descriptor, so use canonical upper case
     rep = rep.toUpper();
 
-    if(keyTable.contains(rep)) {
+    if (keyTable.contains(rep)) {
         mKey = keyTable[rep];
         return true;
     }
 
     // It might be a noncanonical name, check
-    if(aliasTable.contains(rep)) {
+    if (aliasTable.contains(rep)) {
         mKey = aliasTable[rep];
         return true;
     }
@@ -158,14 +155,14 @@ bool YKey::parseModifiers(const QString &mods)
     int pos = -1;
     QRegExp modPattern("[CSMA]-");
 
-    while((pos = modPattern.indexIn(mods, pos + 1)) != -1) {
-        if(mods.at(pos) == 'C') {
+    while ((pos = modPattern.indexIn(mods, pos + 1)) != -1) {
+        if (mods.at(pos) == 'C') {
             mModifiers |= Qt::ControlModifier;
-        } else if(mods.at(pos) == 'S') {
+        } else if (mods.at(pos) == 'S') {
             mModifiers |= Qt::ShiftModifier;
-        } else if(mods.at(pos) == 'M') {
+        } else if (mods.at(pos) == 'M') {
             mModifiers |= Qt::MetaModifier;
-        } else if(mods.at(pos) == 'A') {
+        } else if (mods.at(pos) == 'A') {
             mModifiers |= Qt::AltModifier;
         } else {
             success = false;
@@ -175,30 +172,29 @@ bool YKey::parseModifiers(const QString &mods)
     return success;
 }
 
-
 /* Encode key event into vim form. */
 QString YKey::toString() const
 {
     QString repr = toBasicRep();
     QString mod;
 
-    if(mModifiers & Qt::ControlModifier) {
+    if (mModifiers & Qt::ControlModifier) {
         mod += "C-";
     }
 
-    if(mModifiers & Qt::MetaModifier) {
+    if (mModifiers & Qt::MetaModifier) {
         mod += "M-";
     }
 
-    if(mModifiers & Qt::AltModifier) {
+    if (mModifiers & Qt::AltModifier) {
         mod += "A-";
     }
 
-    if(mModifiers & Qt::ShiftModifier) {
+    if (mModifiers & Qt::ShiftModifier) {
         mod += "S-";
     }
 
-    if(mod.length() || repr.length() > 1) {
+    if (mod.length() || repr.length() > 1) {
         repr = "<" + mod + repr + ">";
     }
 
@@ -215,22 +211,22 @@ int YKey::fromString(const QString &key)
     mModifiers = Qt::NoModifier;
     charFormat.indexIn(key);
 
-    if(charFormat.matchedLength() == -1) {
+    if (charFormat.matchedLength() == -1) {
         return -1;
     }
 
-    if(charFormat.matchedLength() == 1) {    // Have single char
+    if (charFormat.matchedLength() == 1) { // Have single char
         mModifiers = Qt::NoModifier;
         basicKey = charFormat.cap(3);
     } else {
         basicKey = charFormat.cap(2);
 
-        if(! parseModifiers(charFormat.cap(1))) {
+        if (!parseModifiers(charFormat.cap(1))) {
             return -1;
         }
     }
 
-    if(! parseBasicRep(basicKey)) {
+    if (!parseBasicRep(basicKey)) {
         return -1;
     }
 
@@ -261,7 +257,7 @@ YKeySequence::YKeySequence(const YKeySequence &from)
 {
     mKeys = new QVector<YKey>;
 
-    for(const_iterator i = from.mKeys->begin(); i != from.mKeys->end(); ++i) {
+    for (const_iterator i = from.mKeys->begin(); i != from.mKeys->end(); ++i) {
         mKeys->append(*i);
     }
 
@@ -274,13 +270,12 @@ YKeySequence &YKeySequence::operator=(const YKeySequence &from)
 {
     mKeys->clear();
 
-    for(const_iterator i = from.mKeys->begin(); i != from.mKeys->end(); ++i) {
+    for (const_iterator i = from.mKeys->begin(); i != from.mKeys->end(); ++i) {
         mKeys->append(*i);
     }
 
     return *this;
 }
-
 
 YKeySequence::YKeySequence(const QString &input)
 {
@@ -296,10 +291,10 @@ void YKeySequence::appendString(QString input)
     int used;
     YKey k;
 
-    while(input.count()) {
+    while (input.count()) {
         used = k.fromString(input);
 
-        if(used == -1) {
+        if (used == -1) {
             dbg() << "Asked to parse invalid key string";
             break;
         }
@@ -313,7 +308,7 @@ QString YKeySequence::toString() const
 {
     QString repr;
 
-    for(const_iterator i = mKeys->begin(); i != mKeys->end(); ++i) {
+    for (const_iterator i = mKeys->begin(); i != mKeys->end(); ++i) {
         repr += i->toString();
     }
 
@@ -324,14 +319,14 @@ bool YKeySequence::match(const_iterator &pos, const const_iterator &othEnd) cons
 {
     const_iterator thisPos = begin();
 
-    for(; pos != othEnd && thisPos != end(); ++pos, ++thisPos) {
-        if(*pos != *thisPos) {
+    for (; pos != othEnd && thisPos != end(); ++pos, ++thisPos) {
+        if (*pos != *thisPos) {
             return false;
         }
     }
 
     // We've gone through one or both, determine which
-    if(thisPos == end()) {
+    if (thisPos == end()) {
         return true;
     }
 
@@ -343,16 +338,16 @@ int YKeySequence::parseUInt(const_iterator &pos) const
     int tot = 0;
     QChar cur = QChar(pos->key());
 
-    if(!cur.isDigit() || cur.digitValue() == 0) {
+    if (!cur.isDigit() || cur.digitValue() == 0) {
         return -1;
     }
 
-    while(cur.isDigit()) {
+    while (cur.isDigit()) {
         tot *= 10;
         tot += cur.digitValue();
         ++pos;
 
-        if(pos == end()) {
+        if (pos == end()) {
             return tot;
         }
 
@@ -361,4 +356,3 @@ int YKeySequence::parseUInt(const_iterator &pos) const
 
     return tot;
 }
-

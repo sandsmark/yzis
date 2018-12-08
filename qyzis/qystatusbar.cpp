@@ -1,16 +1,15 @@
 #include "qystatusbar.h"
 
 #include "libyzis/debug.h"
-#define dbg()     yzDebug("QYStatusBar")
-#define err()     yzError("QYStatusBar")
+#define dbg() yzDebug("QYStatusBar")
+#define err() yzError("QYStatusBar")
 #define deepdbg() yzDeepDebug("QYStatusBar")
 
 #include <QStatusBar>
 #include <QLabel>
 
-
-QYStatusBar::QYStatusBar(QWidget *parent)
-    : QStatusBar(parent)
+QYStatusBar::QYStatusBar(QWidget *parent) :
+    QStatusBar(parent)
 {
     dbg() << QString("QYStatusBar( %1 )").arg(qp(parent->objectName())) << endl;
     m_mode = new QLabel(this);
@@ -28,14 +27,15 @@ QYStatusBar::~QYStatusBar()
     dbg() << "~QYStatusBar()" << endl;
 }
 
-void QYStatusBar::setMode(const QString& mode)
+void QYStatusBar::setMode(const QString &mode)
 {
     deepdbg() << "setMode( " << mode << " )" << endl;
     m_mode->setText(mode);
 }
 
-void QYStatusBar::setFileName(const QString& /*filename*/)
-{}
+void QYStatusBar::setFileName(const QString & /*filename*/)
+{
+}
 
 void QYStatusBar::setFileInfo(bool isNew, bool isModified)
 {
@@ -49,34 +49,33 @@ void QYStatusBar::setFileInfo(bool isNew, bool isModified)
 void QYStatusBar::setLineInfo(int bufferLine, int bufferColumn, int screenColumn, QString percentage)
 {
     deepdbg() << QString("setLineInfo( %1, %2, %3, %4 )")
-              .arg(bufferLine)
-              .arg(bufferColumn)
-              .arg(screenColumn)
-              .arg(percentage)
+                     .arg(bufferLine)
+                     .arg(bufferColumn)
+                     .arg(screenColumn)
+                     .arg(percentage)
               << endl;
     bool isNumber;
     percentage.toInt(&isNumber);
 
-    if(isNumber) {
+    if (isNumber) {
         percentage += '%';
     }
 
-    if(bufferColumn != screenColumn)
+    if (bufferColumn != screenColumn)
         m_lineinfo->setText(QString("%1,%2-%3 (%4)")
-                            .arg(bufferLine)
-                            .arg(bufferColumn)
-                            .arg(screenColumn)
-                            .arg(percentage));
+                                .arg(bufferLine)
+                                .arg(bufferColumn)
+                                .arg(screenColumn)
+                                .arg(percentage));
     else
         m_lineinfo->setText(QString("%1,%2 (%3)")
-                            .arg(bufferLine)
-                            .arg(bufferColumn)
-                            .arg(percentage));
+                                .arg(bufferLine)
+                                .arg(bufferColumn)
+                                .arg(percentage));
 }
 
-void QYStatusBar::setMessage(const QString& message)
+void QYStatusBar::setMessage(const QString &message)
 {
     deepdbg() << "setMessage( " << message << " )" << endl;
     m_message->setText(message);
 }
-

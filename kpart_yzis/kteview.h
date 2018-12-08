@@ -31,14 +31,14 @@ class KTEView : public KTextEditor::View
 {
     Q_OBJECT
 public:
-    KTEView(KTEDocument* doc, QWidget* parent);
+    KTEView(KTEDocument *doc, QWidget *parent);
     virtual ~KTEView();
-    virtual KTextEditor::Document* document() const;
+    virtual KTextEditor::Document *document() const;
     virtual QString viewMode() const;
     virtual enum KTextEditor::View::EditMode viewEditMode() const;
     virtual void setContextMenu(QMenu *menu);
-    virtual QMenu* contextMenu() const;
-    virtual QMenu* defaultContextMenu(QMenu *menu = 0L) const;
+    virtual QMenu *contextMenu() const;
+    virtual QMenu *defaultContextMenu(QMenu *menu = 0L) const;
     virtual bool setCursorPosition(KTextEditor::Cursor position);
     virtual KTextEditor::Cursor cursorPosition() const;
     virtual KTextEditor::Cursor cursorPositionVirtual() const;
@@ -48,7 +48,7 @@ public:
     virtual bool setMouseTrackingEnabled(bool enable);
     virtual bool setSelection(const KTextEditor::Range &range);
     virtual bool selection() const;
-    virtual const KTextEditor::Range& selectionRange() const;
+    virtual const KTextEditor::Range &selectionRange() const;
     virtual QString selectionText() const;
     virtual bool removeSelection();
     virtual bool removeSelectionText();
@@ -69,10 +69,9 @@ signals:
     void selectionChanged(KTextEditor::View *view);
 
 private:
-    KTEDocument* m_doc;
-    KYView* m_view;
-    QMenu* m_popup;
+    KTEDocument *m_doc;
+    KYView *m_view;
+    QMenu *m_popup;
 };
 
 #endif // YZIS_PART_KTE_VIEW_H
-

@@ -27,8 +27,8 @@
  * YBound
  */
 
-#define dbg()    yzDebug("YBound")
-#define err()    yzError("YBound")
+#define dbg() yzDebug("YBound")
+#define err() yzError("YBound")
 
 void YBound::open()
 {
@@ -52,44 +52,44 @@ bool YBound::closed() const
 }
 
 // operators on bounds
-bool operator==(const YBound& left, const YBound& right)
+bool operator==(const YBound &left, const YBound &right)
 {
     return left.pos() == right.pos() && left.opened() == right.opened();
 }
-bool operator>(const YBound& left, const YBound& right)
+bool operator>(const YBound &left, const YBound &right)
 {
     return left.pos() > right.pos() || (left.pos() == right.pos() && !left.opened() && right.opened());
 }
-bool operator<(const YBound& left, const YBound& right)
+bool operator<(const YBound &left, const YBound &right)
 {
     return left.pos() < right.pos() || (left.pos() == right.pos() && left.opened() && !right.opened());
 }
-bool operator>=(const YBound& left, const YBound& right)
+bool operator>=(const YBound &left, const YBound &right)
 {
     return left.pos() > right.pos() || (left.pos() == right.pos() && (!left.opened() || right.opened()));
 }
-bool operator<=(const YBound& left, const YBound& right)
+bool operator<=(const YBound &left, const YBound &right)
 {
     return left.pos() < right.pos() || (left.pos() == right.pos() && (left.opened() || !right.opened()));
 }
-bool operator>=(const YBound& left, const YCursor right)
+bool operator>=(const YBound &left, const YCursor right)
 {
     return left.pos() > right || (!left.opened() && left.pos() == right);
 }
-bool operator<=(const YBound& left, const YCursor right)
+bool operator<=(const YBound &left, const YCursor right)
 {
     return left.pos() < right || (!left.opened() && left.pos() == right);
 }
-bool operator>=(const YCursor left, const YBound& right)
+bool operator>=(const YCursor left, const YBound &right)
 {
     return right <= left;
 }
-bool operator<=(const YCursor left, const YBound& right)
+bool operator<=(const YCursor left, const YBound &right)
 {
     return right >= left;
 }
 
-const YBound operator-(const YBound& left, const YCursor right)
+const YBound operator-(const YBound &left, const YCursor right)
 {
     return YBound((QPoint)left.pos() - right, left.opened());
 }
@@ -97,11 +97,11 @@ const YBound operator-(const YBound& left, const YCursor right)
  * YInterval
  */
 
-void YInterval::setFrom(const YBound& bound)
+void YInterval::setFrom(const YBound &bound)
 {
     mFrom = bound;
 }
-void YInterval::setTo(const YBound& bound)
+void YInterval::setTo(const YBound &bound)
 {
     mTo = bound;
 }
@@ -113,11 +113,11 @@ void YInterval::setToPos(const YCursor pos)
 {
     mTo.setPos(pos);
 }
-const YBound& YInterval::from() const
+const YBound &YInterval::from() const
 {
     return mFrom;
 }
-const YBound& YInterval::to() const
+const YBound &YInterval::to() const
 {
     return mTo;
 }
@@ -132,7 +132,7 @@ const YCursor YInterval::toPos() const
 
 YCursor YInterval::closedStartCursor() const
 {
-    if(mFrom.opened()) {
+    if (mFrom.opened()) {
         return YCursor(mFrom.pos().column() + 1, mFrom.pos().line());
     } else {
         return mFrom.pos();
@@ -140,8 +140,8 @@ YCursor YInterval::closedStartCursor() const
 }
 YCursor YInterval::closedEndCursor(int column_max) const
 {
-    if(mTo.opened()) {
-        if(mTo.pos().column() == 0) {
+    if (mTo.opened()) {
+        if (mTo.pos().column() == 0) {
             YASSERT(1 <= mTo.pos().line());
             return YCursor(column_max, mTo.pos().line() - 1);
         } else {
@@ -153,15 +153,14 @@ YCursor YInterval::closedEndCursor(int column_max) const
 }
 YCursor YInterval::openedEndCursor() const
 {
-    if(mTo.closed()) {
+    if (mTo.closed()) {
         return YCursor(mTo.pos().column() + 1, mTo.pos().line());
     } else {
         return mTo.pos();
     }
 }
 
-
-bool YInterval::contains(const YBound& pos) const
+bool YInterval::contains(const YBound &pos) const
 {
     return mFrom >= pos && pos <= mTo;
 }
@@ -169,15 +168,15 @@ bool YInterval::contains(const YCursor pos) const
 {
     return mFrom >= pos && pos <= mTo;
 }
-bool YInterval::contains(const YInterval& i) const
+bool YInterval::contains(const YInterval &i) const
 {
     return mFrom <= i.from() && mTo >= i.to();
 }
-bool YInterval::overlap(const YInterval& i) const
+bool YInterval::overlap(const YInterval &i) const
 {
     return contains(i.from()) || contains(i.to()) || i.contains(from()) || i.contains(to());
 }
-YInterval YInterval::intersection(const YInterval& i) const
+YInterval YInterval::intersection(const YInterval &i) const
 {
     return YInterval(i.from() < from() ? from() : i.from(), i.to() < to() ? i.to() : to());
 }
@@ -190,7 +189,7 @@ QRect YInterval::boundingRect() const
 {
     QRect r;
 
-    if(mFrom.pos().x() <= mTo.pos().x()) {
+    if (mFrom.pos().x() <= mTo.pos().x()) {
         r.setLeft(mFrom.pos().x());
         r.setRight(mTo.pos().x());
     } else {
@@ -203,7 +202,7 @@ QRect YInterval::boundingRect() const
     return r;
 }
 
-const YInterval operator- (const YInterval& l, const YCursor r)
+const YInterval operator-(const YInterval &l, const YCursor r)
 {
     return YInterval(qMax(l.from() - r, YBound(YCursor(0, 0))), qMax(l.to() - r, YBound(YCursor(0, 0), true)));
 }
@@ -212,7 +211,7 @@ QString YInterval::toString() const
 {
     QString out;
 
-    if(from().opened()) {
+    if (from().opened()) {
         out += from().pos().toString() + "]";
     } else {
         out += "[" + from().pos().toString();
@@ -220,7 +219,7 @@ QString YInterval::toString() const
 
     out += "<==============>";
 
-    if(to().opened()) {
+    if (to().opened()) {
         out += "[" + to().pos().toString();
     } else {
         out += to().pos().toString() + "]";
@@ -229,12 +228,11 @@ QString YInterval::toString() const
     return out;
 }
 
-YDebugStream& operator<<(YDebugStream& out, const YInterval& i)
+YDebugStream &operator<<(YDebugStream &out, const YInterval &i)
 {
     out << i.toString();
     return out;
 }
-
 
 /**
  * YSelection
@@ -243,16 +241,16 @@ YSelection::YSelection()
 {
     mMap.clear();
 }
-YSelection::YSelection(const QString& name)
+YSelection::YSelection(const QString &name)
 {
     mName = name;
     mMap.clear();
 }
-YSelection::YSelection(const YInterval& i)
+YSelection::YSelection(const YInterval &i)
 {
     addInterval(i);
 }
-void YSelection::setMap(const YSelectionMap& m)
+void YSelection::setMap(const YSelectionMap &m)
 {
     clear();
     mMap = m;
@@ -266,124 +264,124 @@ bool YSelection::isEmpty() const
     return mMap.isEmpty();
 }
 
-void YSelection::addMap(const YSelectionMap& m)
+void YSelection::addMap(const YSelectionMap &m)
 {
-    for(int i = 0; i < m.size(); i++) {
-        addInterval(m[ i ]);
+    for (int i = 0; i < m.size(); i++) {
+        addInterval(m[i]);
     }
 }
-void YSelection::addInterval(const YInterval& i)
+void YSelection::addInterval(const YInterval &i)
 {
     bool containsFrom;
     bool containsTo;
     unsigned int idFrom = locatePosition(i.from(), &containsFrom);
     unsigned int idTo = locatePosition(i.to(), &containsTo);
 
-    if(containsFrom && containsTo) {
-        if(idFrom != idTo) {
-            mMap[ idFrom ].setTo(mMap[ idTo ].to());
+    if (containsFrom && containsTo) {
+        if (idFrom != idTo) {
+            mMap[idFrom].setTo(mMap[idTo].to());
             removeInterval(idFrom + 1, idTo - idFrom);
         }
-    } else if(containsFrom) {
-        mMap[ idFrom ].setTo(i.to());
+    } else if (containsFrom) {
+        mMap[idFrom].setTo(i.to());
         removeInterval(idFrom + 1, idTo - idFrom - 1);
-    } else if(containsTo) {
-        mMap[ idTo ].setFrom(i.from());
+    } else if (containsTo) {
+        mMap[idTo].setFrom(i.from());
         removeInterval(idFrom, idTo - idFrom);
-    } else if(idTo != idFrom) {
-        mMap[ idFrom ].setFrom(i.from());
-        mMap[ idFrom ].setTo(i.to());
+    } else if (idTo != idFrom) {
+        mMap[idFrom].setFrom(i.from());
+        mMap[idFrom].setTo(i.to());
         removeInterval(idFrom + 1, idTo - idFrom);
     } else {
         insertInterval(idFrom, i);
     }
 }
-void YSelection::delInterval(const YInterval& i)
+void YSelection::delInterval(const YInterval &i)
 {
     bool containsFrom;
     bool containsTo;
     unsigned int idFrom = locatePosition(i.from(), &containsFrom);
     unsigned int idTo = locatePosition(i.to(), &containsTo);
 
-    if(idFrom == idTo && !containsFrom && !containsTo) {
-        return ;
+    if (idFrom == idTo && !containsFrom && !containsTo) {
+        return;
     }
 
     // dbg() << "delInterval: from=" << idFrom << "," << containsFrom << "; to=" << idTo << "," << containsTo << endl;
 
-    if(containsFrom && i.from() <= mMap[ idFrom ].from()) {
+    if (containsFrom && i.from() <= mMap[idFrom].from()) {
         containsFrom = false;
     }
 
-    if(containsTo && i.to() >= mMap[ idTo ].to()) {
+    if (containsTo && i.to() >= mMap[idTo].to()) {
         ++idTo;
         containsTo = false;
     }
 
-    if(containsTo && containsFrom && idFrom == idTo) {
+    if (containsTo && containsFrom && idFrom == idTo) {
         ++idTo;
-        insertInterval(idTo, mMap[ idFrom ]);
+        insertInterval(idTo, mMap[idFrom]);
     }
 
-    if(containsFrom) {
-        mMap[ idFrom ].setTo(YBound(i.from().pos(), !i.from().opened()));
+    if (containsFrom) {
+        mMap[idFrom].setTo(YBound(i.from().pos(), !i.from().opened()));
     }
 
-    if(containsTo) {
-        mMap[ idTo ].setFrom(YBound(i.to().pos(), !i.to().opened()));
+    if (containsTo) {
+        mMap[idTo].setFrom(YBound(i.to().pos(), !i.to().opened()));
     }
 
     removeInterval(idFrom + (containsFrom ? 1 : 0), idTo - idFrom - (containsFrom && containsTo ? 1 : 0));
 }
 
-void YSelection::insertInterval(unsigned int pos, const YInterval& interval)
+void YSelection::insertInterval(unsigned int pos, const YInterval &interval)
 {
     unsigned int size = mMap.size() + 1;
 
-    for(unsigned int i = size - 1; i > pos; i--) {
-        mMap[ i ] = mMap[ i - 1 ];
+    for (unsigned int i = size - 1; i > pos; i--) {
+        mMap[i] = mMap[i - 1];
     }
 
     mMap.insert(pos, interval);
 }
 void YSelection::removeInterval(unsigned int pos, unsigned int len)
 {
-    if(len == 0) {
-        return ;
+    if (len == 0) {
+        return;
     }
 
     unsigned int size = mMap.size();
     YASSERT(size >= len);
     unsigned int i = pos;
 
-    for(; i < size - len; ++i) {
-        mMap[ i ] = mMap[ i + len ];
+    for (; i < size - len; ++i) {
+        mMap[i] = mMap[i + len];
     }
 
-    for(; i < size; i++) {
+    for (; i < size; i++) {
         mMap.remove(i);
     }
 }
 
-int YSelection::locatePosition(const YBound& pos, bool* isSelected) const
+int YSelection::locatePosition(const YBound &pos, bool *isSelected) const
 {
     unsigned int i;
     *isSelected = false;
     unsigned int size = mMap.size();
 
-    for(i = 0; ! *isSelected && i < size; i++) {
-        if(mMap[ i ].from() > pos) {
+    for (i = 0; !*isSelected && i < size; i++) {
+        if (mMap[i].from() > pos) {
             break;
         }
 
-        if(mMap[ i ].to() < pos) {
+        if (mMap[i].to() < pos) {
             continue;
         }
 
         *isSelected = true;
     }
 
-    if(*isSelected) {
+    if (*isSelected) {
         --i;
     }
 
@@ -401,21 +399,21 @@ void YSelection::clear()
     mMap.clear();
 }
 
-YSelection YSelection::clip(const YInterval& bound) const
+YSelection YSelection::clip(const YInterval &bound) const
 {
     // dbg() << "YSelection::clip " << bound << endl << "*** INPUT ***" << endl << *this << "*** END INPUT ***" << endl;
     YBound limitFrom(bound.fromPos(), !bound.from().opened());
     YBound limitTo(bound.toPos(), !bound.to().opened());
     YSelection tmp(mName);
     tmp.setMap(mMap);
-    YBound lastBound = mMap[ mMap.size() - 1 ].to();
-    YBound firstBound = mMap[ 0 ].from();
+    YBound lastBound = mMap[mMap.size() - 1].to();
+    YBound firstBound = mMap[0].from();
 
-    if(lastBound > limitTo) {
+    if (lastBound > limitTo) {
         tmp.delInterval(YInterval(limitTo, lastBound));
     }
 
-    if(!tmp.isEmpty() && firstBound < limitFrom) {
+    if (!tmp.isEmpty() && firstBound < limitFrom) {
         tmp.delInterval(YInterval(firstBound, limitFrom));
     }
 
@@ -425,23 +423,23 @@ YSelection YSelection::clip(const YInterval& bound) const
     unsigned int endX = bound.toPos().x();
     unsigned int fX, tX, fY, tY;
 
-    for(int i = 0; i < tmp.mMap.size(); ++i) {
-        fX = tmp.mMap[ i ].fromPos().x();
-        fY = tmp.mMap[ i ].fromPos().y();
-        tX = tmp.mMap[ i ].toPos().x();
-        tY = tmp.mMap[ i ].toPos().y();
+    for (int i = 0; i < tmp.mMap.size(); ++i) {
+        fX = tmp.mMap[i].fromPos().x();
+        fY = tmp.mMap[i].fromPos().y();
+        tX = tmp.mMap[i].toPos().x();
+        tY = tmp.mMap[i].toPos().y();
 
-        if(!(fY == tY && (fX > endX || tX < startX))) {
-            if(fX <= endX) {
+        if (!(fY == tY && (fX > endX || tX < startX))) {
+            if (fX <= endX) {
                 fX = qMax(fX, startX);
             } else {
                 ++fY;
                 fX = startX;
             }
 
-            if(tX >= startX) {
+            if (tX >= startX) {
                 tX = qMin(tX, endX);
-            } else if(fY < tY) {
+            } else if (fY < tY) {
                 --tY;
                 tX = endX;
             } else {
@@ -456,7 +454,7 @@ YSelection YSelection::clip(const YInterval& bound) const
     return ret;
 }
 
-YSelection YSelection::diff(const YSelection& _m1, const YSelection& _m2)
+YSelection YSelection::diff(const YSelection &_m1, const YSelection &_m2)
 {
     YSelection ret(_m1.mName);
     unsigned int i;
@@ -467,45 +465,45 @@ YSelection YSelection::diff(const YSelection& _m1, const YSelection& _m2)
     YSelection m1 = _m1;
     YSelection m2 = _m2;
 
-    for(int k = 0; k <= 1; k++) {
+    for (int k = 0; k <= 1; k++) {
         YSelectionMap s1 = m1.map();
         YSelectionMap s2 = m2.map();
         unsigned int size1 = s1.size();
 
         //  unsigned int size2 = s2.size();
-        for(i = 0; i < size1; i++) {
-            b1 = s1[ i ].from();
-            b2 = s1[ i ].to();
+        for (i = 0; i < size1; i++) {
+            b1 = s1[i].from();
+            b2 = s1[i].to();
             ib1 = m2.locatePosition(b1, &cb1);
             ib2 = m2.locatePosition(b2, &cb2);
 
-            if(cb1 && cb2 && ib1 == ib2) {
+            if (cb1 && cb2 && ib1 == ib2) {
                 continue;
             } else {
-                if(cb1) {
-                    b1 = s2[ ib1 ].to();
+                if (cb1) {
+                    b1 = s2[ib1].to();
 
-                    if(b1.closed()) {
+                    if (b1.closed()) {
                         b1.open();
                     } else {
                         b1.close();
                     }
                 }
 
-                if(cb2) {
-                    b2 = s2[ ib2 ].from();
+                if (cb2) {
+                    b2 = s2[ib2].from();
 
-                    if(b1.opened()) {
+                    if (b1.opened()) {
                         b2.close();
                     } else {
                         b2.open();
                     }
                 }
 
-                for(int j = ib1 + 1; j < ib2; j++) {
-                    n = s2[ j ].from();
+                for (int j = ib1 + 1; j < ib2; j++) {
+                    n = s2[j].from();
 
-                    if(n.opened()) {
+                    if (n.opened()) {
                         n.close();
                     } else {
                         n.open();
@@ -514,9 +512,9 @@ YSelection YSelection::diff(const YSelection& _m1, const YSelection& _m2)
                     iv.setFrom(b1);
                     iv.setTo(n);
                     ret.addInterval(iv);
-                    b1 = s2[ j ].to();
+                    b1 = s2[j].to();
 
-                    if(b1.opened()) {
+                    if (b1.opened()) {
                         b1.close();
                     } else {
                         b1.open();
@@ -541,7 +539,7 @@ QRect YSelection::boundingRect() const
 {
     QRect r;
 
-    for(int i = 0; i < mMap.size(); ++i) {
+    for (int i = 0; i < mMap.size(); ++i) {
         r |= mMap[i].boundingRect();
     }
 
@@ -549,12 +547,12 @@ QRect YSelection::boundingRect() const
 }
 
 // operators on selections
-YDebugStream& operator<<(YDebugStream& out, const YSelection& s)
+YDebugStream &operator<<(YDebugStream &out, const YSelection &s)
 {
     unsigned int size = s.mMap.size();
 
-    for(unsigned int i = 0; i < size; i++) {
-        out << "(" << s.mName << " " << i << ") " << s.mMap[ i ] << endl;
+    for (unsigned int i = 0; i < size; i++) {
+        out << "(" << s.mName << " " << i << ") " << s.mMap[i] << endl;
     }
 
     return out;
@@ -565,14 +563,12 @@ const YSelection YSelection::operator-(const YCursor pos) const
     int i;
     int size = mMap.size();
 
-    for(i = 0; i < size && mMap[i].to() < YBound(pos); ++i)
+    for (i = 0; i < size && mMap[i].to() < YBound(pos); ++i)
         ;
 
-    for(; i < size; ++i) {
+    for (; i < size; ++i) {
         ret.addInterval(mMap[i] - pos);
     }
 
     return ret;
 }
-
-

@@ -25,8 +25,8 @@
 /* Qt */
 #include <qregexp.h>
 
-#define dbg()    yzDebug("YLine")
-#define err()    yzError("YLine")
+#define dbg() yzDebug("YLine")
+#define err() yzError("YLine")
 
 YLine::YLine(const QString &l) :
     m_flags(YLine::FlagVisible)
@@ -42,15 +42,16 @@ YLine::YLine()
 }
 
 YLine::~YLine()
-{}
+{
+}
 
 void YLine::setData(const QString &data)
 {
     mData = data;
     uint len = data.length();
 
-    if(len == 0) {
-        len++;    //make sure to return a non empty array ... (that sucks)
+    if (len == 0) {
+        len++; //make sure to return a non empty array ... (that sucks)
     }
 
     mAttributes = QVector<uchar>(len);
@@ -70,8 +71,8 @@ int YLine::nextNonSpaceChar(uint pos) const
 {
     int length = (int)mData.length();
 
-    for(int i = pos; i < length; ++i) {
-        if(!mData[i].isSpace()) {
+    for (int i = pos; i < length; ++i) {
+        if (!mData[i].isSpace()) {
             return i;
         }
     }
@@ -81,12 +82,12 @@ int YLine::nextNonSpaceChar(uint pos) const
 
 int YLine::previousNonSpaceChar(uint pos) const
 {
-    if(pos >= (uint)mData.length()) {
+    if (pos >= (uint)mData.length()) {
         pos = mData.length() - 1;
     }
 
-    for(int i = pos; i >= 0; --i) {
-        if(!mData[i].isSpace()) {
+    for (int i = pos; i >= 0; --i) {
+        if (!mData[i].isSpace()) {
             return i;
         }
     }
@@ -96,11 +97,11 @@ int YLine::previousNonSpaceChar(uint pos) const
 
 void YLine::addAttribute(int start, int length, int attribute)
 {
-    if((mAttributesList.size() > 2) && (mAttributesList[mAttributesList.size() - 1] == attribute)
-       && (mAttributesList[mAttributesList.size() - 3] + mAttributesList[mAttributesList.size() - 2]
-           == start)) {
+    if ((mAttributesList.size() > 2) && (mAttributesList[mAttributesList.size() - 1] == attribute)
+        && (mAttributesList[mAttributesList.size() - 3] + mAttributesList[mAttributesList.size() - 2]
+            == start)) {
         mAttributesList[mAttributesList.size() - 2] += length;
-        return ;
+        return;
     }
 
     mAttributesList.resize(mAttributesList.size() + 3);
@@ -108,4 +109,3 @@ void YLine::addAttribute(int start, int length, int attribute)
     mAttributesList[mAttributesList.size() - 2] = length;
     mAttributesList[mAttributesList.size() - 1] = attribute;
 }
-

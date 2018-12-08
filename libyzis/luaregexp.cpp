@@ -17,7 +17,6 @@
 *  Boston, MA 02110-1301, USA.
 **/
 
-
 /* Yzis */
 #include "luaregexp.h"
 #include "luaengine.h"
@@ -26,17 +25,14 @@
 /* Qt */
 #include <QRegExp>
 
-
-#define dbg()    yzDebug("YLuaRegexp")
-#define err()    yzError("YLuaRegexp")
+#define dbg() yzDebug("YLuaRegexp")
+#define err() yzError("YLuaRegexp")
 
 /* Lua */
-extern "C"
-{
+extern "C" {
 #include <lauxlib.h>
 #include <lualib.h>
 }
-
 
 // ========================================================
 //
@@ -44,7 +40,7 @@ extern "C"
 //
 // ========================================================
 
-void YLuaRegexp::registerLuaRegexp(lua_State * L)
+void YLuaRegexp::registerLuaRegexp(lua_State *L)
 {
     dbg() << HERE() << endl;
     YLuaEngine::self()->print_lua_stack(L, "registerLuaRegexp - step 1");
@@ -83,14 +79,13 @@ void YLuaRegexp::registerLuaRegexp(lua_State * L)
                             "}        \n"
                             "         \n"
                             "         \n"
-                            "         \n"
-                            ;
+                            "         \n";
     int ret = YLuaEngine::self()->execInLua(regexpLuaCode);
 
-    if(ret != 0) {
+    if (ret != 0) {
         err() << "Regexp class could not be installed in lua" << endl;
         dbg() << HERE() << " done with error" << endl;
-        return ;
+        return;
     }
 
     dbg() << HERE() << " done" << endl;
@@ -98,7 +93,7 @@ void YLuaRegexp::registerLuaRegexp(lua_State * L)
 
 int YLuaRegexp::Regexp_create(lua_State *L)
 {
-    if(! YLuaEngine::checkFunctionArguments(L, 2, 2, "Regexp.create", "Regexp table, pattern")) {
+    if (!YLuaEngine::checkFunctionArguments(L, 2, 2, "Regexp.create", "Regexp table, pattern")) {
         return 0;
     }
 
@@ -112,7 +107,7 @@ int YLuaRegexp::Regexp_create(lua_State *L)
     // store ud
     lua_pushstring(L, "qregexp*");
     // stack: table, string="qregexp*"
-    QRegExp **pRegExp = (QRegExp **) lua_newuserdata(L, sizeof(QRegExp *));    // store the pointer as userdata
+    QRegExp **pRegExp = (QRegExp **)lua_newuserdata(L, sizeof(QRegExp *)); // store the pointer as userdata
     // stack: table, "qregexp*", userdata
     *pRegExp = new QRegExp(re);
     // create userdata metatable and fill it
@@ -149,13 +144,13 @@ int YLuaRegexp::Regexp_userdata_finalize(lua_State *L)
 {
     deepdbgf() << "called" << endl;
 
-    if(! YLuaEngine::checkFunctionArguments(L, 1, 1, "Regexp.finalize", "Regexp object")) {
+    if (!YLuaEngine::checkFunctionArguments(L, 1, 1, "Regexp.finalize", "Regexp object")) {
         return 0;
     }
 
     // stack: userdata
-    QRegExp ** pRegexp = (QRegExp **) lua_touserdata(L, -1);
-    QRegExp * regexp = *pRegexp;
+    QRegExp **pRegexp = (QRegExp **)lua_touserdata(L, -1);
+    QRegExp *regexp = *pRegexp;
     lua_pop(L, 1);
     // stack: /
     deepdbgf() << "regexp='" << regexp->pattern() << "'" << endl;
@@ -163,17 +158,17 @@ int YLuaRegexp::Regexp_userdata_finalize(lua_State *L)
     *pRegexp = NULL;
     deepdbgf() << "done" << endl;
     YASSERT_EQUALS(lua_gettop(L), 0);
-    return 0 ;
+    return 0;
 }
 
 int YLuaRegexp::Regexp_match(lua_State *L)
 {
-    if(! YLuaEngine::checkFunctionArguments(L, 2, 2, "Regexp.match", "Regexp object, string")) {
+    if (!YLuaEngine::checkFunctionArguments(L, 2, 2, "Regexp.match", "Regexp object, string")) {
         return 0;
     }
 
     // stack: table, string
-    QString s = QString::fromUtf8((char *) lua_tostring(L, -1));
+    QString s = QString::fromUtf8((char *)lua_tostring(L, -1));
     lua_pop(L, 1);
     // stack: table
     // extract userdata from table Regexp
@@ -181,24 +176,23 @@ int YLuaRegexp::Regexp_match(lua_State *L)
     // stack: table, "qregexp*"
     lua_gettable(L, -2);
     // stack: table, userdata
-    QRegExp * regexp = *((QRegExp **) lua_touserdata(L, -1));
+    QRegExp *regexp = *((QRegExp **)lua_touserdata(L, -1));
     lua_pop(L, 2);
     // stack: /
     lua_pushboolean(L, regexp->indexIn(s) != -1);
     // stack: bool
     YASSERT_EQUALS(lua_gettop(L), 1);
-    return 1 ;
+    return 1;
 }
-
 
 int YLuaRegexp::Regexp_matchIndex(lua_State *L)
 {
-    if(! YLuaEngine::checkFunctionArguments(L, 2, 2, "Regexp.matchIndex", "Regexp object, string")) {
+    if (!YLuaEngine::checkFunctionArguments(L, 2, 2, "Regexp.matchIndex", "Regexp object, string")) {
         return 0;
     }
 
     // stack: table, string
-    QString s = QString::fromUtf8((char *) lua_tostring(L, -1));
+    QString s = QString::fromUtf8((char *)lua_tostring(L, -1));
     lua_pop(L, 1);
     // stack: table
     // extract userdata from table Regexp
@@ -206,19 +200,18 @@ int YLuaRegexp::Regexp_matchIndex(lua_State *L)
     // stack: table, string="qregexp*"
     lua_gettable(L, -2);
     // stack: table, userdata
-    QRegExp * regexp = *((QRegExp **) lua_touserdata(L, -1));
+    QRegExp *regexp = *((QRegExp **)lua_touserdata(L, -1));
     lua_pop(L, 2);
     // stack: /
     lua_pushnumber(L, regexp->indexIn(s));
     // stack: number
     YASSERT_EQUALS(lua_gettop(L), 1);
-    return 1 ;
+    return 1;
 }
-
 
 int YLuaRegexp::Regexp_setMinimal(lua_State *L)
 {
-    if(! YLuaEngine::checkFunctionArguments(L, 2, 2, "Regexp.setMinimal", "Regexp object, boolean")) {
+    if (!YLuaEngine::checkFunctionArguments(L, 2, 2, "Regexp.setMinimal", "Regexp object, boolean")) {
         return 0;
     }
 
@@ -231,18 +224,17 @@ int YLuaRegexp::Regexp_setMinimal(lua_State *L)
     // stack: table, "qregexp*"
     lua_gettable(L, -2);
     // stack: table, userdata
-    QRegExp * regexp = *((QRegExp **) lua_touserdata(L, -1));
+    QRegExp *regexp = *((QRegExp **)lua_touserdata(L, -1));
     lua_pop(L, 2);
     // stack: /
     regexp->setMinimal(b);
     YASSERT_EQUALS(lua_gettop(L), 0);
-    return 0 ;
+    return 0;
 }
-
 
 int YLuaRegexp::Regexp_setCaseSensitive(lua_State *L)
 {
-    if(! YLuaEngine::checkFunctionArguments(L, 2, 2, "Regexp.setCaseSensitive", "Regexp object, boolean")) {
+    if (!YLuaEngine::checkFunctionArguments(L, 2, 2, "Regexp.setCaseSensitive", "Regexp object, boolean")) {
         return 0;
     }
 
@@ -255,18 +247,17 @@ int YLuaRegexp::Regexp_setCaseSensitive(lua_State *L)
     // stack: table, "qregexp*"
     lua_gettable(L, -2);
     // stack: table, userdata
-    QRegExp * regexp = *((QRegExp **) lua_touserdata(L, -1));
+    QRegExp *regexp = *((QRegExp **)lua_touserdata(L, -1));
     lua_pop(L, 2);
     // stack: /
     regexp->setCaseSensitivity(b ? Qt::CaseSensitive : Qt::CaseInsensitive);
     YASSERT_EQUALS(lua_gettop(L), 0);
-    return 0 ;
+    return 0;
 }
-
 
 int YLuaRegexp::Regexp_pos(lua_State *L)
 {
-    if(! YLuaEngine::checkFunctionArguments(L, 2, 2, "Regexp.pos", "Regexp object, index")) {
+    if (!YLuaEngine::checkFunctionArguments(L, 2, 2, "Regexp.pos", "Regexp object, index")) {
         return 0;
     }
 
@@ -279,18 +270,18 @@ int YLuaRegexp::Regexp_pos(lua_State *L)
     // stack: table, "qregexp*"
     lua_gettable(L, -2);
     // stack: table, userdata
-    QRegExp * regexp = *((QRegExp **) lua_touserdata(L, -1));
+    QRegExp *regexp = *((QRegExp **)lua_touserdata(L, -1));
     lua_pop(L, 2);
     // stack: /
     lua_pushnumber(L, regexp->pos(index));
     // stack: int
     YASSERT_EQUALS(lua_gettop(L), 1);
-    return 1 ;
+    return 1;
 }
 
 int YLuaRegexp::Regexp_numCaptures(lua_State *L)
 {
-    if(! YLuaEngine::checkFunctionArguments(L, 1, 1, "Regexp.numCaptures", "Regexp object")) {
+    if (!YLuaEngine::checkFunctionArguments(L, 1, 1, "Regexp.numCaptures", "Regexp object")) {
         return 0;
     }
 
@@ -300,18 +291,18 @@ int YLuaRegexp::Regexp_numCaptures(lua_State *L)
     // stack: table, "qregexp*"
     lua_gettable(L, -2);
     // stack: table, userdata
-    QRegExp * regexp = *((QRegExp **) lua_touserdata(L, -1));
+    QRegExp *regexp = *((QRegExp **)lua_touserdata(L, -1));
     lua_pop(L, 2);
     // stack: /
     lua_pushnumber(L, regexp->captureCount());
     // stack: int
     YASSERT_EQUALS(lua_gettop(L), 1);
-    return 1 ;
+    return 1;
 }
 
 int YLuaRegexp::Regexp_captured(lua_State *L)
 {
-    if(! YLuaEngine::checkFunctionArguments(L, 2, 2, "Regexp.captured", "Regexp object, index")) {
+    if (!YLuaEngine::checkFunctionArguments(L, 2, 2, "Regexp.captured", "Regexp object, index")) {
         return 0;
     }
 
@@ -324,20 +315,20 @@ int YLuaRegexp::Regexp_captured(lua_State *L)
     // stack: table, "qregexp*"
     lua_gettable(L, -2);
     // stack: table, userdata
-    QRegExp * regexp = *((QRegExp **) lua_touserdata(L, -1));
+    QRegExp *regexp = *((QRegExp **)lua_touserdata(L, -1));
     lua_pop(L, 2);
     // stack: /
     lua_pushstring(L, regexp->cap(index).toUtf8().data());
     // stack: string
     YASSERT_EQUALS(lua_gettop(L), 1);
-    return 1 ;
+    return 1;
 }
 
 int YLuaRegexp::Regexp_replace(lua_State *L)
 {
     dbg() << HERE() << endl;
 
-    if(! YLuaEngine::checkFunctionArguments(L, 3, 4, "Regexp.replace", "Regexp object, string, string")) {
+    if (!YLuaEngine::checkFunctionArguments(L, 3, 4, "Regexp.replace", "Regexp object, string, string")) {
         return 0;
     }
 
@@ -351,7 +342,7 @@ int YLuaRegexp::Regexp_replace(lua_State *L)
     // stack: table, "qregexp*"
     lua_gettable(L, -2);
     // stack: table, userdata
-    QRegExp * regexp = *((QRegExp **) lua_touserdata(L, -1));
+    QRegExp *regexp = *((QRegExp **)lua_touserdata(L, -1));
     lua_pop(L, 2);
     // stack: /
     dbg() << " s='" << s << "'" << endl;
@@ -362,12 +353,12 @@ int YLuaRegexp::Regexp_replace(lua_State *L)
     lua_pushstring(L, s.toUtf8().data());
     // stack: string
     YASSERT_EQUALS(lua_gettop(L), 1);
-    return 1 ;
+    return 1;
 }
 
 int YLuaRegexp::Regexp_pattern(lua_State *L)
 {
-    if(! YLuaEngine::checkFunctionArguments(L, 1, 1, "Regexp.pattern", "Regexp object")) {
+    if (!YLuaEngine::checkFunctionArguments(L, 1, 1, "Regexp.pattern", "Regexp object")) {
         return 0;
     }
 
@@ -377,12 +368,11 @@ int YLuaRegexp::Regexp_pattern(lua_State *L)
     // stack: table, "qregexp*"
     lua_gettable(L, -2);
     // stack: table, userdata
-    QRegExp * regexp = *((QRegExp **) lua_touserdata(L, -1));
+    QRegExp *regexp = *((QRegExp **)lua_touserdata(L, -1));
     lua_pop(L, 2);
     // stack: /
     lua_pushstring(L, regexp->pattern().toUtf8().data());
     // stack: string
     YASSERT_EQUALS(lua_gettop(L), 1);
-    return 1 ;
+    return 1;
 }
-

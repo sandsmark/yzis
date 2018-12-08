@@ -54,7 +54,7 @@ using namespace yzis;
 #define err() yzError("YModeEx")
 #define ftl() yzError("YModeEx")
 
-YExCommandArgs::YExCommandArgs(YView* _view, const QString& _input, const QString& _cmd, const QString& _arg, unsigned int _fromLine, unsigned int _toLine, bool _force)
+YExCommandArgs::YExCommandArgs(YView *_view, const QString &_input, const QString &_cmd, const QString &_arg, unsigned int _fromLine, unsigned int _toLine, bool _force)
 {
     input = _input;
     cmd = _cmd;
@@ -78,27 +78,28 @@ QString YExCommandArgs::toString() const
     return s;
 }
 
-YExRange::YExRange(const QString& regexp, ExRangeMethod pm)
+YExRange::YExRange(const QString &regexp, ExRangeMethod pm)
 {
     mKeySeq = regexp;
     mPoolMethod = pm;
     mRegexp = QRegExp("^(" + mKeySeq + ")([+\\-]\\d*)?(.*)$");
 }
 
-YExCommand::YExCommand(const QString& input, ExPoolMethod pm, const QStringList& longName, bool word)
+YExCommand::YExCommand(const QString &input, ExPoolMethod pm, const QStringList &longName, bool word)
 {
     mKeySeq = input;
     mPoolMethod = pm;
     mLongName = longName;
 
-    if(word) {
+    if (word) {
         mRegexp = QRegExp("^(" + mKeySeq + ")(\\b.*)?$");
     } else {
         mRegexp = QRegExp("^(" + mKeySeq + ")([\\w\\s].*)?$");
     }
 }
 
-YModeEx::YModeEx() : YMode()
+YModeEx::YModeEx() :
+    YMode()
 {
     mType = ModeEx;
     mString = _("[ Ex ]");
@@ -115,11 +116,11 @@ YModeEx::YModeEx() : YMode()
 
 YModeEx::~YModeEx()
 {
-    foreach(const YExCommand *c, commands) {
+    foreach (const YExCommand *c, commands) {
         delete c;
     }
 
-    foreach(const YExRange *r, ranges) {
+    foreach (const YExRange *r, ranges) {
         delete r;
     }
 
@@ -129,28 +130,28 @@ void YModeEx::init()
 {
     initPool();
 }
-void YModeEx::enter(YView* view)
+void YModeEx::enter(YView *view)
 {
     dbg() << "enter( " << view << ")" << endl;
     view->guiSetFocusCommandLine();
     view->guiSetCommandLineText("");
 }
 
-void YModeEx::leave(YView* view)
+void YModeEx::leave(YView *view)
 {
     dbg() << "leave( " << view << ")" << endl;
     view->guiSetCommandLineText("");
 
     // we need to fetch the current view because it may no longer
     // be the view on which the command was done (think :bn )
-    if(view == YSession::self()->currentView()) {
+    if (view == YSession::self()->currentView()) {
         view->guiSetFocusMainWindow();
     }
 
     dbg() << "leave() done" << endl;
 }
 
-CmdState YModeEx::execCommand(YView* view, const YKeySequence &inputs,
+CmdState YModeEx::execCommand(YView *view, const YKeySequence &inputs,
                               YKeySequence::const_iterator &parsePos)
 {
     Q_UNUSED(inputs);
@@ -159,56 +160,59 @@ CmdState YModeEx::execCommand(YView* view, const YKeySequence &inputs,
     YKey key = *parsePos;
     CmdState ret = CmdOk;
 
-    if(key != Qt::Key_Tab) {
+    if (key != Qt::Key_Tab) {
         //clean up the whole completion stuff
         resetCompletion();
     }
 
-    if(key == Qt::Key_Enter || key == Qt::Key_Return) {
-        if(view->guiGetCommandLineText().isEmpty()) {
+    if (key == Qt::Key_Enter || key == Qt::Key_Return) {
+        if (view->guiGetCommandLineText().isEmpty()) {
             view->modePool()->pop();
         } else {
             QString cmd = view->guiGetCommandLineText();
             mHistory->addEntry(cmd);
             ret = execExCommand(view, cmd);
 
-            if(ret != CmdQuit) {
+            if (ret != CmdQuit) {
                 view->modePool()->pop(ModeCommand);
             }
         }
-    } else if(key == Qt::Key_Down) {
+    } else if (key == Qt::Key_Down) {
         mHistory->goForwardInTime();
         view->guiSetCommandLineText(mHistory->getEntry());
-    } else if(key == Qt::Key_Left || key == Qt::Key_Right) {}
-    else if(key == Qt::Key_Up) {
+    } else if (key == Qt::Key_Left || key == Qt::Key_Right) {
+    } else if (key == Qt::Key_Up) {
         mHistory->goBackInTime();
         view->guiSetCommandLineText(mHistory->getEntry());
-    } else if(key == Qt::Key_Escape || key == YKey(Qt::Key_C, Qt::ControlModifier)) {
+    } else if (key == Qt::Key_Escape || key == YKey(Qt::Key_C, Qt::ControlModifier)) {
         view->modePool()->pop(ModeCommand);
-    } else if(key == Qt::Key_Tab) {
+    } else if (key == Qt::Key_Tab) {
         completeCommandLine(view);
-    } else if(key == Qt::Key_Backspace) {
+    } else if (key == Qt::Key_Backspace) {
         QString back = view->guiGetCommandLineText();
 
-        if(back.isEmpty()) {
+        if (back.isEmpty()) {
             view->modePool()->pop();
         } else {
             view->guiSetCommandLineText(back.remove(back.length() - 1, 1));
         }
-    } else if(key == YKey(Qt::Key_W, Qt::ControlModifier)) {
+    } else if (key == YKey(Qt::Key_W, Qt::ControlModifier)) {
         QString cmd = view->guiGetCommandLineText();
-        dbg() << "YModeEx::execCommand(): " << "deleting word from: '"
+        dbg() << "YModeEx::execCommand(): "
+              << "deleting word from: '"
               << cmd << "'" << endl;
         QRegExp rx("\\b\\S+\\s*$");
         int pos = rx.lastIndexIn(cmd);
 
-        if(-1 != pos) {
-            dbg() << "YModeEx::execCommand(): " << "match at: " << pos << endl;
+        if (-1 != pos) {
+            dbg() << "YModeEx::execCommand(): "
+                  << "match at: " << pos << endl;
             view->guiSetCommandLineText(cmd.left(pos));
         } else {
-            dbg() << "YModeEx::execCommand(): " << "didn't match" << endl;
+            dbg() << "YModeEx::execCommand(): "
+                  << "didn't match" << endl;
         }
-    } else if(key == YKey(Qt::Key_U, Qt::ControlModifier)) {
+    } else if (key == YKey(Qt::Key_U, Qt::ControlModifier)) {
         view->guiSetCommandLineText(QString::null);
     } else {
         view->guiSetCommandLineText(view->guiGetCommandLineText() + key.toString());
@@ -226,7 +230,7 @@ void YModeEx::resetCompletion()
     mCurrentCompletionProposal = 0;
 }
 
-const QStringList& YModeEx::completionList()
+const QStringList &YModeEx::completionList()
 {
     return mCompletePossibilities;
 }
@@ -236,7 +240,7 @@ int YModeEx::completionIndex()
     return mCurrentCompletionProposal - 1;
 }
 
-const QString& YModeEx::completionItem(int idx)
+const QString &YModeEx::completionItem(int idx)
 {
     return mCompletePossibilities.at(idx);
 }
@@ -246,20 +250,20 @@ void YModeEx::completeCommandLine(YView *view)
     QString current = view->guiGetCommandLineText();
     QStringList words = current.split(" ", QString::SkipEmptyParts);
 
-    if(mCompletePossibilities.isEmpty()) {    //no list set up yet, init the completion stuff before proceding
+    if (mCompletePossibilities.isEmpty()) { //no list set up yet, init the completion stuff before proceding
         //XXX we probably need something to say that a command can get a filename parameter, the following check is very lame for now...
-        if((current.endsWith(" ") && words.count() == 1) || words.count() == 2) {    //file name completion : ":command /somefile<TAB>" or ":command <TAB>"
+        if ((current.endsWith(" ") && words.count() == 1) || words.count() == 2) { //file name completion : ":command /somefile<TAB>" or ":command <TAB>"
             dbg() << "Init filename completion";
             QDir cDir; //current dir
             QStringList filters; //filename filtering
 
-            if(words.count() == 2) {    //we have a prefix to look for
+            if (words.count() == 2) { //we have a prefix to look for
                 dbg() << "init filter for completion";
                 mCompletionCurrentSearch = words.last();
                 dbg() << "Searched item : " << mCompletionCurrentSearch;
                 current.chop(mCompletionCurrentSearch.length());
 
-                if(!mCompletionCurrentSearch.endsWith("/")) {
+                if (!mCompletionCurrentSearch.endsWith("/")) {
                     QFileInfo fi(mCompletionCurrentSearch);
                     filters << fi.fileName() + "*"; //add the filename part to the filters, this will be used to list only these matches just below
                     dbg() << "Adding filter : " << fi.fileName() + "*";
@@ -270,11 +274,11 @@ void YModeEx::completeCommandLine(YView *view)
                 }
 
                 //list of files in that directory
-                if(cDir.isAbsolute()) {
+                if (cDir.isAbsolute()) {
                     dbg() << "Using absolute paths from dir " << cDir.absolutePath();
                     QFileInfoList ifl = cDir.entryInfoList(filters, QDir::AllEntries | QDir::Dirs | QDir::NoDotAndDotDot);
 
-                    for(int i = 0; i < ifl.size(); ++i) {
+                    for (int i = 0; i < ifl.size(); ++i) {
                         mCompletePossibilities << ifl.at(i).absoluteFilePath();
                     }
                 } else {
@@ -297,19 +301,19 @@ void YModeEx::completeCommandLine(YView *view)
                 mCompletePossibilities << mCompletionCurrentSearch; //XXX dups ?
                 dbg() << "complete no pfx : " << mCompletePossibilities;
             }
-        } else if(words.count() == 1) {    //command completion
+        } else if (words.count() == 1) { //command completion
             dbg() << "Init command completion";
 
             //set the searched item to the last word part of the command line
-            if(mCompletionCurrentSearch.isEmpty() && words.count() > 0) {
+            if (mCompletionCurrentSearch.isEmpty() && words.count() > 0) {
                 mCompletionCurrentSearch = words.last();
                 current.chop(mCompletionCurrentSearch.length());
             }
 
             QStringList l = extractCommandNames();
 
-            foreach(const QString &s, l) {
-                if(s.startsWith(mCompletionCurrentSearch)) {
+            foreach (const QString &s, l) {
+                if (s.startsWith(mCompletionCurrentSearch)) {
                     mCompletePossibilities << s;
                 }
             }
@@ -318,19 +322,19 @@ void YModeEx::completeCommandLine(YView *view)
             mCompletePossibilities << mCompletionCurrentSearch; //add the searched item, so we can loop over XXX check dups
         } else { //command's option completion ?
             //TODO
-            return ;
+            return;
         }
     }
 
     //so now we should have a list with proposals, fire them in order after a TAB key press, until the user presses something else (and stops completion)
-    if(mCompletePossibilities.count() > 1) {
+    if (mCompletePossibilities.count() > 1) {
         //remove previous proposal
-        if(mCurrentCompletionProposal > 0) {
+        if (mCurrentCompletionProposal > 0) {
             current.chop(mCompletePossibilities.at(completionIndex()).length());
         }
 
         //we looped all over possibilities, reset to beginning
-        if(mCurrentCompletionProposal >= mCompletePossibilities.count()) {
+        if (mCurrentCompletionProposal >= mCompletePossibilities.count()) {
             mCurrentCompletionProposal = 0;
         }
 
@@ -350,7 +354,7 @@ const QStringList YModeEx::extractCommandNames()
 {
     QStringList list;
 
-    foreach(const YExCommand *c, commands) {
+    foreach (const YExCommand *c, commands) {
         list << c->longName();
     }
 
@@ -369,7 +373,7 @@ void YModeEx::initPool()
     ranges.push_back(new YExRange("\\?([^\\?]*\\?)?", &YModeEx::rangeSearch));
     // commands
     commands.push_back(new YExCommand("(x|wq?)(a(ll)?)?", &YModeEx::write));
-    commands.push_back(new YExCommand("w(rite)?", &YModeEx::write , QStringList("write")));
+    commands.push_back(new YExCommand("w(rite)?", &YModeEx::write, QStringList("write")));
     commands.push_back(new YExCommand("q(uit|a(ll)?)?", &YModeEx::quit, QString("quit:qall").split(":")));
     commands.push_back(new YExCommand("bf(irst)?", &YModeEx::bufferfirst, QStringList("bfirst")));
     commands.push_back(new YExCommand("bl(ast)?", &YModeEx::bufferlast, QStringList("blast")));
@@ -422,29 +426,29 @@ void YModeEx::initPool()
     commands.push_back(new YExCommand("fo(ld)?", &YModeEx::foldCreate, QStringList("fold")));
 }
 
-QString YModeEx::parseRange(const QString& inputs, YView* view, int* range, bool* matched)
+QString YModeEx::parseRange(const QString &inputs, YView *view, int *range, bool *matched)
 {
     QString _input = inputs;
     *matched = false;
 
-    foreach(const YExRange *currentRange, ranges) {
+    foreach (const YExRange *currentRange, ranges) {
         QRegExp reg(currentRange->regexp());
         *matched = reg.exactMatch(_input);
 
-        if(*matched) {
+        if (*matched) {
             unsigned int nc = reg.captureCount();
             *range = (this->*(currentRange->poolMethod()))(YExRangeArgs(currentRange, view, reg.cap(1)));
             QString s_add = reg.cap(nc - 1);
             dbg() << "matched " << currentRange->keySeq() << ": " << *range << " and " << s_add << endl;
 
-            if(s_add.length() > 0) {    // a range can be followed by +/-nb
+            if (s_add.length() > 0) { // a range can be followed by +/-nb
                 int add = 1;
 
-                if(s_add.length() > 1) {
+                if (s_add.length() > 1) {
                     add = s_add.mid(1).toUInt();
                 }
 
-                if(s_add[ 0 ] == '-') {
+                if (s_add[0] == '-') {
                     add = -add;
                 }
 
@@ -458,8 +462,7 @@ QString YModeEx::parseRange(const QString& inputs, YView* view, int* range, bool
     return _input;
 }
 
-
-CmdState YModeEx::execExCommand(YView* view, const QString& inputs)
+CmdState YModeEx::execExCommand(YView *view, const QString &inputs)
 {
     CmdState ret = CmdError;
     bool matched;
@@ -472,17 +475,17 @@ CmdState YModeEx::execExCommand(YView* view, const QString& inputs)
     current = from = to = rangeCurrentLine(YExRangeArgs(NULL, view, "."));
     _input = parseRange(_input, view, &from, &matched);
 
-    if(matched) {
+    if (matched) {
         to = from;
     }
 
-    if(matched && _input[ 0 ] == ',') {
+    if (matched && _input[0] == ',') {
         _input = _input.mid(1);
         dbg() << "ExCommand : still " << _input << endl;
         _input = parseRange(_input, view, &to, &matched);
     }
 
-    if(from > to) {
+    if (from > to) {
         int tmp = to;
         to = from;
         from = tmp;
@@ -490,24 +493,24 @@ CmdState YModeEx::execExCommand(YView* view, const QString& inputs)
 
     dbg() << "ExCommand : naked command: " << _input << "; range " << from << "," << to << endl;
 
-    if(from < 0 || to < 0) {
+    if (from < 0 || to < 0) {
         dbg() << "ExCommand : ERROR! < 0 range" << endl;
         return ret;
     }
 
     matched = false;
 
-    foreach(const YExCommand *curCommand, commands) {
+    foreach (const YExCommand *curCommand, commands) {
         QRegExp reg(curCommand->regexp());
         matched = reg.exactMatch(_input);
 
-        if(matched) {
+        if (matched) {
             unsigned int nc = reg.captureCount();
             dbg() << "matched " << curCommand->keySeq() << " " << reg.cap(1) << "," << reg.cap(nc) << endl;
             QString arg = reg.cap(nc);
-            bool force = arg[ 0 ] == '!';
+            bool force = arg[0] == '!';
 
-            if(force) {
+            if (force) {
                 arg = arg.mid(1);
             }
 
@@ -516,9 +519,9 @@ CmdState YModeEx::execExCommand(YView* view, const QString& inputs)
         }
     }
 
-    if(_input.length() == 0) {
+    if (_input.length() == 0) {
         view->gotoViewCursor(view->viewCursorFromLinePosition(view->buffer()->firstNonBlankChar(to), to));
-    } else if(!commandIsValid) {
+    } else if (!commandIsValid) {
         YSession::self()->guiPopupMessage(_("Not an editor command: ") + _input);
     }
 
@@ -529,35 +532,35 @@ CmdState YModeEx::execExCommand(YView* view, const QString& inputs)
  * RANGES
  */
 
-int YModeEx::rangeLine(const YExRangeArgs& args)
+int YModeEx::rangeLine(const YExRangeArgs &args)
 {
     unsigned int l = args.arg.toUInt();
 
-    if(l > 0) {
+    if (l > 0) {
         --l;
     }
 
     return l;
 }
-int YModeEx::rangeCurrentLine(const YExRangeArgs& args)
+int YModeEx::rangeCurrentLine(const YExRangeArgs &args)
 {
     return args.view->getLinePositionCursor().y();
 }
-int YModeEx::rangeLastLine(const YExRangeArgs& args)
+int YModeEx::rangeLastLine(const YExRangeArgs &args)
 {
     return qMax((int)args.view->buffer()->lineCount() - 1, 0);
 }
-int YModeEx::rangeMark(const YExRangeArgs& args)
+int YModeEx::rangeMark(const YExRangeArgs &args)
 {
     YViewMarker *mark = args.view->buffer()->viewMarks();
 
-    if(mark->contains(args.arg.mid(1))) {
+    if (mark->contains(args.arg.mid(1))) {
         return mark->value(args.arg.mid(1)).line();
     }
 
     return -1;
 }
-int YModeEx::rangeVisual(const YExRangeArgs& args)
+int YModeEx::rangeVisual(const YExRangeArgs &args)
 {
     //TODO
 #if 0
@@ -576,16 +579,16 @@ int YModeEx::rangeVisual(const YExRangeArgs& args)
 #endif
     return -1;
 }
-int YModeEx::rangeSearch(const YExRangeArgs& args)
+int YModeEx::rangeSearch(const YExRangeArgs &args)
 {
-    bool reverse = args.arg[ 0 ] == QChar('?');
+    bool reverse = args.arg[0] == QChar('?');
     bool found;
     YCursor pos;
 
-    if(args.arg.length() == 1) {
+    if (args.arg.length() == 1) {
         dbg() << "rangeSearch : replay" << endl;
 
-        if(reverse) {
+        if (reverse) {
             pos = YSession::self()->search()->replayBackward(args.view->buffer(), &found, args.view->buffer()->end(), true);
         } else {
             pos = YSession::self()->search()->replayForward(args.view->buffer(), &found, args.view->buffer()->begin(), true);
@@ -593,7 +596,7 @@ int YModeEx::rangeSearch(const YExRangeArgs& args)
     } else {
         QString pat = args.arg.mid(1, args.arg.length() - 2);
 
-        if(reverse) {
+        if (reverse) {
             pat.replace("\\?", "?");
         } else {
             pat.replace("\\/", "/");
@@ -603,7 +606,7 @@ int YModeEx::rangeSearch(const YExRangeArgs& args)
         pos = YSession::self()->search()->forward(args.view->buffer(), pat, &found, args.view->getLinePositionCursor());
     }
 
-    if(found) {
+    if (found) {
         return pos.y();
     }
 
@@ -613,22 +616,22 @@ int YModeEx::rangeSearch(const YExRangeArgs& args)
 /**
  * COMMANDS
  */
-CmdState YModeEx::write(const YExCommandArgs& args)
+CmdState YModeEx::write(const YExCommandArgs &args)
 {
     CmdState ret = CmdOk;
     bool quit = args.cmd.contains('q') || args.cmd.contains('x');
     bool all = args.cmd.contains('a');
     bool force = args.force;
 
-    if(! quit && all) {
+    if (!quit && all) {
         YSession::self()->saveAll();
         return ret;
     }
 
     dbg() << args.arg << "," << args.cmd << " " << quit << " " << force << endl;
 
-    if(quit && all) {    //write all modified buffers
-        if(YSession::self()->saveAll()) {    //if it fails => don't quit
+    if (quit && all) { //write all modified buffers
+        if (YSession::self()->saveAll()) { //if it fails => don't quit
             YSession::self()->exitRequest();
             ret = CmdQuit;
         }
@@ -636,37 +639,37 @@ CmdState YModeEx::write(const YExCommandArgs& args)
         return ret;
     }
 
-    if(args.arg.length()) {
-        args.view->buffer()->setPath(args.arg);   //a filename was given as argument
+    if (args.arg.length()) {
+        args.view->buffer()->setPath(args.arg); //a filename was given as argument
     }
 
-    if(quit && force) {    //check readonly ? XXX
+    if (quit && force) { //check readonly ? XXX
         args.view->buffer()->save();
         YSession::self()->deleteView(args.view);
         ret = CmdQuit;
-    } else if(quit) {
-        if(args.view->buffer()->save()) {
+    } else if (quit) {
+        if (args.view->buffer()->save()) {
             YSession::self()->deleteView(args.view);
             ret = CmdQuit;
         }
-    } else if(! force) {
+    } else if (!force) {
         args.view->buffer()->save();
-    } else if(force) {
+    } else if (force) {
         args.view->buffer()->save();
     }
 
     return ret;
 }
 
-CmdState YModeEx::quit(const YExCommandArgs& args)
+CmdState YModeEx::quit(const YExCommandArgs &args)
 {
     dbg() << "quit( )" << endl;
     CmdState ret = CmdOk;
     bool force = args.force;
     dbg() << YSession::self()->toString() << endl;
 
-    if(args.cmd.startsWith("qa")) {
-        if(force || ! YSession::self()->isOneBufferModified()) {
+    if (args.cmd.startsWith("qa")) {
+        if (force || !YSession::self()->isOneBufferModified()) {
             ret = CmdQuit;
             YSession::self()->exitRequest();
         } else {
@@ -674,12 +677,12 @@ CmdState YModeEx::quit(const YExCommandArgs& args)
         }
     } else {
         //close current view, if it's the last one on a buffer , check it is saved or not
-        if(args.view->buffer()->views().count() > 1) {
+        if (args.view->buffer()->views().count() > 1) {
             ret = CmdQuit;
             YSession::self()->deleteView(args.view);
-        } else if(args.view->buffer()->views().count() == 1 && YSession::self()->buffers().count() == 1) {
-            if(force || !args.view->buffer()->fileIsModified()) {
-                if(YSession::self()->exitRequest()) {
+        } else if (args.view->buffer()->views().count() == 1 && YSession::self()->buffers().count() == 1) {
+            if (force || !args.view->buffer()->fileIsModified()) {
+                if (YSession::self()->exitRequest()) {
                     ret = CmdQuit;
                 } else {
                     ret = CmdOk;
@@ -688,7 +691,7 @@ CmdState YModeEx::quit(const YExCommandArgs& args)
                 YSession::self()->guiPopupMessage(_("One file is modified! Save it first..."));
             }
         } else {
-            if(force || !args.view->buffer()->fileIsModified()) {
+            if (force || !args.view->buffer()->fileIsModified()) {
                 ret = CmdQuit;
                 YSession::self()->deleteView(args.view);
             } else {
@@ -700,12 +703,12 @@ CmdState YModeEx::quit(const YExCommandArgs& args)
     return ret;
 }
 
-CmdState YModeEx::bufferfirst(const YExCommandArgs&)
+CmdState YModeEx::bufferfirst(const YExCommandArgs &)
 {
     dbg() << "Switching buffers (actually sw views) ..." << endl;
     YView *v = YSession::self()->firstView();
 
-    if(v) {
+    if (v) {
         YSession::self()->setCurrentView(v);
     }
 
@@ -714,12 +717,12 @@ CmdState YModeEx::bufferfirst(const YExCommandArgs&)
     return CmdOk;
 }
 
-CmdState YModeEx::bufferlast(const YExCommandArgs&)
+CmdState YModeEx::bufferlast(const YExCommandArgs &)
 {
     dbg() << "Switching buffers (actually sw views) ..." << endl;
     YView *v = YSession::self()->lastView();
 
-    if(v) {
+    if (v) {
         YSession::self()->setCurrentView(v);
     }
 
@@ -728,50 +731,50 @@ CmdState YModeEx::bufferlast(const YExCommandArgs&)
     return CmdOk;
 }
 
-CmdState YModeEx::buffernext(const YExCommandArgs& args)
+CmdState YModeEx::buffernext(const YExCommandArgs &args)
 {
     dbg() << "Switching buffers (actually sw views) ..." << endl;
     YView *v = YSession::self()->nextView();
     YASSERT(v != args.view);
 
-    if(v) {
+    if (v) {
         YSession::self()->setCurrentView(v);
     } else {
-        bufferfirst(args);   // goto first buffer
+        bufferfirst(args); // goto first buffer
     }
 
     return CmdOk;
 }
 
-CmdState YModeEx::bufferprevious(const YExCommandArgs& args)
+CmdState YModeEx::bufferprevious(const YExCommandArgs &args)
 {
     dbg() << "Switching buffers (actually sw views) ..." << endl;
     YView *v = YSession::self()->prevView();
     YASSERT(v != args.view);
 
-    if(v) {
+    if (v) {
         YSession::self()->setCurrentView(v);
     } else {
-        bufferlast(args);   // goto lastbuffer
+        bufferlast(args); // goto lastbuffer
     }
 
     return CmdOk;
 }
 
-CmdState YModeEx::bufferdelete(const YExCommandArgs& args)
+CmdState YModeEx::bufferdelete(const YExCommandArgs &args)
 {
     dbg() << "bufferdelete( " << args.toString() << " ) " << endl;
     YSession::self()->removeBuffer(args.view->buffer());
     return CmdQuit;
 }
 
-CmdState YModeEx::gotoCommandMode(const YExCommandArgs& args)
+CmdState YModeEx::gotoCommandMode(const YExCommandArgs &args)
 {
     args.view->modePool()->pop();
     return CmdOk;
 }
 
-CmdState YModeEx::gotoOpenMode(const YExCommandArgs& /*args*/)
+CmdState YModeEx::gotoOpenMode(const YExCommandArgs & /*args*/)
 {
     dbg() << "Switching to open mode...";
     // args.view->gotoOpenMode();
@@ -779,13 +782,13 @@ CmdState YModeEx::gotoOpenMode(const YExCommandArgs& /*args*/)
     return CmdOk;
 }
 
-CmdState YModeEx::edit(const YExCommandArgs& args)
+CmdState YModeEx::edit(const YExCommandArgs &args)
 {
     bool force = args.force;
     QString filename;
 
     // check if the file needs to be saved
-    if(!force && args.view->buffer()->fileIsModified()) {
+    if (!force && args.view->buffer()->fileIsModified()) {
         YSession::self()->guiPopupMessage(_("No write since last change (add ! to override)"));
         return CmdError;
     }
@@ -794,7 +797,7 @@ CmdState YModeEx::edit(const YExCommandArgs& args)
 
     // Guardian for no arguments
     // in this case Vim reloads the current buffer
-    if(filename.isEmpty() /* XXX or if the filename is the name of the current buffer */) {
+    if (filename.isEmpty() /* XXX or if the filename is the name of the current buffer */) {
         YBuffer *buff = args.view->buffer();
         buff->saveYzisInfo(args.view);
         filename = buff->fileName();
@@ -808,11 +811,11 @@ CmdState YModeEx::edit(const YExCommandArgs& args)
     YBuffer *b = YSession::self()->findBuffer(filename);
     YView *v = YSession::self()->findViewByBuffer(b);
 
-    if(b && v) {
+    if (b && v) {
         // buffer and view already exist
         dbg() << "edit(): using existing view for " << filename << endl;
         YSession::self()->setCurrentView(v);
-    } else if(b) {
+    } else if (b) {
         err() << HERE() << endl;
         ftl() << "edit(): the buffer containing " << filename << " was found without a view on it. That should never happen!" << endl;
     } else {
@@ -825,32 +828,31 @@ CmdState YModeEx::edit(const YExCommandArgs& args)
     return CmdOk;
 }
 
-CmdState YModeEx::set(const YExCommandArgs& args)
+CmdState YModeEx::set(const YExCommandArgs &args)
 {
     CmdState ret = CmdOk;
     OptScope user_scope = ScopeDefault;
 
-    if(args.cmd.startsWith("setg")) {
+    if (args.cmd.startsWith("setg")) {
         user_scope = ScopeGlobal;
-    } else if(args.cmd.startsWith("setl")) {
+    } else if (args.cmd.startsWith("setl")) {
         user_scope = ScopeLocal;
     }
 
-    YBuffer* buff = NULL;
+    YBuffer *buff = NULL;
 
-    if(args.view) {
+    if (args.view) {
         buff = args.view->buffer();
     }
 
     bool matched;
     bool success = YSession::self()->getOptions()->setOptionFromString(&matched,
-                   args.arg.simplified()
-                   , user_scope, buff, args.view);
+                                                                       args.arg.simplified(), user_scope, buff, args.view);
 
-    if(! matched) {
+    if (!matched) {
         ret = CmdError;
         YSession::self()->guiPopupMessage(QString(_("Invalid option name : %1")).arg(args.arg.simplified()));
-    } else if(! success) {
+    } else if (!success) {
         ret = CmdError;
         YSession::self()->guiPopupMessage(_("Bad value for option given"));
     }
@@ -858,7 +860,7 @@ CmdState YModeEx::set(const YExCommandArgs& args)
     return ret;
 }
 
-CmdState YModeEx::mkyzisrc(const YExCommandArgs& args)
+CmdState YModeEx::mkyzisrc(const YExCommandArgs &args)
 {
     YSession::self()->getOptions()->saveTo(
         resourceMgr()->findResource(WritableConfigResource, "yzis.conf"),
@@ -866,12 +868,12 @@ CmdState YModeEx::mkyzisrc(const YExCommandArgs& args)
     return CmdOk;
 }
 
-CmdState YModeEx::substitute(const YExCommandArgs& args)
+CmdState YModeEx::substitute(const YExCommandArgs &args)
 {
     unsigned int idx = args.input.indexOf("substitute");
     unsigned int len = 10;
 
-    if(static_cast<unsigned int>(-1) == idx) {
+    if (static_cast<unsigned int>(-1) == idx) {
         idx = args.input.indexOf("s");
         len = 1;
     }
@@ -880,7 +882,7 @@ CmdState YModeEx::substitute(const YExCommandArgs& args)
     unsigned int tidx = idx + len;
     QChar c;
 
-    while((c = args.input.at(tidx)).isSpace()) {
+    while ((c = args.input.at(tidx)).isSpace()) {
         tidx++;
     }
 
@@ -893,7 +895,7 @@ CmdState YModeEx::substitute(const YExCommandArgs& args)
     bool needsUpdate = false;
     bool found;
 
-    if(options.contains("i") && !search.endsWith("\\c")) {
+    if (options.contains("i") && !search.endsWith("\\c")) {
         search.append("\\c");
     }
 
@@ -901,15 +903,15 @@ CmdState YModeEx::substitute(const YExCommandArgs& args)
     YCursor start(0, args.fromLine);
     YSession::self()->search()->forward(args.view->buffer(), search, &found, start);
 
-    if(found) {
-        for(uint i = args.fromLine; i <= args.toLine; i++) {
-            if(args.view->buffer()->substitute(search, replace, options.contains("g"), i)) {
+    if (found) {
+        for (uint i = args.fromLine; i <= args.toLine; i++) {
+            if (args.view->buffer()->substitute(search, replace, options.contains("g"), i)) {
                 needsUpdate = true;
                 lastLine = i;
             }
         }
 
-        if(needsUpdate) {
+        if (needsUpdate) {
             args.view->commitNextUndo();
             args.view->gotoLinePosition(lastLine, args.view->buffer()->firstNonBlankChar(lastLine));
         }
@@ -918,9 +920,9 @@ CmdState YModeEx::substitute(const YExCommandArgs& args)
     return CmdOk;
 }
 
-CmdState YModeEx::hardcopy(const YExCommandArgs& args)
+CmdState YModeEx::hardcopy(const YExCommandArgs &args)
 {
-    if(args.arg.length() == 0) {
+    if (args.arg.length() == 0) {
         YSession::self()->guiPopupMessage(_("Please specify a filename"));
         return CmdError;
     }
@@ -932,25 +934,25 @@ CmdState YModeEx::hardcopy(const YExCommandArgs& args)
     return CmdOk;
 }
 
-CmdState YModeEx::preserve(const YExCommandArgs& args)
+CmdState YModeEx::preserve(const YExCommandArgs &args)
 {
     args.view->buffer()->preserve();
     return CmdOk;
 }
 
-CmdState YModeEx::lua(const YExCommandArgs& args)
+CmdState YModeEx::lua(const YExCommandArgs &args)
 {
     YLuaEngine::self()->lua(args.view, args.arg);
     return CmdOk;
 }
 
-CmdState YModeEx::source(const YExCommandArgs& args)
+CmdState YModeEx::source(const YExCommandArgs &args)
 {
     dbg() << "source( " << args.toString() << " ) " << endl;
     QString filename = args.arg.left(args.arg.indexOf(" "));
     dbg().SPrintf("source() filename=%s", qp(filename));
 
-    if(YLuaEngine::self()->source(filename) != 0) {
+    if (YLuaEngine::self()->source(filename) != 0) {
         YSession::self()->guiPopupMessage(_("The file %1 could not be found").arg(filename));
     }
 
@@ -958,14 +960,14 @@ CmdState YModeEx::source(const YExCommandArgs& args)
     return CmdOk;
 }
 
-CmdState YModeEx::genericMap(const YExCommandArgs& args, int type)
+CmdState YModeEx::genericMap(const YExCommandArgs &args, int type)
 {
     QRegExp rx("(\\S+)\\s+(.+)");
 
-    if(rx.exactMatch(args.arg)) {
+    if (rx.exactMatch(args.arg)) {
         dbg() << "Adding mapping: " << rx.cap(1) << " to " << rx.cap(2) << endl;
 
-        switch(type) {
+        switch (type) {
         case 0: //global
             YZMapping::self()->addGlobalMapping(rx.cap(1), rx.cap(2));
             break;
@@ -991,11 +993,11 @@ CmdState YModeEx::genericMap(const YExCommandArgs& args, int type)
             break;
         }
 
-        if(rx.cap(1).startsWith("<CTRL>") || rx.cap(1).startsWith("<SHIFT>")) {
+        if (rx.cap(1).startsWith("<CTRL>") || rx.cap(1).startsWith("<SHIFT>")) {
             mModifierKeys << rx.cap(1);
             YViewList views = YSession::self()->getAllViews();
 
-            foreach(YView *v, views) {
+            foreach (YView *v, views) {
                 v->registerModifierKeys(rx.cap(1));
             }
         }
@@ -1004,11 +1006,11 @@ CmdState YModeEx::genericMap(const YExCommandArgs& args, int type)
     return CmdOk;
 }
 
-CmdState YModeEx::genericUnmap(const YExCommandArgs& args, int type)
+CmdState YModeEx::genericUnmap(const YExCommandArgs &args, int type)
 {
     dbg() << "Removing mapping: " << args.arg << endl;
 
-    switch(type) {
+    switch (type) {
     case 0: //global
         YZMapping::self()->deleteGlobalMapping(args.arg);
         break;
@@ -1034,11 +1036,11 @@ CmdState YModeEx::genericUnmap(const YExCommandArgs& args, int type)
         break;
     }
 
-    if(args.arg.startsWith("<CTRL>")) {
+    if (args.arg.startsWith("<CTRL>")) {
         mModifierKeys.removeAll(args.arg);
         YViewList views = YSession::self()->getAllViews();
 
-        for(YViewList::const_iterator itr = views.begin(); itr != views.end(); ++itr) {
+        for (YViewList::const_iterator itr = views.begin(); itr != views.end(); ++itr) {
             YView *v = *itr;
             v->unregisterModifierKeys(args.arg);
         }
@@ -1047,13 +1049,13 @@ CmdState YModeEx::genericUnmap(const YExCommandArgs& args, int type)
     return CmdOk;
 }
 
-CmdState YModeEx::genericNoremap(const YExCommandArgs& args, int type)
+CmdState YModeEx::genericNoremap(const YExCommandArgs &args, int type)
 {
     QRegExp rx("(\\S+)\\s+(.+)");
 
-    if(rx.exactMatch(args.arg)) {
+    if (rx.exactMatch(args.arg)) {
         // dbg() << "Adding noremapping: " << rx.cap(1) << " to " << rx.cap(2) << endl;
-        switch(type) {
+        switch (type) {
         case 0: //global
             YZMapping::self()->addGlobalNoreMapping(rx.cap(1), rx.cap(2));
             break;
@@ -1079,11 +1081,11 @@ CmdState YModeEx::genericNoremap(const YExCommandArgs& args, int type)
             break;
         }
 
-        if(rx.cap(1).startsWith("<CTRL>")) {
+        if (rx.cap(1).startsWith("<CTRL>")) {
             mModifierKeys << rx.cap(1);
             YViewList views = YSession::self()->getAllViews();
 
-            for(YViewList::const_iterator itr = views.begin(); itr != views.end(); ++itr) {
+            for (YViewList::const_iterator itr = views.begin(); itr != views.end(); ++itr) {
                 YView *v = *itr;
                 v->registerModifierKeys(rx.cap(1));
             }
@@ -1093,109 +1095,109 @@ CmdState YModeEx::genericNoremap(const YExCommandArgs& args, int type)
     return CmdOk;
 }
 
-CmdState YModeEx::map(const YExCommandArgs& args)
+CmdState YModeEx::map(const YExCommandArgs &args)
 {
     return genericMap(args, 0);
 }
 
-CmdState YModeEx::unmap(const YExCommandArgs& args)
+CmdState YModeEx::unmap(const YExCommandArgs &args)
 {
     return genericUnmap(args, 0);
 }
 
-CmdState YModeEx::imap(const YExCommandArgs& args)
+CmdState YModeEx::imap(const YExCommandArgs &args)
 {
     return genericMap(args, 1);
 }
 
-CmdState YModeEx::iunmap(const YExCommandArgs& args)
+CmdState YModeEx::iunmap(const YExCommandArgs &args)
 {
     return genericUnmap(args, 1);
 }
 
-CmdState YModeEx::omap(const YExCommandArgs& args)
+CmdState YModeEx::omap(const YExCommandArgs &args)
 {
     return genericMap(args, 2);
 }
 
-CmdState YModeEx::ounmap(const YExCommandArgs& args)
+CmdState YModeEx::ounmap(const YExCommandArgs &args)
 {
     return genericUnmap(args, 2);
 }
 
-CmdState YModeEx::vmap(const YExCommandArgs& args)
+CmdState YModeEx::vmap(const YExCommandArgs &args)
 {
     return genericMap(args, 3);
 }
 
-CmdState YModeEx::vunmap(const YExCommandArgs& args)
+CmdState YModeEx::vunmap(const YExCommandArgs &args)
 {
     return genericUnmap(args, 3);
 }
 
-CmdState YModeEx::nmap(const YExCommandArgs& args)
+CmdState YModeEx::nmap(const YExCommandArgs &args)
 {
     return genericMap(args, 4);
 }
 
-CmdState YModeEx::nunmap(const YExCommandArgs& args)
+CmdState YModeEx::nunmap(const YExCommandArgs &args)
 {
     return genericUnmap(args, 4);
 }
 
-CmdState YModeEx::cmap(const YExCommandArgs& args)
+CmdState YModeEx::cmap(const YExCommandArgs &args)
 {
     return genericMap(args, 5);
 }
 
-CmdState YModeEx::cunmap(const YExCommandArgs& args)
+CmdState YModeEx::cunmap(const YExCommandArgs &args)
 {
     return genericUnmap(args, 5);
 }
 
-CmdState YModeEx::noremap(const YExCommandArgs& args)
+CmdState YModeEx::noremap(const YExCommandArgs &args)
 {
     return genericNoremap(args, 0);
 }
 
-CmdState YModeEx::inoremap(const YExCommandArgs& args)
+CmdState YModeEx::inoremap(const YExCommandArgs &args)
 {
     return genericNoremap(args, 1);
 }
 
-CmdState YModeEx::onoremap(const YExCommandArgs& args)
+CmdState YModeEx::onoremap(const YExCommandArgs &args)
 {
     return genericNoremap(args, 2);
 }
 
-CmdState YModeEx::vnoremap(const YExCommandArgs& args)
+CmdState YModeEx::vnoremap(const YExCommandArgs &args)
 {
     return genericNoremap(args, 3);
 }
 
-CmdState YModeEx::nnoremap(const YExCommandArgs& args)
+CmdState YModeEx::nnoremap(const YExCommandArgs &args)
 {
     return genericNoremap(args, 4);
 }
 
-CmdState YModeEx::cnoremap(const YExCommandArgs& args)
+CmdState YModeEx::cnoremap(const YExCommandArgs &args)
 {
     return genericNoremap(args, 5);
 }
 
-CmdState YModeEx::indent(const YExCommandArgs& args)
+CmdState YModeEx::indent(const YExCommandArgs &args)
 {
     int count = 1;
 
-    if(args.arg.length() > 0) {
+    if (args.arg.length() > 0) {
         count = args.arg.toUInt();
     }
 
-    if(args.cmd[ 0 ] == '<') {
+    if (args.cmd[0] == '<') {
         count *= -1;
     }
 
-    for(unsigned int i = args.fromLine; i <= args.toLine; i++) {
+    for (unsigned int i = args.fromLine; i <= args.toLine; i++) {
         args.view->buffer()->action()->indentLine(args.view, i, count);
     }
 
@@ -1204,26 +1206,26 @@ CmdState YModeEx::indent(const YExCommandArgs& args)
     return CmdOk;
 }
 
-CmdState YModeEx::enew(const YExCommandArgs&)
+CmdState YModeEx::enew(const YExCommandArgs &)
 {
     YSession::self()->createBufferAndView();
     return CmdOk;
 }
 
-CmdState YModeEx::registers(const YExCommandArgs&)
+CmdState YModeEx::registers(const YExCommandArgs &)
 {
     QString infoMessage(_("Registers:\n")); // will contain register-value table
     QList<QChar> keys = YSession::self()->getRegisters();
     QString regContents;
 
-    foreach(QChar c, keys) {
+    foreach (QChar c, keys) {
         infoMessage += QString("\"") + c + "  ";
         // why I use space as separator? I don't know :)
         // if you know what must be used here, fix it ;)
         regContents = YSession::self()->getRegister(c).join(" ");
 
         // FIXME dimsuz: maybe replace an abstract 27 with some predefined value?
-        if(regContents.length() >= 27) {
+        if (regContents.length() >= 27) {
             // if register contents is too large, truncate it a little
             regContents.truncate(27);
             regContents += "...";
@@ -1236,26 +1238,26 @@ CmdState YModeEx::registers(const YExCommandArgs&)
     return CmdOk;
 }
 
-CmdState YModeEx::syntax(const YExCommandArgs& args)
+CmdState YModeEx::syntax(const YExCommandArgs &args)
 {
-    if(args.arg == "on") {
+    if (args.arg == "on") {
         args.view->buffer()->detectHighLight();
-    } else if(args.arg == "off") {
+    } else if (args.arg == "off") {
         args.view->buffer()->setHighLight(0);
     }
 
     return CmdOk;
 }
 
-CmdState YModeEx::highlight(const YExCommandArgs& args)
+CmdState YModeEx::highlight(const YExCommandArgs &args)
 {
     // :highlight Defaults Comment fg= selfg= bg= selbg= italic nobold underline strikeout
     QStringList list = args.arg.split(" ");
     QStringList::Iterator it = list.begin(), end = list.end();
     dbg() << list << endl;
 
-    if(list.count() < 3) {
-        return CmdError;    //at least 3 parameters...
+    if (list.count() < 3) {
+        return CmdError; //at least 3 parameters...
     }
 
     QString style = list[0];
@@ -1263,7 +1265,7 @@ CmdState YModeEx::highlight(const YExCommandArgs& args)
     list.erase(it++);
     list.erase(it++);
 
-    if(!list[0].contains("=") && !list[0].endsWith("bold") && !list[0].endsWith("italic") && !list[0].endsWith("underline") && !list[0].endsWith("strikeout")) {
+    if (!list[0].contains("=") && !list[0].endsWith("bold") && !list[0].endsWith("italic") && !list[0].endsWith("underline") && !list[0].endsWith("strikeout")) {
         type += ' ' + list[0];
         list.erase(it++);
     }
@@ -1271,7 +1273,7 @@ CmdState YModeEx::highlight(const YExCommandArgs& args)
     //get the current settings for this option
     int idx = 0;
 
-    if(style == "Defaults" || style == "Default") {
+    if (style == "Defaults" || style == "Default") {
         style = "Default Item Styles - Schema ";
     } else {
         style = "Highlighting " + style.trimmed() + " - Schema ";
@@ -1283,59 +1285,59 @@ CmdState YModeEx::highlight(const YExCommandArgs& args)
     QStringList option = YSession::self()->getOptions()->readListOption(type);
     dbg() << "HIGHLIGHT : Current " << type << ": " << option << endl;
 
-    if(option.count() < 7) {
-        return CmdError;    //just make sure it's fine ;)
+    if (option.count() < 7) {
+        return CmdError; //just make sure it's fine ;)
     }
 
     end = list.end();
     //and update it with parameters passed from user
     QRegExp rx("(\\S*)=(\\S*)");
 
-    for(it = list.begin(); it != end; ++it) {
+    for (it = list.begin(); it != end; ++it) {
         dbg() << "Testing " << *it << endl;
 
-        if(rx.exactMatch(*it)) {    // fg=, selfg= ...
-            YColor col(rx.cap(2));  //can be a name or rgb
+        if (rx.exactMatch(*it)) { // fg=, selfg= ...
+            YColor col(rx.cap(2)); //can be a name or rgb
 
-            if(rx.cap(1) == "fg") {
+            if (rx.cap(1) == "fg") {
                 option[idx] = QString::number(col.rgb(), 16);
-            } else if(rx.cap(1) == "bg") {
+            } else if (rx.cap(1) == "bg") {
                 option[6 + idx] = QString::number(col.rgb(), 16);
-            } else if(rx.cap(1) == "selfg") {
+            } else if (rx.cap(1) == "selfg") {
                 option[1 + idx] = QString::number(col.rgb(), 16);
-            } else if(rx.cap(1) == "selbg") {
+            } else if (rx.cap(1) == "selbg") {
                 option[7 + idx] = QString::number(col.rgb(), 16);
             }
         } else { // bold, noitalic ...
-            if(*it == "bold") {
+            if (*it == "bold") {
                 option[2 + idx] = "1";
             }
 
-            if(*it == "nobold") {
+            if (*it == "nobold") {
                 option[2 + idx] = "0";
             }
 
-            if(*it == "italic") {
+            if (*it == "italic") {
                 option[3 + idx] = "1";
             }
 
-            if(*it == "noitalic") {
+            if (*it == "noitalic") {
                 option[3 + idx] = "0";
             }
 
-            if(*it == "strikeout") {
+            if (*it == "strikeout") {
                 option[4 + idx] = "1";
             }
 
-            if(*it == "nostrikeout") {
+            if (*it == "nostrikeout") {
                 option[4 + idx] = "0";
             }
 
-            if(*it == "underline") {
+            if (*it == "underline") {
                 option[5 + idx] = "1";
             }
 
-            if(*it == "nounderline") {
+            if (*it == "nounderline") {
                 option[5 + idx] = "0";
             }
         }
@@ -1345,10 +1347,10 @@ CmdState YModeEx::highlight(const YExCommandArgs& args)
     YSession::self()->getOptions()->getOption(type)->setList(option);
     YSession::self()->getOptions()->setGroup("Global");
 
-    if(args.view && args.view->buffer()) {
+    if (args.view && args.view->buffer()) {
         YzisHighlighting *yzis = args.view->buffer()->highlight();
 
-        if(yzis) {
+        if (yzis) {
             args.view->buffer()->makeAttribs();
             args.view->sendRefreshEvent();
         }
@@ -1357,23 +1359,23 @@ CmdState YModeEx::highlight(const YExCommandArgs& args)
     return CmdOk;
 }
 
-CmdState YModeEx::split(const YExCommandArgs& args)
+CmdState YModeEx::split(const YExCommandArgs &args)
 {
     YSession::self()->guiSplitHorizontally(args.view);
     return CmdOk;
 }
 
-CmdState YModeEx::foldCreate(const YExCommandArgs& args)
+CmdState YModeEx::foldCreate(const YExCommandArgs &args)
 {
     args.view->folds()->create(args.fromLine, args.toLine);
     return CmdOk;
 }
 
-CmdState YModeEx::cd(const YExCommandArgs& args)
+CmdState YModeEx::cd(const YExCommandArgs &args)
 {
     QString targetDir = tildeExpand(args.arg);
 
-    if(QDir::setCurrent(targetDir)) {
+    if (QDir::setCurrent(targetDir)) {
         // we could be using a new tag file, so reset tags
         tagReset();
         return CmdOk;
@@ -1383,37 +1385,37 @@ CmdState YModeEx::cd(const YExCommandArgs& args)
     }
 }
 
-CmdState YModeEx::pwd(const YExCommandArgs&)
+CmdState YModeEx::pwd(const YExCommandArgs &)
 {
     YSession::self()->guiPopupMessage(QDir::current().absolutePath().toUtf8().data());
     return CmdOk;
 }
 
-CmdState YModeEx::tag(const YExCommandArgs& args)
+CmdState YModeEx::tag(const YExCommandArgs &args)
 {
     tagJumpTo(args.arg);
     return CmdOk;
 }
 
-CmdState YModeEx::pop(const YExCommandArgs& /*args*/)
+CmdState YModeEx::pop(const YExCommandArgs & /*args*/)
 {
     tagPop();
     return CmdOk;
 }
 
-CmdState YModeEx::tagnext(const YExCommandArgs& /*args*/)
+CmdState YModeEx::tagnext(const YExCommandArgs & /*args*/)
 {
     tagNext();
     return CmdOk;
 }
 
-CmdState YModeEx::tagprevious(const YExCommandArgs& /*args*/)
+CmdState YModeEx::tagprevious(const YExCommandArgs & /*args*/)
 {
     tagPrev();
     return CmdOk;
 }
 
-CmdState YModeEx::retab(const YExCommandArgs& args)
+CmdState YModeEx::retab(const YExCommandArgs &args)
 {
     YBuffer *buffer = args.view->buffer();
     // save the cursor's position on screen so it can be restored
@@ -1430,11 +1432,11 @@ CmdState YModeEx::retab(const YExCommandArgs& args)
     QString oldLine;
     QString newLine;
 
-    if(args.arg.length() > 0) {  // we got an argument
-        if(args.arg.toInt() > 0) {
+    if (args.arg.length() > 0) { // we got an argument
+        if (args.arg.toInt() > 0) {
             // set the value of 'tabstop' to the argument given
             YSession::self()->getOptions()->setOptionFromString(args.arg.trimmed().insert(0, "tabstop="),
-                    ScopeLocal, args.view->buffer(), args.view);
+                                                                ScopeLocal, args.view->buffer(), args.view);
             tabstop = args.arg.toInt();
         } else {
             // Value must be > 0 FIXME: The user should get an error message
@@ -1442,33 +1444,33 @@ CmdState YModeEx::retab(const YExCommandArgs& args)
         }
     }
 
-    for(int lnum = 0; lnum < buffer->lineCount(); lnum++) {
+    for (int lnum = 0; lnum < buffer->lineCount(); lnum++) {
         oldLine = buffer->textline(lnum);
         newLine = "";
         int col = 0;
         int vcol = 0;
 
-        for(;;) {
-            if(oldLine[col].isSpace()) {
-                if(!gotTab && numSpaces == 0) {
+        for (;;) {
+            if (oldLine[col].isSpace()) {
+                if (!gotTab && numSpaces == 0) {
                     // First consecutive white-space
                     startVcol = vcol;
                     startCol = col;
                 }
 
-                if(oldLine[col] == ' ') {
+                if (oldLine[col] == ' ') {
                     numSpaces++;
                 } else {
                     gotTab = true;
                 }
             } else {
-                if(gotTab || (args.force && numSpaces > 1)) {
+                if (gotTab || (args.force && numSpaces > 1)) {
                     // Retabulate this string of white-space
                     len = numSpaces = vcol - startVcol;
                     numTabs = 0;
 
-                    if(!args.view->getLocalBooleanOption("expandtab")) {
-                        if(numSpaces >= (tabstop - (startVcol % tabstop))) {
+                    if (!args.view->getLocalBooleanOption("expandtab")) {
+                        if (numSpaces >= (tabstop - (startVcol % tabstop))) {
                             numSpaces -= (tabstop - (startVcol % tabstop));
                             numTabs++;
                         }
@@ -1477,22 +1479,22 @@ CmdState YModeEx::retab(const YExCommandArgs& args)
                         numSpaces -= (numSpaces / tabstop) * tabstop;
                     }
 
-                    if(args.view->getLocalBooleanOption("expandtab") || gotTab || (numSpaces + numTabs < len)) {
+                    if (args.view->getLocalBooleanOption("expandtab") || gotTab || (numSpaces + numTabs < len)) {
                         // len is actual number of white characters used
                         len = numSpaces + numTabs;
                         oldLen = oldLine.length();
 
-                        if(startCol > 0) {
+                        if (startCol > 0) {
                             newLine = oldLine.mid(0, startCol);
                         }
 
                         newLine.insert(startCol + len, oldLine.mid(col, oldLen - col + 1));
 
-                        for(col = 0; col < len; col++) {
+                        for (col = 0; col < len; col++) {
                             newLine[col + startCol] = (col < numTabs) ? '\t' : ' ';
                         }
 
-                        if(newLine != oldLine) {
+                        if (newLine != oldLine) {
                             // replace the line and set changed to true
                             buffer->action()->replaceLine(args.view, lnum, newLine);
                             changed = true;
@@ -1507,12 +1509,12 @@ CmdState YModeEx::retab(const YExCommandArgs& args)
                 numSpaces = 0;
             }
 
-            if(oldLine[col].isNull()) {
+            if (oldLine[col].isNull()) {
                 break;
             }
 
-            if(oldLine[col] == '\t') {
-                vcol += tabstop - (vcol % tabstop);    // number of columns the tab fills
+            if (oldLine[col] == '\t') {
+                vcol += tabstop - (vcol % tabstop); // number of columns the tab fills
             } else {
                 vcol++;
             }
@@ -1521,7 +1523,7 @@ CmdState YModeEx::retab(const YExCommandArgs& args)
         }
     }
 
-    if(changed) {
+    if (changed) {
         args.view->commitNextUndo();
     }
 

@@ -53,7 +53,8 @@ static const YColor blue(Qt::blue);
 #define err() yzError("YView")
 
 YViewIface::~YViewIface()
-{}
+{
+}
 
 /**
  * class YView
@@ -61,8 +62,7 @@ YViewIface::~YViewIface()
 
 static int nextId = 1;
 
-YView::YView(YBuffer *_b, YSession *sess, int cols, int lines)
-    :
+YView::YView(YBuffer *_b, YSession *sess, int cols, int lines) :
     mDrawBuffer(this, cols, lines),
     mPreviousChars(""), mLastPreviousChars(""),
     mSession(sess),
@@ -92,7 +92,7 @@ YView::~YView()
     mBuffer->saveYzisInfo(this);
     mBuffer->rmView(this); //make my buffer forget about me
 
-    if(mBuffer->views().isEmpty()) {
+    if (mBuffer->views().isEmpty()) {
         // last view deleted, delete the buffer
         /* TODO: THIS IS BAD!!!! get rid of this */
         YSession::self()->deleteBuffer(mBuffer);
@@ -119,7 +119,7 @@ void YView::setVisibleArea(int c, int l)
 {
     dbg() << "setVisibleArea(" << c << "," << l << ")" << endl;
 
-    if(c != mDrawBuffer.screenWidth() || l != mDrawBuffer.screenHeight()) {
+    if (c != mDrawBuffer.screenWidth() || l != mDrawBuffer.screenHeight()) {
         mDrawBuffer.setScreenSize(c, l);
         recalcScreen();
     }
@@ -133,9 +133,9 @@ void YView::updateInternalAttributes()
     opt_list = getLocalBooleanOption("list");
     opt_listchars = getLocalMapOption("listchars");
     opt_schema = getLocalIntegerOption("schema");
-    YzisHighlighting* highlight = mBuffer->highlight();
+    YzisHighlighting *highlight = mBuffer->highlight();
 
-    if(highlight) {
+    if (highlight) {
         mHighlightAttributes = highlight->attributes(opt_schema)->data();
     } else {
         mHighlightAttributes = NULL;
@@ -174,15 +174,15 @@ void YView::reindent(const QPoint pos)
     YCursor cur(pos);
     YCursor match = mBuffer->action()->match(this, cur, &found);
 
-    if(!found) {
-        return ;
+    if (!found) {
+        return;
     }
 
     dbg() << "Match found on line " << match.y() << endl;
     QString matchLine = mBuffer->textline(match.y());
 
-    if(rx.exactMatch(matchLine)) {
-        currentLine.prepend(rx.cap(1));    //that should have all tabs and spaces from the previous line
+    if (rx.exactMatch(matchLine)) {
+        currentLine.prepend(rx.cap(1)); //that should have all tabs and spaces from the previous line
     }
 
     mBuffer->action()->replaceLine(this, YCursor(0, mMainCursor.line()), currentLine);
@@ -202,13 +202,13 @@ void YView::indent()
     QString currentLine = mBuffer->textline(ypos);
     QRegExp rxLeadingWhiteSpace("^([ \t]*).*$");
 
-    if(!rxLeadingWhiteSpace.exactMatch(currentLine)) {
-        return ; //Shouldn't happen
+    if (!rxLeadingWhiteSpace.exactMatch(currentLine)) {
+        return; //Shouldn't happen
     }
 
     QString indentString = rxLeadingWhiteSpace.cap(1);
 
-    if(mMainCursor.position() == currentLine.length() && currentLine.trimmed().endsWith(indentMarker)) {
+    if (mMainCursor.position() == currentLine.length() && currentLine.trimmed().endsWith(indentMarker)) {
         //dbg() << "Indent marker found" << endl;
         // This should probably be tabstop...
         indentString.append("\t");
@@ -218,11 +218,11 @@ void YView::indent()
     mBuffer->action()->insertNewLine(this, mMainCursor.buffer());
     ypos++;
     mBuffer->action()->replaceLine(this, ypos, indentString + mBuffer->textline(ypos).trimmed());
-    gotoLinePosition(ypos , indentString.length());
+    gotoLinePosition(ypos, indentString.length());
     //dbg() << "Leaving YView::indent" << endl;
 }
 
-QString YView::centerLine(const QString& s)
+QString YView::centerLine(const QString &s)
 {
     QString spacer = "";
     int nspaces = mDrawBuffer.screenWidth() > s.length() ? mDrawBuffer.screenWidth() - s.length() : 0;
@@ -239,18 +239,18 @@ void YView::updateCursor()
     QString lineinfo;
     int y = mMainCursor.line();
 
-    if(y != lasty) {
+    if (y != lasty) {
         int nblines = mBuffer->lineCount();
 
-        if(topLine() < 1)
-            if((topLine() + getLinesVisible()) >= nblines) {
+        if (topLine() < 1)
+            if ((topLine() + getLinesVisible()) >= nblines) {
                 percentage = _("All");
             } else {
-                percentage =  _("Top");
+                percentage = _("Top");
             }
-        else if((topLine() + getLinesVisible()) >= nblines) {
+        else if ((topLine() + getLinesVisible()) >= nblines) {
             percentage = _("Bot");
-        } else if(y < 0 || y > nblines) {
+        } else if (y < 0 || y > nblines) {
             err() << HERE() << "Percentage out of range" << endl;
         } else {
             percentage.setNum((int)(y * 100 / (nblines == 0 ? 1 : nblines)));
@@ -259,7 +259,7 @@ void YView::updateCursor()
         percentage = _("All");
     }
 
-    if(guiStatusBar()) {
+    if (guiStatusBar()) {
         guiStatusBar()->setLineInfo(y + 1, mMainCursor.position() + 1, mMainCursor.column() + 1, percentage);
     }
 
@@ -271,11 +271,11 @@ void YView::updateMode()
     QString mode;
     mode = currentMode()->toString();
 
-    if(isRecording()) {
+    if (isRecording()) {
         mode += _(" { Recording }");
     }
 
-    if(guiStatusBar()) {
+    if (guiStatusBar()) {
         guiStatusBar()->setMode(mode);
     }
 
@@ -286,7 +286,7 @@ void YView::updateFileName()
 {
     QString filename = buffer()->fileName();
 
-    if(guiStatusBar()) {
+    if (guiStatusBar()) {
         guiStatusBar()->setFileName(filename);
     }
 
@@ -295,16 +295,16 @@ void YView::updateFileName()
 
 void YView::updateFileInfo()
 {
-    if(guiStatusBar()) {
+    if (guiStatusBar()) {
         guiStatusBar()->setFileInfo(buffer()->fileIsNew(), buffer()->fileIsModified());
     }
 
     guiUpdateFileInfo();
 }
 
-void YView::displayInfo(const QString& message)
+void YView::displayInfo(const QString &message)
 {
-    if(guiStatusBar()) {
+    if (guiStatusBar()) {
         guiStatusBar()->setMessage(message);
     }
 
@@ -315,7 +315,7 @@ void YView::scrollLineToBottom(int line)
 {
     int scroll_horizontal, scroll_vertical;
 
-    if(mDrawBuffer.scrollLineToBottom(line, &scroll_horizontal, &scroll_vertical)) {
+    if (mDrawBuffer.scrollLineToBottom(line, &scroll_horizontal, &scroll_vertical)) {
         mDrawBuffer.squeeze();
         guiScroll(scroll_horizontal, scroll_vertical);
     }
@@ -324,7 +324,7 @@ void YView::scrollLineToTop(int line)
 {
     int scroll_horizontal, scroll_vertical;
 
-    if(mDrawBuffer.scrollLineToTop(line, &scroll_horizontal, &scroll_vertical)) {
+    if (mDrawBuffer.scrollLineToTop(line, &scroll_horizontal, &scroll_vertical)) {
         mDrawBuffer.squeeze();
         guiScroll(scroll_horizontal, scroll_vertical);
     }
@@ -333,7 +333,7 @@ void YView::scrollLineToCenter(int line)
 {
     int scroll_horizontal, scroll_vertical;
 
-    if(mDrawBuffer.scrollLineToCenter(line, &scroll_horizontal, &scroll_vertical)) {
+    if (mDrawBuffer.scrollLineToCenter(line, &scroll_horizontal, &scroll_vertical)) {
         mDrawBuffer.squeeze();
         guiScroll(scroll_horizontal, scroll_vertical);
     }
@@ -342,9 +342,9 @@ YViewCursor YView::viewCursorFromScreen()
 {
     YViewCursor vc = viewCursor();
 
-    if(vc.line() < topLine()) {
+    if (vc.line() < topLine()) {
         return viewCursorFromStickedLine(topLine());
-    } else if(vc.line() > bottomLine()) {
+    } else if (vc.line() > bottomLine()) {
         return viewCursorFromStickedLine(bottomLine());
     }
 
@@ -360,10 +360,10 @@ YViewCursor YView::viewCursorFromLinePosition(int line, int position)
     mDrawBuffer.targetBufferLine(line, &sid);
     int my_position = mDrawBuffer.targetBufferColumn(position, sid, &lid, &cid, &bshift, &column);
 
-    if(my_position < position) {
+    if (my_position < position) {
         position = my_position;
 
-        if(mBuffer->getLineLength(line) > 0 && mModePool->current()->isEditMode()) {
+        if (mBuffer->getLineLength(line) > 0 && mModePool->current()->isEditMode()) {
             position += 1;
             column += 1;
         }
@@ -385,8 +385,8 @@ YViewCursor YView::viewCursorFromRowColumn(int row, int scol) const
     int my_scol = mDrawBuffer.targetScreenColumn(scol, sid, lid, &cid, &sshift, &position);
     int column = lid * mDrawBuffer.screenWidth() + my_scol;
 
-    if(my_scol < scol) {
-        if(mBuffer->getLineLength(line) > 0 && mModePool->current()->isEditMode()) {
+    if (my_scol < scol) {
+        if (mBuffer->getLineLength(line) > 0 && mModePool->current()->isEditMode()) {
             position += 1;
             column += 1;
         }
@@ -406,7 +406,7 @@ YViewCursor YView::viewCursorFromLineColumn(int line, int column)
     int scol = column % mDrawBuffer.screenWidth();
     int max_lid = mDrawBuffer.sections()[sid].count() - 1;
 
-    if(lid > max_lid) {
+    if (lid > max_lid) {
         lid = max_lid;
         scol = mDrawBuffer.screenWidth() - 1;
     }
@@ -414,10 +414,10 @@ YViewCursor YView::viewCursorFromLineColumn(int line, int column)
     int cid, sshift, position;
     int my_scol = mDrawBuffer.targetScreenColumn(scol, sid, lid, &cid, &sshift, &position);
 
-    if(my_scol < scol) {
+    if (my_scol < scol) {
         column = lid * mDrawBuffer.screenWidth() + my_scol;
 
-        if(mBuffer->getLineLength(line) > 0 && mModePool->current()->isEditMode()) {
+        if (mBuffer->getLineLength(line) > 0 && mModePool->current()->isEditMode()) {
             position += 1;
             column += 1;
         }
@@ -432,7 +432,7 @@ YViewCursor YView::viewCursorFromLineColumn(int line, int column)
 #define STICK_ENDLINE -1
 YViewCursor YView::viewCursorFromStickedLine(int line)
 {
-    if(mStickyColumn == STICK_ENDLINE) {
+    if (mStickyColumn == STICK_ENDLINE) {
         return viewCursorFromLinePosition(line, qMax(0, mBuffer->getLineLength(line) - 1));
     } else {
         return viewCursorFromLineColumn(line, mStickyColumn);
@@ -447,13 +447,12 @@ void YView::stickToEOL()
     mStickyColumn = STICK_ENDLINE;
 }
 
-
-void YView::gotoViewCursor(const YViewCursor& cursor)
+void YView::gotoViewCursor(const YViewCursor &cursor)
 {
     mMainCursor = cursor;
     int scroll_horizontal, scroll_vertical;
 
-    if(mDrawBuffer.scrollForViewCursor(mMainCursor, &scroll_horizontal, &scroll_vertical)) {
+    if (mDrawBuffer.scrollForViewCursor(mMainCursor, &scroll_horizontal, &scroll_vertical)) {
         mDrawBuffer.squeeze();
         guiScroll(scroll_horizontal, scroll_vertical);
     }
@@ -480,11 +479,11 @@ void YView::gotoLinePositionAndStick(int line, int position)
     gotoLinePosition(line, position);
     stickToColumn();
 }
-void YView::gotoLinePosition(const YCursor& buffer)
+void YView::gotoLinePosition(const YCursor &buffer)
 {
     gotoLinePosition(buffer.line(), buffer.column());
 }
-void YView::gotoLinePositionAndStick(const YCursor& buffer)
+void YView::gotoLinePositionAndStick(const YCursor &buffer)
 {
     gotoLinePositionAndStick(buffer.line(), buffer.column());
 }
@@ -493,7 +492,7 @@ void YView::gotoRowColumn(int row, int column)
 {
     gotoViewCursor(viewCursorFromRowColumn(row, column));
 }
-void YView::gotoRowColumn(const YCursor& screen)
+void YView::gotoRowColumn(const YCursor &screen)
 {
     gotoRowColumn(screen.line(), screen.column());
 }
@@ -504,41 +503,41 @@ YViewCursor YView::viewCursorMoveVertical(int ticks)
     return viewCursorFromStickedLine(line);
 }
 
-YViewCursor YView::viewCursorMoveHorizontal(int ticks, bool wrap, bool* stopped)
+YViewCursor YView::viewCursorMoveHorizontal(int ticks, bool wrap, bool *stopped)
 {
     int line = mMainCursor.line();
     int position = mMainCursor.position() + ticks;
     int shift = mModePool->current()->isEditMode() ? 1 : 0;
     bool my_stopped = false;
 
-    if(position < 0) {
-        if(wrap) {
-            while(position < 0 && line >= 1) {
+    if (position < 0) {
+        if (wrap) {
+            while (position < 0 && line >= 1) {
                 // go one line up
                 line -= 1;
                 position = mBuffer->getLineLength(line) + position + 1;
             }
 
-            if(position < 0) {
+            if (position < 0) {
                 my_stopped = true;
                 position = 0;
             }
         } else {
             position = 0;
         }
-    } else if(position >= mBuffer->getLineLength(line) + shift) {
+    } else if (position >= mBuffer->getLineLength(line) + shift) {
         int max_line = mBuffer->lineCount() - 1;
 
-        if(wrap && line < max_line) {
+        if (wrap && line < max_line) {
             int line_length = mBuffer->getLineLength(line) + shift;
 
             do {
                 position -= line_length;
                 line += 1;
                 line_length = mBuffer->getLineLength(line) + shift;
-            } while(position >= line_length && line < max_line);
+            } while (position >= line_length && line < max_line);
 
-            if(position >= line_length) {
+            if (position >= line_length) {
                 my_stopped = true;
                 position = line_length - 1;
             }
@@ -547,7 +546,7 @@ YViewCursor YView::viewCursorMoveHorizontal(int ticks, bool wrap, bool* stopped)
         }
     }
 
-    if(stopped != NULL) {
+    if (stopped != NULL) {
         *stopped = my_stopped;
     }
 
@@ -556,10 +555,10 @@ YViewCursor YView::viewCursorMoveHorizontal(int ticks, bool wrap, bool* stopped)
 
 void YView::applyStartPosition(const YCursor pos)
 {
-    if(pos.y() >= 0) {
+    if (pos.y() >= 0) {
         YViewCursor dest;
 
-        if(pos.x() >= 0) {
+        if (pos.x() >= 0) {
             dest = viewCursorFromLinePosition(pos);
         } else {
             dest = viewCursorFromStickedLine(pos.y());
@@ -573,7 +572,7 @@ void YView::applyStartPosition(const YCursor pos)
 QString YView::append()
 {
     mModePool->change(YMode::ModeInsert);
-    gotoLinePositionAndStick(mMainCursor.line() , mMainCursor.position() + 1);
+    gotoLinePositionAndStick(mMainCursor.line(), mMainCursor.position() + 1);
     return QString();
 }
 
@@ -582,16 +581,15 @@ void YView::commitUndoItem()
     mBuffer->undoBuffer()->commitUndoItem(mMainCursor.position(), mMainCursor.line());
 }
 
-
-YRawData YView::setSelection(yzis::SelectionType type, const YInterval& bufferInterval)
+YRawData YView::setSelection(yzis::SelectionType type, const YInterval &bufferInterval)
 {
     YRawData selectedData;
     setPaintAutoCommit(false);
 
-    if(type == yzis::SelectionVisual) {
+    if (type == yzis::SelectionVisual) {
         dbg() << "setSelection[Visual] = " << bufferInterval << endl;
 
-        if(mSelectionPool.contains(type)) {
+        if (mSelectionPool.contains(type)) {
             sendPaintEvent(mDrawBuffer.delSelection(type, mSelectionPool[type], yzis::BufferInterval));
         }
 
@@ -613,7 +611,7 @@ YRawData YView::setSelection(yzis::SelectionType type, const YInterval& bufferIn
  * Drawing engine
  */
 
-bool YView::isColumnVisible(int , int) const
+bool YView::isColumnVisible(int, int) const
 {
     /* TODO */
     return true;
@@ -624,32 +622,32 @@ bool YView::isLineVisible(int l) const
     return l >= 0 && l < mDrawBuffer.screenHeight();
 }
 
-const YColor& YView::drawColor(int col, int line) const
+const YColor &YView::drawColor(int col, int line) const
 {
     YLine *yl = mBuffer->yzline(line);
-    YzisHighlighting * highlight = mBuffer->highlight();
-    const uchar* hl = NULL;
+    YzisHighlighting *highlight = mBuffer->highlight();
+    const uchar *hl = NULL;
     YzisAttribute *at = NULL;
 
-    if(yl->length() != 0 && highlight) {
+    if (yl->length() != 0 && highlight) {
         hl = yl->attributes(); //attributes of this line
         hl += col; // -1 ? //move pointer to the correct column
-        int len = hl ? highlight->attributes(0)->size() : 0 ;   //length of attributes
-        at = ((*hl) >= len) ? &mHighlightAttributes[ 0 ] : &mHighlightAttributes[*hl];     //attributes pointed by line's attribute for current column
+        int len = hl ? highlight->attributes(0)->size() : 0; //length of attributes
+        at = ((*hl) >= len) ? &mHighlightAttributes[0] : &mHighlightAttributes[*hl]; //attributes pointed by line's attribute for current column
     }
 
-    if(opt_list && (yl->data().at(col) == ' ' || yl->data().at(col) == tabChar)) {
+    if (opt_list && (yl->data().at(col) == ' ' || yl->data().at(col) == tabChar)) {
         return blue;
     }
 
-    if(at) {
-        return at->textColor();    //textcolor :)
+    if (at) {
+        return at->textColor(); //textcolor :)
     }
 
     return color_null;
 }
 
-void YView::printToFile(const QString& /*path*/)
+void YView::printToFile(const QString & /*path*/)
 {
 #if 0
 
@@ -675,86 +673,83 @@ void YView::printToFile(const QString& /*path*/)
 
 void YView::undo(int count)
 {
-    for(int i = 0 ; i < count ; i++) {
+    for (int i = 0; i < count; i++) {
         mBuffer->undoBuffer()->undo(this);
     }
 }
 
 void YView::redo(int count)
 {
-    for(int i = 0 ; i < count ; i++) {
+    for (int i = 0; i < count; i++) {
         mBuffer->undoBuffer()->redo(this);
     }
 }
-
 
 QString YView::getLocalOptionKey() const
 {
     return mBuffer->fileName() + "-view-" + QString::number(getId());
 }
-YOptionValue* YView::getLocalOption(const QString& option) const
+YOptionValue *YView::getLocalOption(const QString &option) const
 {
-    if(YSession::self()->getOptions()->hasOption(getLocalOptionKey() + "\\" + option)) {    //find the local one ?
+    if (YSession::self()->getOptions()->hasOption(getLocalOptionKey() + "\\" + option)) { //find the local one ?
         return YSession::self()->getOptions()->getOption(getLocalOptionKey() + "\\" + option);
     } else {
         return YSession::self()->getOptions()->getOption("Global\\" + option);
     }
 }
-int YView::getLocalIntegerOption(const QString& option) const
+int YView::getLocalIntegerOption(const QString &option) const
 {
-    if(YSession::self()->getOptions()->hasOption(getLocalOptionKey() + "\\" + option)) {    //find the local one ?
+    if (YSession::self()->getOptions()->hasOption(getLocalOptionKey() + "\\" + option)) { //find the local one ?
         return YSession::self()->getOptions()->readIntegerOption(getLocalOptionKey() + "\\" + option);
     } else {
-        return YSession::self()->getOptions()->readIntegerOption("Global\\" + option);    // else give the global default if any
+        return YSession::self()->getOptions()->readIntegerOption("Global\\" + option); // else give the global default if any
     }
 }
-bool YView::getLocalBooleanOption(const QString& option) const
+bool YView::getLocalBooleanOption(const QString &option) const
 {
-    if(YSession::self()->getOptions()->hasOption(getLocalOptionKey() + "\\" + option)) {    //find the local one ?
+    if (YSession::self()->getOptions()->hasOption(getLocalOptionKey() + "\\" + option)) { //find the local one ?
         return YSession::self()->getOptions()->readBooleanOption(getLocalOptionKey() + "\\" + option);
     } else {
         return YSession::self()->getOptions()->readBooleanOption("Global\\" + option);
     }
 }
-QString YView::getLocalStringOption(const QString& option) const
+QString YView::getLocalStringOption(const QString &option) const
 {
-    if(YSession::self()->getOptions()->hasOption(getLocalOptionKey() + "\\" + option)) {    //find the local one ?
+    if (YSession::self()->getOptions()->hasOption(getLocalOptionKey() + "\\" + option)) { //find the local one ?
         return YSession::self()->getOptions()->readStringOption(getLocalOptionKey() + "\\" + option);
     } else {
         return YSession::self()->getOptions()->readStringOption("Global\\" + option);
     }
 }
-QStringList YView::getLocalListOption(const QString& option) const
+QStringList YView::getLocalListOption(const QString &option) const
 {
-    if(YSession::self()->getOptions()->hasOption(getLocalOptionKey() + "\\" + option)) {    //find the local one ?
+    if (YSession::self()->getOptions()->hasOption(getLocalOptionKey() + "\\" + option)) { //find the local one ?
         return YSession::self()->getOptions()->readListOption(getLocalOptionKey() + "\\" + option);
     } else {
         return YSession::self()->getOptions()->readListOption("Global\\" + option);
     }
 }
-MapOption YView::getLocalMapOption(const QString& option) const
+MapOption YView::getLocalMapOption(const QString &option) const
 {
-    if(YSession::self()->getOptions()->hasOption(getLocalOptionKey() + "\\" + option)) {    //find the local one ?
+    if (YSession::self()->getOptions()->hasOption(getLocalOptionKey() + "\\" + option)) { //find the local one ?
         return YSession::self()->getOptions()->readMapOption(getLocalOptionKey() + "\\" + option);
     } else {
         return YSession::self()->getOptions()->readMapOption("Global\\" + option);
     }
 }
 
-QString YView::getCharBelow(int delta)   // TODO: get it out of YView
+QString YView::getCharBelow(int delta) // TODO: get it out of YView
 {
     int target_line = qMin(qMax(0, mMainCursor.line() + delta), mBuffer->lineCount());
     int target_column = mMainCursor.column();
     YViewCursor target = viewCursorFromLineColumn(target_line, target_column);
 
-    if(target.column() == target_column && target.line() == target_line &&
-       target.column() < mBuffer->getLineLength(target.line())) {
+    if (target.column() == target_column && target.line() == target_line && target.column() < mBuffer->getLineLength(target.line())) {
         return mBuffer->textline(target.line()).at(target.position());
     }
 
     return QString();
 }
-
 
 void YView::commitNextUndo()
 {
@@ -767,9 +762,9 @@ int YView::currentRow() const
      * 	- make sure it never happen?
      * 	- or, return joker values
      * 	- or, return wrong values */
-    if(currentLine() < mDrawBuffer.screenTopBufferLine()) {
+    if (currentLine() < mDrawBuffer.screenTopBufferLine()) {
         return 0;
-    } else if(currentLine() > mDrawBuffer.screenBottomBufferLine() + 1) {
+    } else if (currentLine() > mDrawBuffer.screenBottomBufferLine() + 1) {
         /* TODO: how handle this? */
         return mDrawBuffer.screenHeight() - 1;
     }
@@ -796,24 +791,24 @@ void YView::recordMacro(const QList<QChar> &regs)
 {
     mRegs = regs;
 
-    for(int ab = 0 ; ab < mRegs.size(); ++ab) {
+    for (int ab = 0; ab < mRegs.size(); ++ab) {
         YSession::self()->setRegister(mRegs.at(ab), QStringList());
     }
 }
 
 void YView::stopRecordMacro()
 {
-    for(int ab = 0 ; ab < mRegs.size(); ++ab) {
+    for (int ab = 0; ab < mRegs.size(); ++ab) {
         QStringList list;
         QString ne = YSession::self()->getRegister(mRegs.at(ab))[0];
-        list << ne.mid(0, ne.length() - 1);   //remove the last 'q' which was recorded ;)
+        list << ne.mid(0, ne.length() - 1); //remove the last 'q' which was recorded ;)
         YSession::self()->setRegister(mRegs.at(ab), list);
     }
 
     mRegs = QList<QChar>();
 }
 
-YSelection YView::clipSelection(const YSelection& sel) const
+YSelection YView::clipSelection(const YSelection &sel) const
 {
     YCursor bottomRight = YCursor(getColumnsVisible() - 1, getLinesVisible() - 1);
     return sel.clip(YInterval(YCursor(0, 0), bottomRight));
@@ -821,7 +816,7 @@ YSelection YView::clipSelection(const YSelection& sel) const
 
 void YView::setPaintAutoCommit(bool enable)
 {
-    if(enable) {
+    if (enable) {
         m_paintAutoCommit = 0;
     } else {
         ++m_paintAutoCommit;
@@ -830,8 +825,8 @@ void YView::setPaintAutoCommit(bool enable)
 
 void YView::commitPaintEvent()
 {
-    if(m_paintAutoCommit == 0 || --m_paintAutoCommit == 0) {
-        if(!mPaintSelection.isEmpty()) {
+    if (m_paintAutoCommit == 0 || --m_paintAutoCommit == 0) {
+        if (!mPaintSelection.isEmpty()) {
             guiNotifyContentChanged(clipSelection(mPaintSelection));
         }
 
@@ -844,9 +839,9 @@ void YView::resetPaintEvent()
     setPaintAutoCommit();
 }
 
-void YView::sendPaintEvent(const YInterval& i)
+void YView::sendPaintEvent(const YInterval &i)
 {
-    if(i.valid()) {
+    if (i.valid()) {
         setPaintAutoCommit(false);
         mPaintSelection.addInterval(i);
         commitPaintEvent();
@@ -858,10 +853,10 @@ void YView::sendRefreshEvent()
     sendPaintEvent(YInterval(YCursor(0, 0), YBound(YCursor(0, mDrawBuffer.screenHeight()), true)));
 }
 
-bool YView::stringHasOnlySpaces(const QString& what) const
+bool YView::stringHasOnlySpaces(const QString &what) const
 {
-    for(int i = 0 ; i < what.length(); i++)
-        if(!what.at(i).isSpace()) {
+    for (int i = 0; i < what.length(); i++)
+        if (!what.at(i).isSpace()) {
             return false;
         }
 
@@ -871,17 +866,17 @@ bool YView::stringHasOnlySpaces(const QString& what) const
 void YView::saveInputBuffer()
 {
     // Only have special cases for length 1
-    if(mPreviousChars.count() == 1) {
+    if (mPreviousChars.count() == 1) {
         // We don't need to remember ENTER or ESC or CTRL-C
-        if(*mPreviousChars.begin() == Qt::Key_Enter
-           || *mPreviousChars.begin() == Qt::Key_Return
-           || *mPreviousChars.begin() == Qt::Key_Escape
-           || *mPreviousChars.begin() == YKey(Qt::Key_C, Qt::ControlModifier)) {
+        if (*mPreviousChars.begin() == Qt::Key_Enter
+            || *mPreviousChars.begin() == Qt::Key_Return
+            || *mPreviousChars.begin() == Qt::Key_Escape
+            || *mPreviousChars.begin() == YKey(Qt::Key_C, Qt::ControlModifier)) {
             return;
         }
 
         // Provided we are not repeating the command don't overwrite
-        if(*mPreviousChars.begin() == Qt::Key_Period) {
+        if (*mPreviousChars.begin() == Qt::Key_Period) {
             return;
         }
     }
@@ -913,11 +908,11 @@ int YView::getColumnsVisible() const
     return mDrawBuffer.screenWidth();
 }
 
-void YView::updateBufferInterval(const YInterval& bi)
+void YView::updateBufferInterval(const YInterval &bi)
 {
     int last_bl = bi.toPos().line();
 
-    if(bi.to().opened() && bi.toPos().column() == 0) {
+    if (bi.to().opened() && bi.toPos().column() == 0) {
         --last_bl;
     }
 
@@ -929,7 +924,7 @@ void YView::updateBufferInterval(int bl, int bl_last)
     YASSERT(bl <= bl_last);
     mDrawBuffer.squeeze();
 
-    if(mDrawBuffer.firstBufferLine() > bl_last || mDrawBuffer.lastBufferLine() + (mDrawBuffer.full() ? 0 : 1) < bl) {
+    if (mDrawBuffer.firstBufferLine() > bl_last || mDrawBuffer.lastBufferLine() + (mDrawBuffer.full() ? 0 : 1) < bl) {
         dbg() << "ignoring updateBufferInterval from line " << bl << " to " << bl_last << " [" << mDrawBuffer.firstBufferLine() << " to " << mDrawBuffer.lastBufferLine() << " full=" << mDrawBuffer.full() << "]" << endl;
         return;
     }
@@ -940,15 +935,15 @@ void YView::updateBufferInterval(int bl, int bl_last)
     setPaintAutoCommit(false);
 
     /* delete extra lines */
-    if(bl_last >= mBuffer->lineCount()) {
+    if (bl_last >= mBuffer->lineCount()) {
         deleteFromBufferLine(mBuffer->lineCount());
     }
 
     bl_last = qMin(bl_last, mBuffer->lineCount() - 1);
 
     /* update requested lines */
-    for(; bl <= bl_last; ++bl) {
-        if(!setBufferLineContent(bl)) {
+    for (; bl <= bl_last; ++bl) {
+        if (!setBufferLineContent(bl)) {
             dbg() << "updateBufferInterval stops at line " << bl << endl;
             break;
         }
@@ -957,28 +952,27 @@ void YView::updateBufferInterval(int bl, int bl_last)
     commitPaintEvent();
 }
 
-
-YDrawLine YView::drawLineFromYLine(const YLine* yl, int start_column) const
+YDrawLine YView::drawLineFromYLine(const YLine *yl, int start_column) const
 {
     YDrawLine dl;
     QString data = yl->data();
-    const uchar* hl = mHighlightAttributes ? yl->attributes() : NULL;
+    const uchar *hl = mHighlightAttributes ? yl->attributes() : NULL;
     QString text;
     QChar fillChar;
     YColor fg, bg, outline;
     YFont font;
-    YzisAttribute* last_at = NULL;
-    YzisAttribute* at = NULL;
+    YzisAttribute *last_at = NULL;
+    YzisAttribute *at = NULL;
     bool last_is_listchar = false;
     bool is_listchar;
     int drawLength;
     int column = start_column;
 
-    for(int i = 0; i < data.length(); ++i) {
+    for (int i = 0; i < data.length(); ++i) {
         text = data.at(i);
         fillChar = ' ';
 
-        if(text == tabChar) {
+        if (text == tabChar) {
             drawLength = tabstop - column % tabstop;
             /* column + drawLength = 0 mod tabstop */
         } else {
@@ -988,40 +982,40 @@ YDrawLine YView::drawLineFromYLine(const YLine* yl, int start_column) const
         /* :set list support */
         is_listchar = opt_list && (text == " " || text == tabChar);
 
-        if(is_listchar) {
-            if(text == " ") {
-                if(stringHasOnlySpaces(data.mid(i)) && opt_listchars[ "trail" ].length() > 0) {
+        if (is_listchar) {
+            if (text == " ") {
+                if (stringHasOnlySpaces(data.mid(i)) && opt_listchars["trail"].length() > 0) {
                     text = opt_listchars["trail"][0];
-                } else if(opt_listchars["space"].length() > 0) {
+                } else if (opt_listchars["space"].length() > 0) {
                     text = opt_listchars["space"][0];
                 }
-            } else if(text == tabChar) {
-                if(opt_listchars["tab"].length() > 0) {
+            } else if (text == tabChar) {
+                if (opt_listchars["tab"].length() > 0) {
                     text = opt_listchars["tab"][0];
 
-                    if(opt_listchars["tab"].length() > 1) {
+                    if (opt_listchars["tab"].length() > 1) {
                         fillChar = opt_listchars["tab"][1];
                     }
                 }
             }
         } else {
-            if(text == tabChar) {
+            if (text == tabChar) {
                 text = " ";
             }
         }
 
-        if(drawLength > 1) {
+        if (drawLength > 1) {
             text = text.leftJustified(drawLength, fillChar);
         }
 
         /* syntax highlighting attributes */
-        if(hl) {
+        if (hl) {
             at = &mHighlightAttributes[*hl];
             ++hl;
         }
 
-        if(i == 0 || last_at != at || is_listchar != last_is_listchar) {
-            if(at) {
+        if (i == 0 || last_at != at || is_listchar != last_is_listchar) {
+            if (at) {
                 fg = at->textColor();
                 bg = at->bgColor();
                 font.setWeight(at->bold() ? YFont::Bold : YFont::Normal);
@@ -1041,7 +1035,7 @@ YDrawLine YView::drawLineFromYLine(const YLine* yl, int start_column) const
                 outline = color_null;
             }
 
-            if(is_listchar) {
+            if (is_listchar) {
                 fg = blue; // TODO: make custom
                 outline = color_null; // TODO: make custom
             }
@@ -1063,11 +1057,11 @@ YDrawLine YView::drawLineFromYLine(const YLine* yl, int start_column) const
 
 YDrawSection YView::drawSectionOfBufferLine(int bl) const
 {
-    const YLine* yl = mBuffer->yzline(bl);
+    const YLine *yl = mBuffer->yzline(bl);
     YDrawLine dl = drawLineFromYLine(yl);
     YDrawSection ds;
 
-    if(wrap) {
+    if (wrap) {
         ds = dl.arrange(mDrawBuffer.screenWidth());
     } else {
         ds << dl;
@@ -1089,59 +1083,59 @@ void YView::deleteFromBufferLine(int bl)
     sendPaintEvent(affected);
 }
 
-void YView::guiPaintEvent(const YSelection& drawMap)
+void YView::guiPaintEvent(const YSelection &drawMap)
 {
-    if(drawMap.isEmpty()) {
-        return ;
+    if (drawMap.isEmpty()) {
+        return;
     }
 
     dbg() << "guiPaintEvent" << drawMap << endl;
     guiPreparePaintEvent();
     bool show_numbers = getLocalBooleanOption("number");
 
-    if(show_numbers) {
+    if (show_numbers) {
         guiDrawSetMaxLineNumber(mBuffer->lineCount());
     }
 
     int cur_line = -1;
 
     for (YInterval di : drawMap.map()) {
-        for(YDrawBufferConstIterator it = mDrawBuffer.const_iterator(di, yzis::ScreenInterval); it.isValid(); it.next()) {
-            if(show_numbers && cur_line != it.screenLine()) {
+        for (YDrawBufferConstIterator it = mDrawBuffer.const_iterator(di, yzis::ScreenInterval); it.isValid(); it.next()) {
+            if (show_numbers && cur_line != it.screenLine()) {
                 guiDrawSetLineNumber(it.screenLine(), it.bufferLine() + 1, it.lineHeight());
                 cur_line = it.screenLine();
             }
 
             const YDrawCellInfo ci = it.drawCellInfo();
 
-            switch(ci.type) {
-            case YDrawCellInfo::Data :
+            switch (ci.type) {
+            case YDrawCellInfo::Data:
                 guiDrawCell(ci.pos, ci.cell);
                 break;
 
-            case YDrawCellInfo::EOL :
+            case YDrawCellInfo::EOL:
                 guiDrawClearToEOL(ci.pos, ci.cell);
                 break;
             }
         }
     }
 
-    if(!mDrawBuffer.full()) {
+    if (!mDrawBuffer.full()) {
         /* may be fake lines ? */
         YDrawCell fl;
         fl.step("~");
         fl.setForegroundColor(YColor("cyan"));
         YInterval fake(YCursor(0, mDrawBuffer.currentHeight()), YCursor(mDrawBuffer.screenWidth() - 1, mDrawBuffer.screenHeight() - 1));
 
-        foreach(YInterval di, drawMap.map()) {
+        foreach (YInterval di, drawMap.map()) {
             YInterval i = di.intersection(fake);
 
-            if(!i.valid()) {
+            if (!i.valid()) {
                 continue;
             }
 
-            for(int cur_dy = i.fromPos().line(); cur_dy <= i.toPos().line(); ++cur_dy) {
-                if(show_numbers) {
+            for (int cur_dy = i.fromPos().line(); cur_dy <= i.toPos().line(); ++cur_dy) {
+                if (show_numbers) {
                     guiDrawSetLineNumber(cur_dy, -1, 0); /* clear line number */
                 }
 
@@ -1153,4 +1147,3 @@ void YView::guiPaintEvent(const YSelection& drawMap)
 
     guiEndPaintEvent();
 }
-

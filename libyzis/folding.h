@@ -29,7 +29,8 @@ class YDebugStream;
 /**
  * A text fold
  */
-struct YZFold {
+struct YZFold
+{
     int to;
     bool opened;
 };
@@ -40,10 +41,10 @@ struct YZFold {
 class YZFoldPool
 {
 
-    friend YDebugStream& operator<<(YDebugStream& out, const YZFoldPool& f);
+    friend YDebugStream &operator<<(YDebugStream &out, const YZFoldPool &f);
 
 public:
-    YZFoldPool(YView* view);
+    YZFoldPool(YView *view);
     virtual ~YZFoldPool();
 
     /**
@@ -60,13 +61,13 @@ public:
      * returns true if line is inside a fold (head excluded)
      * if head is not NULL, it will contains the line heading the fold
      */
-    bool contains(int line, int* head = NULL) const;
+    bool contains(int line, int *head = NULL) const;
 
     /**
      * same as contains && fold is closed
      *  => line should be hidden
      */
-    bool isFolded(int line, int* head = NULL) const;
+    bool isFolded(int line, int *head = NULL) const;
 
     /**
      * returns the line number under the fold containing line. If line isn't inside a fold, returns line
@@ -79,10 +80,8 @@ public:
     int lineHeadingFold(int line) const;
 
 private:
-    YView* m_view;
+    YView *m_view;
     QMap<int, YZFold> m_folds;
-
 };
 
 #endif
-

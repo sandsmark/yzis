@@ -15,7 +15,6 @@
    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-
 /* QYzis */
 #include "qysession.h"
 #include "qyview.h"
@@ -39,15 +38,14 @@
 #include <QX11Info>
 #endif
 
-
-#define dbg()    yzDebug("QYSession")
-#define err()    yzError("QYSession")
+#define dbg() yzDebug("QYSession")
+#define err() yzError("QYSession")
 
 // ===================[ Qt stuff for the main windows ]==================
 
-QYSession::QYSession(QWidget *w)
-    : QMainWindow(w),
-      YSession()
+QYSession::QYSession(QWidget *w) :
+    QMainWindow(w),
+    YSession()
 {
     dbg() << "QYSession()" << endl;
     resize(800, 600);
@@ -114,8 +112,8 @@ void QYSession::slotFileOpen()
     dbg() << "slotFileOpen()" << endl;
     QString url = QFileDialog::getOpenFileName(this, "Open a file");
 
-    if(url.isEmpty()) {
-        return ;
+    if (url.isEmpty()) {
+        return;
     }
 
     openURL(url);
@@ -125,8 +123,8 @@ void QYSession::openURL(const QString &url)
 {
     dbg() << "openURL( " << url << ")" << endl;
 
-    if(url.isEmpty()) {
-        return ;
+    if (url.isEmpty()) {
+        return;
     }
 
     createBufferAndView(url);
@@ -135,7 +133,7 @@ void QYSession::openURL(const QString &url)
 void QYSession::slotPreferences()
 {
     dbg() << "slotPreferences()" << endl;
-    QYConfigureDialog* w = new QYConfigureDialog(this);
+    QYConfigureDialog *w = new QYConfigureDialog(this);
     w->exec();
 }
 
@@ -143,14 +141,13 @@ void QYSession::slotAbout()
 {
     dbg() << "slotAbout()" << endl;
     QMessageBox::about(this, _("About QYzis"),
-                       _("Qt frontend for the yzis text editor\n\n"\
+                       _("Qt frontend for the yzis text editor\n\n"
                          "http://www.yzis.org"));
 }
 
-
 // ===================[ Yzis stuff ]==================
 //
-void QYSession::guiSetClipboardText(const QString& text, Clipboard::Mode mode)
+void QYSession::guiSetClipboardText(const QString &text, Clipboard::Mode mode)
 {
     dbg() << QString("guiSetClipboardText( %1, %2 )").arg(text).arg((int)mode) << endl;
     bool hasDisplay = true;
@@ -158,7 +155,7 @@ void QYSession::guiSetClipboardText(const QString& text, Clipboard::Mode mode)
     hasDisplay = QX11Info::display();
 #endif
 
-    if(hasDisplay) {
+    if (hasDisplay) {
         QApplication::clipboard()->setText(text, mode == Clipboard::Clipboard ? QClipboard::Clipboard : QClipboard::Selection);
     }
 }
@@ -180,15 +177,15 @@ void QYSession::applyConfig()
     // TODO
 }
 
-void QYSession::guiChangeCurrentView(YView* view)
+void QYSession::guiChangeCurrentView(YView *view)
 {
     dbg() << "guiChangeCurrentView(" << view->toString() << ")" << endl;
-    QYView *v = static_cast<QYView*>(view);
+    QYView *v = static_cast<QYView *>(view);
     Q_ASSERT(v);
     mTabWidget->setCurrentWidget(v);
 }
 
-YView* QYSession::guiCreateView(YBuffer *buffer)
+YView *QYSession::guiCreateView(YBuffer *buffer)
 {
     dbg() << "guiCreateView(" << buffer->toString() << ")" << endl;
     QYView *view;
@@ -200,7 +197,7 @@ YView* QYSession::guiCreateView(YBuffer *buffer)
     return view;
 }
 
-void QYSession::viewFilenameChanged(QYView * view, const QString & filename)
+void QYSession::viewFilenameChanged(QYView *view, const QString &filename)
 {
     Q_ASSERT(view);
     int tabIdx = mTabWidget->indexOf(view);
@@ -208,11 +205,10 @@ void QYSession::viewFilenameChanged(QYView * view, const QString & filename)
     setWindowTitle(filename);
 }
 
-
 void QYSession::guiDeleteView(YView *view)
 {
     dbg() << "guiDeleteView(" << view->toString() << ")" << endl;
-    QYView * v = dynamic_cast<QYView*>(view);
+    QYView *v = dynamic_cast<QYView *>(view);
     Q_ASSERT(v);
     dbg() << "guiDeleteView(): delete v;" << endl;
     delete v;
@@ -220,26 +216,25 @@ void QYSession::guiDeleteView(YView *view)
     dbg() << "guiDeleteView(): done" << endl;
 }
 
-
-void QYSession::guiPopupMessage(const QString& message)
+void QYSession::guiPopupMessage(const QString &message)
 {
     dbg() << "popupMessage(" << message << ")" << endl;
-    QMessageBox::information(this , _("Error"), message);
+    QMessageBox::information(this, _("Error"), message);
 }
 
-bool QYSession::guiPromptYesNo(const QString& title, const QString& message)
+bool QYSession::guiPromptYesNo(const QString &title, const QString &message)
 {
     dbg() << "guiPromptYesNo(" << title << "," << message << ")" << endl;
-    int v = QMessageBox::question(this , title, message, _("Yes"), _("No"));
+    int v = QMessageBox::question(this, title, message, _("Yes"), _("No"));
 
-    if(v == 0) {
+    if (v == 0) {
         return true;
     } else {
         return false;
     }
 }
 
-int QYSession::guiPromptYesNoCancel(const QString& title, const QString& message)
+int QYSession::guiPromptYesNoCancel(const QString &title, const QString &message)
 {
     dbg() << "guiPromptYesNoCancel(" << title << "," << message << ")" << endl;
     return QMessageBox::question(this, title, message, _("Yes"), _("No"), _("Cancel"));
@@ -250,11 +245,11 @@ void QYSession::guiSplitHorizontally(YView *view)
     dbg() << "guiSplitHorizontally(" << view->toString() << ")" << endl;
 }
 
-YDebugStream& operator<<(YDebugStream& out, const Qt::KeyboardModifiers & v)
+YDebugStream &operator<<(YDebugStream &out, const Qt::KeyboardModifiers &v)
 {
     QString s;
 
-    switch(v) {
+    switch (v) {
     case Qt::NoModifier:
         s += "NoModifier |";
         break;
@@ -289,21 +284,21 @@ YDebugStream& operator<<(YDebugStream& out, const Qt::KeyboardModifiers & v)
     return out;
 }
 
-YDebugStream& operator<<(YDebugStream& out, const QSize & sz)
+YDebugStream &operator<<(YDebugStream &out, const QSize &sz)
 {
     out << sz.width() << "," << sz.height();
     return out;
 }
 
-YDebugStream& operator<<(YDebugStream& out, const QResizeEvent & e)
+YDebugStream &operator<<(YDebugStream &out, const QResizeEvent &e)
 {
     out << "(oldsize=" << e.oldSize() << ",newSize=" << e.size() << ")" << endl;
     return out;
 }
 
-YDebugStream& operator<<(YDebugStream& out, const Qt::FocusReason & e)
+YDebugStream &operator<<(YDebugStream &out, const Qt::FocusReason &e)
 {
-    switch(e) {
+    switch (e) {
     case Qt::NoFocusReason:
         out << "NoFocusReason";
         break;

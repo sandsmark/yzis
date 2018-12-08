@@ -46,7 +46,7 @@ int main(int argc, char **argv)
     app.setOrganizationDomain("yzis.org");
     app.setApplicationName("QYzis");
     // ==============[ create session ]=============
-    QYSession * session = new QYSession();
+    QYSession *session = new QYSession();
     session->show();
     YSession::self()->parseCommandLine(argc, argv);
     //YSession::self()->frontendGuiReady();
@@ -54,4 +54,3 @@ int main(int argc, char **argv)
     // ==============[ let's rock ]=============
     return app.exec();
 }
-

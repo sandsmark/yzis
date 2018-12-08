@@ -38,13 +38,13 @@ public:
     /**
      * Fills the register @param r with the @param value
      */
-    void setRegister(QChar r, const QStringList& value);
+    void setRegister(QChar r, const QStringList &value);
 
     /**
      * Gets the value of register @param r
      * Returns a QString containing the register content
      */
-    QStringList& getRegister(QChar r);
+    QStringList &getRegister(QChar r);
 
     /**
      * Gets the list of registers

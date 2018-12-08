@@ -33,8 +33,8 @@ class YBuffer;
 class YInfoStartPositionRecord;
 class YInfoJumpListRecord;
 
-typedef QVector<YInfoStartPositionRecord*> StartPositionVector;
-typedef QVector<YInfoJumpListRecord*> JumpListVector;
+typedef QVector<YInfoStartPositionRecord *> StartPositionVector;
+typedef QVector<YInfoJumpListRecord *> JumpListVector;
 
 /**
  * Class YInfo
@@ -62,7 +62,7 @@ public:
      * @param path The full path to the yzisinfo file
      */
 
-    YInfo(const QString & path);
+    YInfo(const QString &path);
 
     /**
      * Destructor. Does nothing.
@@ -101,7 +101,7 @@ public:
      * yzisinfo file
      */
 
-    void saveSearchHistory(QTextStream & write);
+    void saveSearchHistory(QTextStream &write);
 
     /**
      * Method to save the start position to the yzisinfo file
@@ -110,7 +110,7 @@ public:
      * yzisinfo file
      */
 
-    void saveStartPosition(QTextStream & write);
+    void saveStartPosition(QTextStream &write);
 
     /**
      * Method to save the jump list to the yzisinfo file
@@ -119,7 +119,7 @@ public:
      * yzisinfo file
      */
 
-    void saveJumpList(QTextStream & write);
+    void saveJumpList(QTextStream &write);
 
     /**
      * Method to save the registers list to the yzisinfo file
@@ -128,13 +128,13 @@ public:
      * yzisinfo file
      */
 
-    void saveRegistersList(QTextStream & write);
+    void saveRegistersList(QTextStream &write);
 
     /**
      * Method to return the start position for the current file
      */
 
-    YCursor startPosition(const QString& filename) const;
+    YCursor startPosition(const QString &filename) const;
     YCursor startPosition(const YBuffer *buffer) const;
 
     /**
@@ -156,8 +156,7 @@ private:
      * yzisinfo file
      */
 
-    void saveExHistory(QTextStream & write);
-
+    void saveExHistory(QTextStream &write);
 
     QFile mYzisinfo;
     bool mYzisinfoInitialized; // is yzisinfo initialized

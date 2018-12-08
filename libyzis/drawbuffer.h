@@ -56,13 +56,13 @@ typedef QList<YDrawLine> YDrawSection;
 
 #include "drawline.h"
 
-
 class YDrawCell;
 class YCursor;
 class YView;
 class YViewCursor;
 
-struct YDrawLineLock {
+struct YDrawLineLock
+{
     int line;
     int count;
     YDrawLineLock(int l, int c)
@@ -72,7 +72,6 @@ struct YDrawLineLock {
     }
 };
 
-
 class YZIS_EXPORT YDrawBuffer
 {
     friend class YDrawBufferAbstractIterator;
@@ -80,8 +79,7 @@ class YZIS_EXPORT YDrawBuffer
     friend class YDrawBufferIterator;
 
 public:
-
-    YDrawBuffer(const YView* view, int columns, int height);
+    YDrawBuffer(const YView *view, int columns, int height);
 
     /*
      * Returns the buffer line number corresponding to
@@ -138,7 +136,7 @@ public:
      * This iterator is suitable for read-only operations on the drawbuffer
      * see YDrawBufferConstIterator
      */
-    YDrawBufferConstIterator const_iterator(const YInterval& i, yzis::IntervalType itype);
+    YDrawBufferConstIterator const_iterator(const YInterval &i, yzis::IntervalType itype);
 
     /**
      * Returns an iterator on this drawbuffer for the given interval @arg i
@@ -146,7 +144,7 @@ public:
      * This iterator is suitable for read and write operations on the drawbuffer
      * see YDrawBufferIterator
      */
-    YDrawBufferIterator iterator(const YInterval& i, yzis::IntervalType itype);
+    YDrawBufferIterator iterator(const YInterval &i, yzis::IntervalType itype);
 
     /**
      * Accessor to the in-memory lines
@@ -171,7 +169,7 @@ public:
     /**
      * Sets the YDrawCell used to draw the end of lines.
      */
-    void setEOLCell(const YDrawCell& cell);
+    void setEOLCell(const YDrawCell &cell);
 
     /**
      * Get the YDrawCell used to draw the end of lines.
@@ -194,7 +192,6 @@ public:
         return currentHeight() >= mScreenHeight;
     }
 
-
     /**
      * Fill resting space with buffer content
      */
@@ -214,13 +211,13 @@ public:
      * Mark the given @arg i interval as selected by @arg sel.
      * Returns the affected part of screen.
      */
-    YInterval addSelection(yzis::SelectionType sel, const YInterval& i, yzis::IntervalType itype);
+    YInterval addSelection(yzis::SelectionType sel, const YInterval &i, yzis::IntervalType itype);
 
     /**
      * Remove @arg sel selection mark from the given @arg i interval.
      * Returns the affected part of screen.
      */
-    YInterval delSelection(yzis::SelectionType sel, const YInterval& i, yzis::IntervalType itype);
+    YInterval delSelection(yzis::SelectionType sel, const YInterval &i, yzis::IntervalType itype);
 
     /**
      * Low-level method.
@@ -229,7 +226,7 @@ public:
      *
      * Warning: do not use this method, unless you known what you are doing. Please use iterators instead.
      */
-    bool targetBufferLine(int bline, int* sid);
+    bool targetBufferLine(int bline, int *sid);
 
     /**
      * Low-level method.
@@ -243,7 +240,7 @@ public:
      *
      * Warning: do not use this method, unless you known what you are doing. Please use iterators instead.
      */
-    int targetBufferColumn(int bcol, int sid, int* lid, int* cid, int* bshift, int* column = nullptr) const;
+    int targetBufferColumn(int bcol, int sid, int *lid, int *cid, int *bshift, int *column = nullptr) const;
 
     /**
      * Low-level method.
@@ -255,7 +252,7 @@ public:
      *
      * Warning: do not use this method, unless you known what you are doing. Please use iterators instead.
      */
-    bool targetScreenLine(int sline, int* sid, int* lid, int* bline = nullptr) const;
+    bool targetScreenLine(int sline, int *sid, int *lid, int *bline = nullptr) const;
 
     /**
      * Low-level method.
@@ -268,8 +265,7 @@ public:
      *
      * Warning: do not use this method, unless you known what you are doing. Please use iterators instead.
      */
-    int targetScreenColumn(int scol, int sid, int lid, int* cid, int* sshift, int* position = nullptr) const;
-
+    int targetScreenColumn(int scol, int sid, int lid, int *cid, int *sshift, int *position = nullptr) const;
 
     /**
      * Make the drawbuffer scroll to ensure the YViewCursor @arg vc is visible.
@@ -280,26 +276,25 @@ public:
      * The row v has to be shifted to row v-vd.
      * The column c has to be shifted to column c-hd.
      */
-    bool scrollForViewCursor(const YViewCursor& vc, int* scrolling_horizontal, int* scroll_vertical);
+    bool scrollForViewCursor(const YViewCursor &vc, int *scrolling_horizontal, int *scroll_vertical);
 
     /**
      * Make the drawbuffer scroll to ensure the line @arg line is the on-screen top line.
      * see scrollForViewCursor.
      */
-    bool scrollLineToTop(int line, int* scrolling_horizontal, int* scroll_vertical);
+    bool scrollLineToTop(int line, int *scrolling_horizontal, int *scroll_vertical);
 
     /**
      * Make the drawbuffer scroll to ensure the line @arg line is the on-screen center line.
      * see scrollForViewCursor.
      */
-    bool scrollLineToCenter(int line, int* scrolling_horizontal, int* scroll_vertical);
+    bool scrollLineToCenter(int line, int *scrolling_horizontal, int *scroll_vertical);
 
     /**
      * Make the drawbuffer scroll to ensure the line @arg line is the on-screen bottom line.
      * see scrollForViewCursor.
      */
-    bool scrollLineToBottom(int line, int* scrolling_horizontal, int* scroll_vertical);
-
+    bool scrollLineToBottom(int line, int *scrolling_horizontal, int *scroll_vertical);
 
     /**
      * Locks the buffer line @line
@@ -319,8 +314,7 @@ public:
      */
     void squeeze();
 
-
-private :
+private:
     QList<YDrawSection> mContent;
 
     QList<YDrawLineLock> mLocks;
@@ -332,13 +326,11 @@ private :
     int mFirstBufferLine;
     int mScreenTopBufferLine;
 
-    const YView* mView;
+    const YView *mView;
 
-    friend YZIS_EXPORT YDebugStream& operator<< (YDebugStream& out, const YDrawBuffer& buff);
-
+    friend YZIS_EXPORT YDebugStream &operator<<(YDebugStream &out, const YDrawBuffer &buff);
 };
 
-extern YZIS_EXPORT YDebugStream& operator<< (YDebugStream& out, const YDrawBuffer& buff);
-
+extern YZIS_EXPORT YDebugStream &operator<<(YDebugStream &out, const YDrawBuffer &buff);
 
 #endif

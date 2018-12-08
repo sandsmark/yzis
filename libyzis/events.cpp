@@ -24,25 +24,26 @@
 #include "kate/syntaxhighlight.h"
 #include "view.h"
 
-#define dbg()    yzDebug("YEvents")
-#define err()    yzError("YEvents")
+#define dbg() yzDebug("YEvents")
+#define err() yzError("YEvents")
 
 YEvents::YEvents()
-{}
+{
+}
 
 YEvents::~YEvents()
 {
     mEvents.clear();
 }
 
-void YEvents::connect(const QString& event, const QString& function)
+void YEvents::connect(const QString &event, const QString &function)
 {
     dbg() << "Events : connecting event " << event << " to " << function << endl;
 
-    if(mEvents.contains(event)) {
+    if (mEvents.contains(event)) {
         QStringList list = mEvents[event];
 
-        if(!list.contains(function)) {
+        if (!list.contains(function)) {
             list += function;
         }
 
@@ -54,8 +55,7 @@ void YEvents::connect(const QString& event, const QString& function)
     }
 }
 
-
-QStringList YEvents::exec(const QString& event, YView *view)
+QStringList YEvents::exec(const QString &event, YView *view)
 {
     /* XXX when view is NULL, what shall we do ? */
     dbg() << "Executing event " << event << endl;
@@ -63,31 +63,31 @@ QStringList YEvents::exec(const QString& event, YView *view)
     QStringList results;
     QString hlName;
 
-    if(view && view->buffer()->highlight()) {
+    if (view && view->buffer()->highlight()) {
         hlName = view->buffer()->highlight()->name();
     }
 
     hlName = hlName.toLower();
     hlName.replace("+", "p");
 
-    for(; it != end; ++it) {
+    for (; it != end; ++it) {
         dbg() << "Comparing " << it.key() << " to " << event << endl;
 
-        if(QString::compare(it.key(), event) == 0) {
+        if (QString::compare(it.key(), event) == 0) {
             QStringList list = it.value();
             dbg() << "Matched " << list << endl;
 
-            foreach(QString action, list) {
+            foreach (QString action, list) {
                 int nbArgs = 0, nbResults = 0;
 
-                if(event == "INDENT_ON_ENTER" && action != "Indent_" + hlName) {
-                    continue;    //skip it (it's not the right plugin for indent according to the current highlight name)
-                } else if(event == "INDENT_ON_KEY" && action != "Indent_OnKey_" + hlName) {
-                    continue;    //skip it (it's not the right plugin for indent according to the current highlight name)
+                if (event == "INDENT_ON_ENTER" && action != "Indent_" + hlName) {
+                    continue; //skip it (it's not the right plugin for indent according to the current highlight name)
+                } else if (event == "INDENT_ON_KEY" && action != "Indent_OnKey_" + hlName) {
+                    continue; //skip it (it's not the right plugin for indent according to the current highlight name)
                 }
 
                 //special handling for indent
-                if(QString::compare(event, "INDENT_ON_KEY") == 0) {
+                if (QString::compare(event, "INDENT_ON_KEY") == 0) {
                     QByteArray b = view->getInputBuffer().toString().toUtf8();
                     const char *inputs = b.data();
                     QRegExp rx("^(\\s*).*$"); //regexp to get all tabs and spaces
@@ -97,7 +97,7 @@ QStringList YEvents::exec(const QString& event, YView *view)
                     int nbCurSpaces = rx.cap(1).count(" ");
                     QString nextLine;
 
-                    if(view->getLineColumnCursor().y() + 1 < view->buffer()->lineCount()) {
+                    if (view->getLineColumnCursor().y() + 1 < view->buffer()->lineCount()) {
                         nextLine = view->buffer()->textline(view->getLineColumnCursor().y() + 1);
                     }
 
@@ -112,7 +112,7 @@ QStringList YEvents::exec(const QString& event, YView *view)
                     QByteArray prev = prevLine.toUtf8();
                     QByteArray next = nextLine.toUtf8();
                     YLuaEngine::self()->exe(action, "siiiiiisss", inputs, nbPrevTabs, nbPrevSpaces, nbCurTabs, nbCurSpaces, nbNextTabs, nbNextSpaces, cur.data(), prev.data(), next.data());
-                } else if(QString::compare(event, "INDENT_ON_ENTER") == 0) {
+                } else if (QString::compare(event, "INDENT_ON_ENTER") == 0) {
                     QRegExp rx("^(\\s*).*$"); //regexp to get all tabs and spaces
                     QString nextLine = view->buffer()->textline(view->getLineColumnCursor().y());
                     rx.exactMatch(nextLine);

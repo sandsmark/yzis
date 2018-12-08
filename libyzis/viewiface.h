@@ -46,7 +46,6 @@ class YDrawCell;
 class YZIS_EXPORT YViewIface
 {
 public:
-
     //-------------------------------------------------------
     //                GUI Notifications
     //-------------------------------------------------------
@@ -67,7 +66,8 @@ public:
      * so implementation is optional in the GUI.
      */
     virtual void guiUpdateFileName()
-    {}
+    {
+    }
 
     /** Called when current mode has changed.
      * The GUI must update the editor's cursor shape.
@@ -80,31 +80,31 @@ public:
      * so implementation is optional in the GUI.
      */
     virtual void guiUpdateFileInfo()
-    {}
+    {
+    }
 
     /** Called when an informational message has been sent to the user.
      * Basic feedback is already handled by YView,
      * so implementation is optional in the GUI.
      */
-    virtual void guiDisplayInfo(const QString&)    {}
+    virtual void guiDisplayInfo(const QString &) {}
 
     /**
      * Notify GUIs that HL changed
      */
-    virtual void guiHighlightingChanged(void) {} ;
+    virtual void guiHighlightingChanged(void) {};
 
     /** Notify GUIs that the selected text has changed (clipboard).
       *
       * The GUI may want to re-implement this method to catch selection
       * change events.
       */
-    virtual void guiSelectionChanged()    {}
+    virtual void guiSelectionChanged() {}
 
     /**
      * scroll dx to the right and dy downward
      */
     virtual void guiScroll(int dx, int dy) = 0;
-
 
     //-------------------------------------------------------
     //                  GUI Command Line
@@ -117,7 +117,7 @@ public:
     /**
      * Sets the command line text
      */
-    virtual void guiSetCommandLineText(const QString&) = 0;
+    virtual void guiSetCommandLineText(const QString &) = 0;
 
     /** Focus on the command line
      */
@@ -134,7 +134,7 @@ public:
      * It is used by libyzis to export information about
      * the buffer and the view to the GUI.
      */
-    virtual YStatusBarIface* guiStatusBar() = 0;
+    virtual YStatusBarIface *guiStatusBar() = 0;
 
     //-------------------------------------------------------
     //                  GUI Painting
@@ -149,7 +149,7 @@ public:
       *
       * XXX This needs more doc.
       */
-    virtual void guiNotifyContentChanged(const YSelection& s) = 0;
+    virtual void guiNotifyContentChanged(const YSelection &s) = 0;
 
     /** Inform GUI that a paint event is going to arrive. */
     virtual void guiPreparePaintEvent() = 0;
@@ -158,10 +158,10 @@ public:
     virtual void guiEndPaintEvent() = 0;
 
     /** XXX to be written */
-    virtual void guiDrawCell(YCursor pos, const YDrawCell& cell) = 0;
+    virtual void guiDrawCell(YCursor pos, const YDrawCell &cell) = 0;
 
     /** XXX to be written */
-    virtual void guiDrawClearToEOL(YCursor pos, const YDrawCell& clearCell) = 0;
+    virtual void guiDrawClearToEOL(YCursor pos, const YDrawCell &clearCell) = 0;
 
     /** XXX to be written */
     virtual void guiDrawSetMaxLineNumber(int max) = 0;
@@ -181,10 +181,6 @@ public:
 
     /** Virtual destructor */
     virtual ~YViewIface();
-
 };
 
-
 #endif // YZ_VIEW_IFACE
-
-

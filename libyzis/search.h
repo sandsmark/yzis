@@ -35,44 +35,44 @@ class YBuffer;
 class YSearch
 {
 
-public :
+public:
     YSearch();
     ~YSearch();
 
     /**
      * search after current cursor position
      */
-    YCursor forward(YBuffer* buffer, const QString& pattern, bool* found, const YCursor from);
+    YCursor forward(YBuffer *buffer, const QString &pattern, bool *found, const YCursor from);
 
     /**
      * search before current cursor position
      */
-    YCursor backward(YBuffer *buffer, const QString& pattern, bool* found, const YCursor from);
+    YCursor backward(YBuffer *buffer, const QString &pattern, bool *found, const YCursor from);
 
     /**
      * replay search forward
      */
-    YCursor replayForward(YBuffer *buffer, bool* found, const YCursor from, bool skipline = false);
+    YCursor replayForward(YBuffer *buffer, bool *found, const YCursor from, bool skipline = false);
 
     /**
      * replay search backward
      */
-    YCursor replayBackward(YBuffer *buffer, bool* found, const YCursor from, bool skipline = false);
+    YCursor replayBackward(YBuffer *buffer, bool *found, const YCursor from, bool skipline = false);
 
     /**
      * Highlight given line
      */
-    void highlightLine(YBuffer* buffer, int line);
+    void highlightLine(YBuffer *buffer, int line);
 
     /**
      * Shift @arg shift lines to the bottom the search highlight layout from @ærg line line
      */
-    void shiftHighlight(YBuffer* buffer, int line, int shift);
+    void shiftHighlight(YBuffer *buffer, int line, int shift);
 
     /**
      * return current search
      */
-    const QString& currentSearch() const;
+    const QString &currentSearch() const;
 
     /**
      * true if currentSearch is not null
@@ -84,11 +84,9 @@ public :
      */
     void update();
 
-
-private :
+private:
     struct Private;
     Private *d;
 };
 
 #endif
-

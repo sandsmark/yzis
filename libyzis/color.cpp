@@ -21,25 +21,24 @@
 
 #include "color.h"
 
-#define dbg()    yzDebug("YColor")
-#define err()    yzError("YColor")
+#define dbg() yzDebug("YColor")
+#define err() yzError("YColor")
 
 /*
  * Most of the code here has been copy/pasted from the Qt3 QColor class.
  * If some things looks weird, complain to Trolltech.
  */
 
-
 /** helper functions from qt ( gui/painting/qcolor_p.cpp ) **/
 static int hex2int(QChar hexchar)
 {
     int v;
 
-    if(hexchar.isDigit()) {
+    if (hexchar.isDigit()) {
         v = hexchar.digitValue();
-    } else if(hexchar >= 'A' && hexchar <= 'F') {
+    } else if (hexchar >= 'A' && hexchar <= 'F') {
         v = hexchar.cell() - 'A' + 10;
-    } else if(hexchar >= 'a' && hexchar <= 'f') {
+    } else if (hexchar >= 'a' && hexchar <= 'f') {
         v = hexchar.cell() - 'a' + 10;
     } else {
         v = -1;
@@ -50,11 +49,11 @@ static int hex2int(QChar hexchar)
 
 #define qRgb YzqRgb
 
-static const struct RGBData {
+static const struct RGBData
+{
     const char *name;
     uint value;
-}
-rgbTbl[] = {
+} rgbTbl[] = {
     { "aliceblue", qRgb(240, 248, 255) },
     { "antiquewhite", qRgb(250, 235, 215) },
     { "aqua", qRgb(0, 255, 255) },
@@ -216,7 +215,6 @@ static int rgb_cmp(const void *d1, const void *d2)
     return qstricmp(((RGBData *)d1)->name, ((RGBData *)d2)->name);
 }
 
-
 YColor::YColor()
 {
     invalidate();
@@ -230,26 +228,26 @@ YColor::YColor(QRgb rgb)
 YColor::YColor(Qt::GlobalColor color)
 {
     static const QRgb global_colors[] = {
-        qRgb(255, 255, 255),  // Qt::color0
-        qRgb(0, 0, 0),   // Qt::color1
-        qRgb(0, 0, 0),   // black
-        qRgb(255, 255, 255),  // white
-        qRgb(128, 128, 128),  // index 248   medium gray
-        qRgb(160, 160, 164),  // index 247   light gray
-        qRgb(192, 192, 192),  // index 7     light gray
-        qRgb(255, 0, 0),  // index 249   red
-        qRgb(0, 255, 0),   // index 250   green
-        qRgb(0, 0, 255),   // index 252   blue
-        qRgb(0, 255, 255),   // index 254   cyan
-        qRgb(255, 0, 255),  // index 253   magenta
-        qRgb(255, 255, 0),  // index 251   yellow
-        qRgb(128, 0, 0),  // index 1     dark red
-        qRgb(0, 128, 0),   // index 2     dark green
-        qRgb(0, 0, 128),   // index 4     dark blue
-        qRgb(0, 128, 128),   // index 6     dark cyan
-        qRgb(128, 0, 128),  // index 5     dark magenta
-        qRgb(128, 128, 0),  // index 3     dark yellow
-        qRgb(0, 0, 0)    //             transparent
+        qRgb(255, 255, 255), // Qt::color0
+        qRgb(0, 0, 0), // Qt::color1
+        qRgb(0, 0, 0), // black
+        qRgb(255, 255, 255), // white
+        qRgb(128, 128, 128), // index 248   medium gray
+        qRgb(160, 160, 164), // index 247   light gray
+        qRgb(192, 192, 192), // index 7     light gray
+        qRgb(255, 0, 0), // index 249   red
+        qRgb(0, 255, 0), // index 250   green
+        qRgb(0, 0, 255), // index 252   blue
+        qRgb(0, 255, 255), // index 254   cyan
+        qRgb(255, 0, 255), // index 253   magenta
+        qRgb(255, 255, 0), // index 251   yellow
+        qRgb(128, 0, 0), // index 1     dark red
+        qRgb(0, 128, 0), // index 2     dark green
+        qRgb(0, 0, 128), // index 4     dark blue
+        qRgb(0, 128, 128), // index 6     dark cyan
+        qRgb(128, 0, 128), // index 5     dark magenta
+        qRgb(128, 128, 0), // index 3     dark yellow
+        qRgb(0, 0, 0) //             transparent
     };
     setRgb(global_colors[color]);
 }
@@ -264,7 +262,7 @@ void YColor::setRgb(QRgb rgb)
 {
     m_red = ((rgb >> 16) & 0xff) * 0x101;
     m_green = ((rgb >> 8) & 0xff) * 0x101;
-    m_blue = ((rgb) & 0xff) * 0x101;
+    m_blue = ((rgb)&0xff) * 0x101;
     m_valid = true;
 }
 
@@ -272,21 +270,21 @@ void YColor::setNamedColor(const QString &name)
 {
     invalidate();
 
-    if(!name.isEmpty()) {
+    if (!name.isEmpty()) {
         QByteArray n = name.toLatin1();
         int len = qstrlen(n.constData());
 
-        if(name[0] == '#') {
+        if (name[0] == '#') {
             QString hex(name.mid(1));
             --len;
             m_red = m_green = m_blue = 0;
             m_valid = true;
 
-            if(len == 6) {
+            if (len == 6) {
                 m_red = (hex2int(hex[0]) << 4) + hex2int(hex[1]);
                 m_green = (hex2int(hex[2]) << 4) + hex2int(hex[3]);
                 m_blue = (hex2int(hex[4]) << 4) + hex2int(hex[5]);
-            } else if(len == 3) {
+            } else if (len == 3) {
                 m_red = (hex2int(hex[0]) << 4) + hex2int(hex[0]);
                 m_green = (hex2int(hex[1]) << 4) + hex2int(hex[1]);
                 m_blue = (hex2int(hex[2]) << 4) + hex2int(hex[2]);
@@ -294,7 +292,7 @@ void YColor::setNamedColor(const QString &name)
                 m_valid = false;
             }
 
-            if(m_valid) {
+            if (m_valid) {
                 m_red |= (m_red << 8);
                 m_green |= (m_green << 8);
                 m_blue |= (m_blue << 8);
@@ -303,18 +301,18 @@ void YColor::setNamedColor(const QString &name)
             ++len;
             char *name_no_space = (char *)malloc(len);
 
-            for(int o = 0, i = 0; i < len; i++) {
-                if(n[i] != '\t' && n[i] != ' ') {
+            for (int o = 0, i = 0; i < len; i++) {
+                if (n[i] != '\t' && n[i] != ' ') {
                     name_no_space[o++] = n[i];
                 }
             }
 
             RGBData x;
             x.name = name_no_space;
-            RGBData *r = (RGBData*)bsearch(&x, rgbTbl, rgbTblSize, sizeof(RGBData), rgb_cmp);
+            RGBData *r = (RGBData *)bsearch(&x, rgbTbl, rgbTblSize, sizeof(RGBData), rgb_cmp);
             free(name_no_space);
 
-            if(r) {
+            if (r) {
                 m_valid = true;
                 setRgb(r->value);
             }
@@ -349,16 +347,16 @@ int YColor::blue() const
     return m_blue >> 8;
 }
 
-bool YColor::operator==(const YColor& color) const
+bool YColor::operator==(const YColor &color) const
 {
     return m_valid == color.m_valid && (!m_valid || (m_red == color.m_red && m_green == color.m_green && m_blue == color.m_blue));
 }
-bool YColor::operator!=(const YColor& color) const
+bool YColor::operator!=(const YColor &color) const
 {
     return !(*this == color);
 }
 
-YColor& YColor::operator=(const YColor& color)
+YColor &YColor::operator=(const YColor &color)
 {
     m_valid = color.m_valid;
     m_red = color.m_red;
@@ -366,4 +364,3 @@ YColor& YColor::operator=(const YColor& color)
     m_blue = color.m_blue;
     return *this;
 }
-

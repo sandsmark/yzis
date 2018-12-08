@@ -40,27 +40,26 @@ class QYCommandLine;
 class QYZisCodeCompletion;
 class QYLineNumbers;
 
-
 /**
   * @short Implementation of YView for the Qt GUI
   *
   * In QYzis, the view is implemented using a QWidget
   */
-class QYView: public QWidget, public YView
+class QYView : public QWidget, public YView
 {
     Q_OBJECT
 
     friend class QYCursor;
     friend class QYEdit;
 
-signals :
+signals:
     void cursorPositionChanged();
     void newStatus();
 
 public:
-    QYView(YBuffer *doc, YSession * ysession);
+    QYView(YBuffer *doc, YSession *ysession);
     virtual ~QYView();
-    void guiSetCommandLineText(const QString& text);
+    void guiSetCommandLineText(const QString &text);
     QString guiGetCommandLineText() const;
     void guiSetFocusCommandLine();
     void guiSetFocusMainWindow();
@@ -68,11 +67,11 @@ public:
 
     void setVisibleArea(int columns, int lines);
 
-    virtual YStatusBarIface* guiStatusBar();
+    virtual YStatusBarIface *guiStatusBar();
 
-    void wheelEvent(QWheelEvent * e);
+    void wheelEvent(QWheelEvent *e);
 
-    void applyConfig(const QSettings& settings, bool refresh = true);
+    void applyConfig(const QSettings &settings, bool refresh = true);
 
     QChar currentChar() const;
 
@@ -81,8 +80,8 @@ public:
         return mEdit;
     }
 
-    virtual void registerModifierKeys(const QString& keys);
-    virtual void unregisterModifierKeys(const QString& keys);
+    virtual void registerModifierKeys(const QString &keys);
+    virtual void unregisterModifierKeys(const QString &keys);
 
     void guiSetup();
 
@@ -93,19 +92,18 @@ public:
     void guiHighlightingChanged();
 
 protected:
-    void focusInEvent(QFocusEvent * e);
-    void resizeEvent(QResizeEvent * e);
+    void focusInEvent(QFocusEvent *e);
+    void resizeEvent(QResizeEvent *e);
     void guiDrawSetMaxLineNumber(int max);
     void guiDrawSetLineNumber(int y, int n, int h);
     virtual void guiPreparePaintEvent();
     virtual void guiEndPaintEvent();
-    virtual void guiDrawCell(YCursor pos, const YDrawCell& cell);
-    virtual void guiDrawClearToEOL(YCursor pos, const YDrawCell& clearCell);
+    virtual void guiDrawCell(YCursor pos, const YDrawCell &cell);
+    virtual void guiDrawClearToEOL(YCursor pos, const YDrawCell &clearCell);
 
-    void guiPaintEvent(const YSelection& s);
+    void guiPaintEvent(const YSelection &s);
 
-
-    virtual void guiNotifyContentChanged(const YSelection& i);
+    virtual void guiNotifyContentChanged(const YSelection &i);
 
     /**
      * Get the screen coordinates of the cursor position
@@ -129,10 +127,9 @@ private:
     QYCommandLine *mCommandLine;
     QScrollBar *mVScroll; //vertical scroll
 
-    QYLineNumbers* mLineNumbers;
+    QYLineNumbers *mLineNumbers;
 
-    QPainter* mPainter;
+    QPainter *mPainter;
 };
 
 #endif
-

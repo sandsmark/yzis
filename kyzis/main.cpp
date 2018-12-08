@@ -29,22 +29,21 @@
 #include <kaboutdata.h>
 #include <kservice.h>
 
-
-MainWindow::MainWindow(KTextEditor::Document* doc)
-    : document(0),
-      view(0)
+MainWindow::MainWindow(KTextEditor::Document *doc) :
+    document(0),
+    view(0)
 {
-    if(!doc) {
-        KTextEditor::Editor* editor = NULL;
+    if (!doc) {
+        KTextEditor::Editor *editor = NULL;
         KService::Ptr serv = KService::serviceByDesktopName("yzispart");
 
-        if(!serv) {
+        if (!serv) {
             KMessageBox::error(this, "Could not find yzispart!");
             kapp->exit(-1);
         } else {
             editor = KTextEditor::editor(serv->library().toLatin1());
 
-            if(!editor) {
+            if (!editor) {
                 KMessageBox::error(this, "Could not create yziskpart editor component");
                 kapp->exit(-1);
             }
@@ -55,7 +54,7 @@ MainWindow::MainWindow(KTextEditor::Document* doc)
         document = doc;
     }
 
-    view = qobject_cast< KTextEditor::View* >(document->createView(this));
+    view = qobject_cast<KTextEditor::View *>(document->createView(this));
     setCentralWidget(view);
     guiFactory()->addClient(view);
     show();
@@ -63,13 +62,13 @@ MainWindow::MainWindow(KTextEditor::Document* doc)
 
 MainWindow::~MainWindow()
 {
-    if(document) {
+    if (document) {
         guiFactory()->removeClient(view);
         delete document;
     }
 }
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
     KAboutData aboutData("kyzis",
                          0,
@@ -80,11 +79,10 @@ int main(int argc, char** argv)
                          ki18n("(c) 2007"),
                          ki18n("http://www.yzis.org"),
                          "http://yzis.org",
-                         "yzis-dev@yzis.org"
-                        );
+                         "yzis-dev@yzis.org");
     KCmdLineArgs::init(argc, argv, &aboutData);
     KApplication app;
-    MainWindow* mainWindow = new MainWindow();
+    MainWindow *mainWindow = new MainWindow();
     mainWindow->show();
     return app.exec();
 }

@@ -30,21 +30,20 @@
 
 class YDrawCell;
 
-
 class YZIS_EXPORT YDrawLine : public QList<YDrawCell>
 {
-public :
+public:
     YDrawLine();
     virtual ~YDrawLine();
 
-    void setFont(const YFont& f);
-    void setColor(const YColor& c);
-    void setBackgroundColor(const YColor& c);
+    void setFont(const YFont &f);
+    void setColor(const YColor &c);
+    void setBackgroundColor(const YColor &c);
     // TODO: setOutline
 
     void clear();
 
-    int step(const QString& c);
+    int step(const QString &c);
     void flush();
 
     YDrawSection arrange(int columns) const;
@@ -59,11 +58,10 @@ public :
     }
 
 private:
-
     /* current cell */
     YDrawCell mCur;
     /* working cell */
-    YDrawCell* mCell;
+    YDrawCell *mCell;
 
     int mWidth;
     int mLength;
@@ -72,9 +70,8 @@ private:
 
     friend class YDrawBuffer;
     friend class YDrawBufferIterator;
-    friend YZIS_EXPORT YDebugStream& operator<< (YDebugStream& out, const YDrawLine& dl);
+    friend YZIS_EXPORT YDebugStream &operator<<(YDebugStream &out, const YDrawLine &dl);
 };
-extern YZIS_EXPORT YDebugStream& operator<< (YDebugStream& out, const YDrawLine& dl);
-
+extern YZIS_EXPORT YDebugStream &operator<<(YDebugStream &out, const YDrawLine &dl);
 
 #endif

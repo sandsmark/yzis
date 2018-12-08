@@ -33,9 +33,8 @@
 #include <qregexp.h>
 #include <QTextStream>
 
-#define dbg()    yzDebug("YInternalOptionPool")
-#define err()    yzError("YInternalOptionPool")
-
+#define dbg() yzDebug("YInternalOptionPool")
+#define err() yzError("YInternalOptionPool")
 
 using namespace yzis;
 
@@ -51,41 +50,42 @@ YInternalOptionPool::~YInternalOptionPool()
     options.clear();
 }
 
-YInternalOptionPool::YInternalOptionPool(const YInternalOptionPool&)
-{}
+YInternalOptionPool::YInternalOptionPool(const YInternalOptionPool &)
+{
+}
 
-void YInternalOptionPool::loadFrom(const QString& file)
+void YInternalOptionPool::loadFrom(const QString &file)
 {
     dbg() << "loadFrom( " << file << " ) " << endl;
     QFile f(file);
 
-    if(file.isEmpty() || !f.exists()) {
-        return ;
+    if (file.isEmpty() || !f.exists()) {
+        return;
     }
 
-    if(f.open(QIODevice::ReadOnly | QIODevice::Text)) {
+    if (f.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QTextStream stream(&f);
         QRegExp rx("\\[(.*)\\]");
         QRegExp rx2("(.*)=(.*)");
         uint idx = 0;
 
-        while(!stream.atEnd()) {
-            QString line(stream.readLine());  // line of text excluding '\n'
+        while (!stream.atEnd()) {
+            QString line(stream.readLine()); // line of text excluding '\n'
 
-            if(line.trimmed().startsWith("#") || line.isEmpty()) {
-                continue;    //skip comment and empty lines
+            if (line.trimmed().startsWith("#") || line.isEmpty()) {
+                continue; //skip comment and empty lines
             }
 
-            if(rx.exactMatch(line)) {
+            if (rx.exactMatch(line)) {
                 setGroup(rx.cap(1).trimmed());
             } else {
-                if(rx2.exactMatch(line)) {
+                if (rx2.exactMatch(line)) {
                     bool matched = false;
 
-                    if(rx2.captureCount() > 1) {
+                    if (rx2.captureCount() > 1) {
                         setOptionFromString(&matched, rx2.cap(1).trimmed() + '=' + rx2.cap(2).trimmed());
 
-                        if(!matched) {  // this option is not known, probably a setting
+                        if (!matched) { // this option is not known, probably a setting
                             setQStringEntry(rx2.cap(1).trimmed(), rx2.cap(2).trimmed());
                         }
                     } else {
@@ -103,37 +103,37 @@ void YInternalOptionPool::loadFrom(const QString& file)
     }
 }
 
-void YInternalOptionPool::saveTo(const QString& file, const QString& what, const QString& except, bool force)
+void YInternalOptionPool::saveTo(const QString &file, const QString &what, const QString &except, bool force)
 {
     QFile f(file);
 
-    if(f.exists() && !force) {
-        return ;
+    if (f.exists() && !force) {
+        return;
     }
 
-    if(f.open(QIODevice::WriteOnly)) {
+    if (f.open(QIODevice::WriteOnly)) {
         QTextStream stream(&f);
         QList<QString> keys = mOptions.keys();
         qSort(keys);
         QString cGroup = "";
 
-        for(int i = 0; i < keys.size(); ++i) {
+        for (int i = 0; i < keys.size(); ++i) {
             QString myGroup = keys[i].section("\\", 0, -2);
 
-            if(!what.isEmpty() && !myGroup.startsWith(what)) {
-                continue;    //filter !
+            if (!what.isEmpty() && !myGroup.startsWith(what)) {
+                continue; //filter !
             }
 
-            if(!except.isEmpty() && myGroup.startsWith(except)) {
-                continue;    //filter
+            if (!except.isEmpty() && myGroup.startsWith(except)) {
+                continue; //filter
             }
 
-            if(myGroup != cGroup) {    // changing group
+            if (myGroup != cGroup) { // changing group
                 stream << "\n[" << myGroup << "]\n";
                 cGroup = myGroup;
             }
 
-            YOptionValue* ov = mOptions[ keys[i] ];
+            YOptionValue *ov = mOptions[keys[i]];
             stream << ov->parent()->name() << "=" << ov->toString() << "\n";
         }
 
@@ -145,19 +145,20 @@ void YInternalOptionPool::saveTo(const QString& file, const QString& what, const
  * Apply options functions
  */
 
-void doNothing(YBuffer*, YView*)
-{}
-void changeEncoding(YBuffer* b, YView* v)
+void doNothing(YBuffer *, YView *)
 {
-    if(b == NULL && v) {
+}
+void changeEncoding(YBuffer *b, YView *v)
+{
+    if (b == NULL && v) {
         b = v->buffer();
     }
 
-    if(b) {
+    if (b) {
         QString enc = b->getLocalStringOption("encoding");
 
-        if(enc != b->encoding()) {
-            if(b->fileIsModified() && YSession::self()->guiPromptYesNo(_("File modified"), _("This file has been modified, do you want to save it ?"))) {
+        if (enc != b->encoding()) {
+            if (b->fileIsModified() && YSession::self()->guiPromptYesNo(_("File modified"), _("This file has been modified, do you want to save it ?"))) {
                 b->save();
             }
 
@@ -165,61 +166,63 @@ void changeEncoding(YBuffer* b, YView* v)
         }
     }
 }
-void changeCursor(YBuffer*, YView* v)
+void changeCursor(YBuffer *, YView *v)
 {
-    if(v) {
+    if (v) {
         v->updateMode();
     }
 }
-void refreshView(YBuffer*, YView* v)
+void refreshView(YBuffer *, YView *v)
 {
-    if(v) {
+    if (v) {
         v->sendRefreshEvent();
     }
 }
-void recalcView(YBuffer*, YView* v)
+void recalcView(YBuffer *, YView *v)
 {
-    if(v) {
+    if (v) {
         v->recalcScreen();
     }
 }
-void setupView(YBuffer*, YView* v)
+void setupView(YBuffer *, YView *v)
 {
-    if(v) {
+    if (v) {
         v->guiSetup();
     }
 }
-void viewUpdateListChars(YBuffer*, YView* v)
+void viewUpdateListChars(YBuffer *, YView *v)
 {
-    if(v && v->getLocalBooleanOption("list")) {
+    if (v && v->getLocalBooleanOption("list")) {
         v->sendRefreshEvent();
     }
 }
-void setSyntax(YBuffer* b, YView* v)
+void setSyntax(YBuffer *b, YView *v)
 {
-    if(b == NULL && v) {
+    if (b == NULL && v) {
         b = v->buffer();
     }
 
-    if(b) {
+    if (b) {
         b->setHighLight(b->getLocalStringOption("syntax"));
     }
 }
-void updateHLSearch(YBuffer*, YView*)
+void updateHLSearch(YBuffer *, YView *)
 {
     YSession::self()->search()->update();
 }
 
-
 void YInternalOptionPool::init()
 {
     // here you add new options
-    options.append(new YOptionString("backspace", "eol", ContextSession, ScopeGlobal, &doNothing, QStringList("bs"), QStringList("eol") << "indent" << "start"));
+    options.append(new YOptionString("backspace", "eol", ContextSession, ScopeGlobal, &doNothing, QStringList("bs"), QStringList("eol") << "indent"
+                                                                                                                                        << "start"));
     options.append(new YOptionBoolean("blocksplash", true, ContextSession, ScopeGlobal, &doNothing, QStringList()));
     options.append(new YOptionBoolean("startofline", true, ContextSession, ScopeGlobal, &doNothing, QStringList("sol")));
     options.append(new YOptionBoolean("cindent", false, ContextBuffer, ScopeLocal, &doNothing, QStringList("cin")));
     QStringList cursor_shape;
-    cursor_shape << "square" << "vbar" << "hbar";
+    cursor_shape << "square"
+                 << "vbar"
+                 << "hbar";
     options.append(new YOptionString("cursor", "square", ContextView, ScopeLocal, &changeCursor, QStringList(), cursor_shape));
     options.append(new YOptionString("cursorinsert", "square", ContextView, ScopeLocal, &changeCursor, QStringList(), cursor_shape));
     options.append(new YOptionString("cursorreplace", "square", ContextView, ScopeLocal, &changeCursor, QStringList(), cursor_shape));
@@ -249,11 +252,16 @@ void YInternalOptionPool::init()
     options.append(new YOptionBoolean("wrap", true, ContextView, ScopeLocal, &recalcView, QStringList()));
     options.append(new YOptionBoolean("startofline", true, ContextView, ScopeLocal, &doNothing, QStringList("sol")));
     options.append(new YOptionList("tags", QStringList("tags"), ContextSession, ScopeGlobal, &doNothing, QStringList(), QStringList()));
-    options.append(new YOptionList("complete", QStringList(".") << "w" << "b" << "u" << "t" << "i", ContextSession, ScopeGlobal, &doNothing,
+    options.append(new YOptionList("complete", QStringList(".") << "w"
+                                                                << "b"
+                                                                << "u"
+                                                                << "t"
+                                                                << "i",
+                                   ContextSession, ScopeGlobal, &doNothing,
                                    QStringList("cpt"), QStringList()));
 
-    for(int i = 0; i < options.size(); i++) {
-        mOptions[ "Global\\" + options[i]->name() ] = new YOptionValue(*options[i]->defaultValue());
+    for (int i = 0; i < options.size(); i++) {
+        mOptions["Global\\" + options[i]->name()] = new YOptionValue(*options[i]->defaultValue());
     }
 
     setGroup("Global");
@@ -261,88 +269,88 @@ void YInternalOptionPool::init()
     initConfFiles();
 }
 
-void YInternalOptionPool::applyOption(YOption* option, OptContext ctx, OptScope scope, YBuffer* b, YView* v)
+void YInternalOptionPool::applyOption(YOption *option, OptContext ctx, OptScope scope, YBuffer *b, YView *v)
 {
     YASSERT(option);
 
-    if(ctx == ContextSession) {
+    if (ctx == ContextSession) {
         option->apply(NULL, NULL);
-    } else if(ctx == ContextBuffer) {
-        if(scope == ScopeGlobal) {
-            foreach(YBuffer *buffer, YSession::self()->buffers()) {
+    } else if (ctx == ContextBuffer) {
+        if (scope == ScopeGlobal) {
+            foreach (YBuffer *buffer, YSession::self()->buffers()) {
                 option->apply(buffer, v);
             }
-        } else if(b) {
+        } else if (b) {
             option->apply(b, v);
         }
-    } else if(ctx == ContextView) {
-        if(scope == ScopeGlobal) {
-            foreach(YBuffer *buffer, YSession::self()->buffers())
-                foreach(YView *view, buffer->views()) {
+    } else if (ctx == ContextView) {
+        if (scope == ScopeGlobal) {
+            foreach (YBuffer *buffer, YSession::self()->buffers())
+                foreach (YView *view, buffer->views()) {
                     option->apply(buffer, view);
                 }
-        } else if(v) {
+        } else if (v) {
             option->apply(b, v);
         }
     }
 }
-bool YInternalOptionPool::setOptionFromString(const QString& entry, OptScope user_scope, YBuffer* b, YView* v)
+bool YInternalOptionPool::setOptionFromString(const QString &entry, OptScope user_scope, YBuffer *b, YView *v)
 {
     bool test;
     return setOptionFromString(&test, entry, user_scope, b, v);
 }
-bool YInternalOptionPool::setOptionFromString(bool* matched, const QString& entry, OptScope user_scope, YBuffer* b, YView* v)
+bool YInternalOptionPool::setOptionFromString(bool *matched, const QString &entry, OptScope user_scope, YBuffer *b, YView *v)
 {
     bool ret = false;
     *matched = false;
     int i;
 
-    for(i = 0; !(*matched) && i < options.size(); i++) {
-        *matched = options[ i ]->context() != ContextNone && options[ i ]->match(entry);
+    for (i = 0; !(*matched) && i < options.size(); i++) {
+        *matched = options[i]->context() != ContextNone && options[i]->match(entry);
     }
 
-    if(*matched) {
+    if (*matched) {
         --i;
         OptScope scope = options[i]->scope();
         OptContext ctx = options[i]->context();
 
-        if(user_scope != ScopeDefault) {
+        if (user_scope != ScopeDefault) {
             scope = user_scope;
         }
 
         setGroup("Global");
 
-        if(scope == ScopeLocal) {
-            if(b && ctx == ContextBuffer) {
+        if (scope == ScopeLocal) {
+            if (b && ctx == ContextBuffer) {
                 setGroup(b->fileName());
-            } else if(v && ctx == ContextView) {
+            } else if (v && ctx == ContextView) {
                 setGroup(v->getLocalOptionKey());
             }
         }
 
         ret = fillOptionFromString(options[i], entry);
 
-        if(ret) {
+        if (ret) {
             applyOption(options[i], ctx, scope, b, v);
         }
     }
 
     return ret;
 }
-bool YInternalOptionPool::fillOptionFromString(YOption* opt, const QString& entry)
+bool YInternalOptionPool::fillOptionFromString(YOption *opt, const QString &entry)
 {
     QString option_key = currentGroup + "\\" + opt->name();
-    YOptionValue* ov = NULL;
+    YOptionValue *ov = NULL;
     bool created = false;
 
-    if(mOptions.contains(option_key)) {
-        ov = mOptions[ option_key ];
+    if (mOptions.contains(option_key)) {
+        ov = mOptions[option_key];
     } else {
         created = true;
 
         // we try to find a global one
-        if(mOptions.contains("Global\\" + opt->name())) {
-            ov = new YOptionValue(*mOptions[ "Global\\" + opt->name() ]);
+        if (mOptions.contains("Global\\" + opt->name())) {
+            ov = new YOptionValue(*mOptions["Global\\" + opt->name()]);
         } else {
             ov = new YOptionValue(*opt->defaultValue());
         }
@@ -350,198 +358,198 @@ bool YInternalOptionPool::fillOptionFromString(YOption* opt, const QString& entr
 
     bool ret = opt->setValue(entry, ov);
 
-    if(created) {
-        if(! ret) {  // bad value, delete the newly created ov
+    if (created) {
+        if (!ret) { // bad value, delete the newly created ov
             delete ov;
         } else {
-            mOptions[ option_key ] = ov;
+            mOptions[option_key] = ov;
         }
     }
 
     return ret;
 }
 
-const QString YInternalOptionPool::readStringOption(const QString& _key, const QString& def) const
+const QString YInternalOptionPool::readStringOption(const QString &_key, const QString &def) const
 {
     QString key = _key;
 
-    if(! key.contains('\\')) {
+    if (!key.contains('\\')) {
         key.prepend(currentGroup + '\\');
     }
 
-    if(mOptions.contains(key)) {
-        return mOptions[ key ]->string();
+    if (mOptions.contains(key)) {
+        return mOptions[key]->string();
     } else {
         return def;
     }
 }
 
-int YInternalOptionPool::readIntegerOption(const QString& _key, int def) const
+int YInternalOptionPool::readIntegerOption(const QString &_key, int def) const
 {
     QString key = _key;
 
-    if(! key.contains('\\')) {
+    if (!key.contains('\\')) {
         key.prepend(currentGroup + '\\');
     }
 
-    if(mOptions.contains(key)) {
-        return mOptions[ key ]->integer();
+    if (mOptions.contains(key)) {
+        return mOptions[key]->integer();
     } else {
         return def;
     }
 }
 
-bool YInternalOptionPool::readBooleanOption(const QString& _key, bool def) const
+bool YInternalOptionPool::readBooleanOption(const QString &_key, bool def) const
 {
     QString key = _key;
 
-    if(! key.contains('\\')) {
+    if (!key.contains('\\')) {
         key.prepend(currentGroup + '\\');
     }
 
-    if(mOptions.contains(key)) {
-        return mOptions[ key ]->boolean();
+    if (mOptions.contains(key)) {
+        return mOptions[key]->boolean();
     }
 
     return def;
 }
 
-QStringList YInternalOptionPool::readListOption(const QString& _key, const QStringList& def) const
+QStringList YInternalOptionPool::readListOption(const QString &_key, const QStringList &def) const
 {
     QString key = _key;
 
-    if(! key.contains('\\')) {
+    if (!key.contains('\\')) {
         key.prepend(currentGroup + '\\');
     }
 
-    if(mOptions.contains(key)) {
-        return mOptions[ key ]->list();
+    if (mOptions.contains(key)) {
+        return mOptions[key]->list();
     }
 
     return def;
 }
-MapOption YInternalOptionPool::readMapOption(const QString& _key) const
+MapOption YInternalOptionPool::readMapOption(const QString &_key) const
 {
     MapOption ret;
     QString key = _key;
 
-    if(! key.contains('\\')) {
+    if (!key.contains('\\')) {
         key.prepend(currentGroup + '\\');
     }
 
-    if(mOptions.contains(key)) {
-        ret = mOptions[ key ]->map();
+    if (mOptions.contains(key)) {
+        ret = mOptions[key]->map();
     }
 
     return ret;
 }
-YColor YInternalOptionPool::readColorOption(const QString& _key, const YColor& def) const
+YColor YInternalOptionPool::readColorOption(const QString &_key, const YColor &def) const
 {
     QString key = _key;
 
-    if(! key.contains('\\')) {
+    if (!key.contains('\\')) {
         key.prepend(currentGroup + '\\');
     }
 
-    if(mOptions.contains(key)) {
-        return mOptions[ key ]->color();
+    if (mOptions.contains(key)) {
+        return mOptions[key]->color();
     }
 
     return def;
 }
 
-const QString YInternalOptionPool::readQStringEntry(const QString& key , const QString& def) const
+const QString YInternalOptionPool::readQStringEntry(const QString &key, const QString &def) const
 {
     QString _key = currentGroup + "\\" + key;
 
-    if(mOptions.contains(_key)) {
-        return mOptions[ _key ]->string();
+    if (mOptions.contains(_key)) {
+        return mOptions[_key]->string();
     }
 
     return def;
 }
-int YInternalOptionPool::readIntEntry(const QString& key, int def) const
-{
-    QString _key = currentGroup + "\\" + key;
-    bool test;
-
-    if(mOptions.contains(_key)) {
-        return YOptionValue::integerFromString(&test, mOptions[ _key ]->string());
-    }
-
-    return def;
-}
-bool YInternalOptionPool::readBoolEntry(const QString& key , bool def) const
+int YInternalOptionPool::readIntEntry(const QString &key, int def) const
 {
     QString _key = currentGroup + "\\" + key;
     bool test;
 
-    if(mOptions.contains(_key)) {
-        return YOptionValue::booleanFromString(&test, mOptions[ _key ]->string());
+    if (mOptions.contains(_key)) {
+        return YOptionValue::integerFromString(&test, mOptions[_key]->string());
     }
 
     return def;
 }
-QStringList YInternalOptionPool::readQStringListEntry(const QString& key, const QStringList& def) const
+bool YInternalOptionPool::readBoolEntry(const QString &key, bool def) const
 {
     QString _key = currentGroup + "\\" + key;
     bool test;
 
-    if(mOptions.contains(_key)) {
-        return YOptionValue::listFromString(&test, mOptions[ _key ]->string());
+    if (mOptions.contains(_key)) {
+        return YOptionValue::booleanFromString(&test, mOptions[_key]->string());
     }
 
     return def;
 }
-YColor YInternalOptionPool::readYColorEntry(const QString& key, const YColor& def) const
+QStringList YInternalOptionPool::readQStringListEntry(const QString &key, const QStringList &def) const
 {
     QString _key = currentGroup + "\\" + key;
     bool test;
 
-    if(mOptions.contains(_key)) {
-        return YOptionValue::colorFromString(&test, mOptions[ _key ]->string());
+    if (mOptions.contains(_key)) {
+        return YOptionValue::listFromString(&test, mOptions[_key]->string());
+    }
+
+    return def;
+}
+YColor YInternalOptionPool::readYColorEntry(const QString &key, const YColor &def) const
+{
+    QString _key = currentGroup + "\\" + key;
+    bool test;
+
+    if (mOptions.contains(_key)) {
+        return YOptionValue::colorFromString(&test, mOptions[_key]->string());
     }
 
     return def;
 }
 
-void YInternalOptionPool::setQStringEntry(const QString& name, const QString& value)
+void YInternalOptionPool::setQStringEntry(const QString &name, const QString &value)
 {
     bool found = false, success = false;
     int i;
-    YOption* opt = NULL;
+    YOption *opt = NULL;
 
-    for(i = 0; !found && i < options.size(); i++) {
-        found = options[ i ]->name() == name;
+    for (i = 0; !found && i < options.size(); i++) {
+        found = options[i]->name() == name;
     }
 
-    if(found) {
-        opt = options[ i - 1 ];
+    if (found) {
+        opt = options[i - 1];
     } else {
         opt = new YOptionString(name, "", ContextNone, ScopeGlobal, &doNothing, QStringList(), QStringList());
     }
 
     success = fillOptionFromString(opt, name + '=' + value);
 
-    if(! success && !found) {
+    if (!success && !found) {
         delete opt;
-    } else if(success && !found) {
+    } else if (success && !found) {
         options.append(opt);
     }
 }
-void YInternalOptionPool::setBoolEntry(const QString& name, bool value)
+void YInternalOptionPool::setBoolEntry(const QString &name, bool value)
 {
     setQStringEntry(name, YOptionValue::booleanToString(value));
 }
-void YInternalOptionPool::setIntEntry(const QString& name, int value)
+void YInternalOptionPool::setIntEntry(const QString &name, int value)
 {
     setQStringEntry(name, YOptionValue::integerToString(value));
 }
-void YInternalOptionPool::setQStringListEntry(const QString& name, const QStringList& value)
+void YInternalOptionPool::setQStringListEntry(const QString &name, const QStringList &value)
 {
     setQStringEntry(name, YOptionValue::listToString(value));
 }
-void YInternalOptionPool::setYColorEntry(const QString& name, const YColor& value)
+void YInternalOptionPool::setYColorEntry(const QString &name, const YColor &value)
 {
     setQStringEntry(name, YOptionValue::colorToString(value));
 }
@@ -556,7 +564,7 @@ QSet<QString> YInternalOptionPool::groups()
     return ret;
 }
 
-void YInternalOptionPool::setGroup(const QString& group)
+void YInternalOptionPool::setGroup(const QString &group)
 {
     currentGroup = group;
 }
@@ -566,12 +574,12 @@ void YInternalOptionPool::initConfFiles()
     loadFrom(resourceMgr()->findResource(ConfigResource, "yzis.conf"));
 }
 
-bool YInternalOptionPool::hasGroup(const QString& group) const
+bool YInternalOptionPool::hasGroup(const QString &group) const
 {
     QList<QString> keys = mOptions.keys();
 
-    for(int ab = 0 ; ab < keys.size() ; ++ab)
-        if(keys.at(ab).split("\\")[ 0 ] == group) {
+    for (int ab = 0; ab < keys.size(); ++ab)
+        if (keys.at(ab).split("\\")[0] == group) {
             return true;
         }
 
@@ -580,44 +588,44 @@ bool YInternalOptionPool::hasGroup(const QString& group) const
 
 void YInternalOptionPool::cleanup()
 {
-    QMap<QString, YOptionValue*>::Iterator it = mOptions.begin(), end = mOptions.end();
+    QMap<QString, YOptionValue *>::Iterator it = mOptions.begin(), end = mOptions.end();
 
-    for(; it != end; ++it) {
+    for (; it != end; ++it) {
         delete it.value();
     }
 
-    for(int i = 0; i < options.size(); i++) {
+    for (int i = 0; i < options.size(); i++) {
         delete options[i];
     }
 }
 
-bool YInternalOptionPool::hasOption(const QString& _key) const
+bool YInternalOptionPool::hasOption(const QString &_key) const
 {
     QString key = _key;
 
-    if(! key.contains('\\')) {
+    if (!key.contains('\\')) {
         key.prepend(currentGroup + '\\');
     }
 
     return (mOptions.contains(key));
 }
 
-YOptionValue* YInternalOptionPool::getOption(const QString& option)
+YOptionValue *YInternalOptionPool::getOption(const QString &option)
 {
     QString key = option;
 
-    if(! key.contains('\\')) {
+    if (!key.contains('\\')) {
         key.prepend(currentGroup + '\\');
     }
 
-    if(mOptions.contains(key)) {
-        return mOptions[ key ];
+    if (mOptions.contains(key)) {
+        return mOptions[key];
     }
 
     return NULL;
 }
 
-void YInternalOptionPool::createOption(const QString& optionName, const QString& group, const QString& defaultValue, const QString& value, OptContext ctx, OptType type)
+void YInternalOptionPool::createOption(const QString &optionName, const QString &group, const QString &defaultValue, const QString &value, OptContext ctx, OptType type)
 {
     // TODO add OptScope parameter
     OptScope scope = ScopeLocal;
@@ -625,80 +633,80 @@ void YInternalOptionPool::createOption(const QString& optionName, const QString&
     bool found = false;
     int i;
 
-    for(i = 0; !found && i < options.size(); i++) {
-        found = options[ i ]->name() == optionName;
+    for (i = 0; !found && i < options.size(); i++) {
+        found = options[i]->name() == optionName;
     }
 
-    if(! found) {
+    if (!found) {
         // create a new YOption
-        YOption* opt = NULL;
+        YOption *opt = NULL;
         bool success = false;
 
-        if(type == yzis::TypeBool) {
+        if (type == yzis::TypeBool) {
             bool d_v = YOptionValue::booleanFromString(&success, defaultValue);
 
-            if(success) {
+            if (success) {
                 opt = new YOptionBoolean(optionName, d_v, ctx, scope, &doNothing, QStringList());
             }
-        } else if(type == TypeString) {
+        } else if (type == TypeString) {
             QString d_v = YOptionValue::stringFromString(&success, defaultValue);
 
-            if(success) {
+            if (success) {
                 opt = new YOptionString(optionName, d_v, ctx, scope, &doNothing, QStringList(), QStringList());
             }
-        } else if(type == yzis::TypeInt) {
+        } else if (type == yzis::TypeInt) {
             int d_v = YOptionValue::integerFromString(&success, defaultValue);
 
-            if(success) {
+            if (success) {
                 opt = new YOptionInteger(optionName, d_v, ctx, scope, &doNothing, QStringList());
             }
-        } else if(type == TypeList) {
+        } else if (type == TypeList) {
             QStringList d_v = YOptionValue::listFromString(&success, defaultValue);
 
-            if(success) {
+            if (success) {
                 opt = new YOptionList(optionName, d_v, ctx, scope, &doNothing, QStringList(), QStringList());
             }
-        } else if(type == TypeMap) {
+        } else if (type == TypeMap) {
             MapOption d_v = YOptionValue::mapFromString(&success, defaultValue);
 
-            if(success) {
+            if (success) {
                 opt = new YOptionMap(optionName, d_v, ctx, scope, &doNothing, QStringList(), d_v.keys(), QStringList());
             }
-        } else if(type == TypeColor) {
+        } else if (type == TypeColor) {
             YColor d_v = YOptionValue::colorFromString(&success, defaultValue);
 
-            if(success) {
+            if (success) {
                 opt = new YOptionColor(optionName, d_v, ctx, scope, &doNothing, QStringList());
             }
         }
 
-        if(opt) {
+        if (opt) {
             options.append(opt);
-            YOptionValue* ov = new YOptionValue(*opt->defaultValue());
+            YOptionValue *ov = new YOptionValue(*opt->defaultValue());
             success = opt->setValue(value, ov);
 
-            if(! success) {    // bad value, we cannot add that new option. Delete the ov and the option itself.
+            if (!success) { // bad value, we cannot add that new option. Delete the ov and the option itself.
                 delete ov;
                 options.removeLast();
                 delete opt;
             } else {
-                mOptions[ group + "\\" + opt->name() ] = ov;
+                mOptions[group + "\\" + opt->name()] = ov;
             }
         }
     }
 }
 
-void YInternalOptionPool::updateOptions(const QString& oldPath, const QString& newPath)
+void YInternalOptionPool::updateOptions(const QString &oldPath, const QString &newPath)
 {
-    QMap<QString, YOptionValue*> newoptions;
+    QMap<QString, YOptionValue *> newoptions;
     QStringList toDrop;
     //create the list of new options to add
-    QMap<QString, YOptionValue*>::Iterator it = mOptions.begin(), end = mOptions.end();
+    QMap<QString, YOptionValue *>::Iterator it = mOptions.begin(), end = mOptions.end();
 
-    for(; it != end; ++it) {
+    for (; it != end; ++it) {
         QString key = it.key();
 
-        if(it.key().startsWith(oldPath)) {
+        if (it.key().startsWith(oldPath)) {
             key.replace(oldPath, newPath);
             newoptions[key] = it.value();
             toDrop << it.key();
@@ -706,7 +714,7 @@ void YInternalOptionPool::updateOptions(const QString& oldPath, const QString& n
     }
 
     //drop old records
-    for(QStringList::Iterator it2 = toDrop.begin(); it2 != toDrop.end(); ++it2) {
+    for (QStringList::Iterator it2 = toDrop.begin(); it2 != toDrop.end(); ++it2) {
         //don't delete the pointers, it is still used by the new option ;)
         mOptions.remove(*it2);
     }
@@ -714,8 +722,7 @@ void YInternalOptionPool::updateOptions(const QString& oldPath, const QString& n
     //add new mOptions into the QMap now
     it = newoptions.begin(), end = newoptions.end();
 
-    for(; it != end; ++it) {
+    for (; it != end; ++it) {
         mOptions[it.key()] = it.value();
     }
 }
-

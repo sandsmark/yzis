@@ -22,8 +22,7 @@
 #include "printer.h"
 #ifdef HAVE_LIBPS
 #include <math.h>
-extern "C"
-{
+extern "C" {
 #include <libps/pslib.h>
 #include <libps/pslib-mp.h>
 }
@@ -35,8 +34,8 @@ extern "C"
 #include <QPaintDevice>
 #include <QPainter>
 
-#define dbg()    yzDebug("YZPrinter")
-#define err()    yzError("YZPrinter")
+#define dbg() yzDebug("YZPrinter")
+#define err() yzError("YZPrinter")
 
 YZPrinter::YZPrinter(YView *view) /*: QPrinter(QPrinter::PrinterResolution) */
 {
@@ -47,7 +46,7 @@ YZPrinter::YZPrinter(YView *view) /*: QPrinter(QPrinter::PrinterResolution) */
     setColorMode( QPrinter::Color );*/
 }
 
-void YZPrinter::printToFile(const QString& path)
+void YZPrinter::printToFile(const QString &path)
 {
     /*setOutputToFile( true );
     setOutputFileName( path );*/
@@ -64,8 +63,8 @@ void YZPrinter::doPrint()
     const double fontsize = 10.0;
     PSDoc *doc = PS_new();
 
-    if(!doc) {
-        return ;
+    if (!doc) {
+        return;
     }
 
     QByteArray p = m_path.toLatin1();
@@ -80,8 +79,8 @@ void YZPrinter::doPrint()
     font = PS_findfont(doc, "Fixed", "", 0);
     dbg() << "findfont returned " << font << endl;
 
-    if(!font) {
-        return ;    //no font => abort
+    if (!font) {
+        return; //no font => abort
     }
 
     QPrinter lpr(QPrinter::PrinterResolution);
@@ -105,11 +104,11 @@ void YZPrinter::doPrint()
     unsigned int marginLeft = 0;
     double red, green, blue;
 
-    if(number) {
+    if (number) {
         marginLeft = (2 + QString::number(mView->buffer()->lineCount()).length());
     }
 
-    YOptionValue* ov_wrap = mView->getLocalOption("wrap");
+    YOptionValue *ov_wrap = mView->getLocalOption("wrap");
     bool oldWrap = ov_wrap->boolean();
     ov_wrap->setBoolean(true);
     mView->setVisibleArea(clipw - marginLeft, cliph, false);
@@ -132,9 +131,9 @@ void YZPrinter::doPrint()
     PS_set_value(doc, "parindent", 0.0);
     PS_set_value(doc, "numindentlines", 0.0);
 
-    while(mView->drawNextLine()) {
-        if(curY == topY) {
-            if(pageNumber) {
+    while (mView->drawNextLine()) {
+        if (curY == topY) {
+            if (pageNumber) {
                 PS_end_page(doc);
                 PS_begin_page(doc, 596, 792);
                 PS_setfont(doc, font, fontsize);
@@ -155,10 +154,10 @@ void YZPrinter::doPrint()
                           titleRect.height(), "right", "");
         }
 
-        if(number) {
+        if (number) {
             unsigned int lineNumber = mView->drawLineNumber();
 
-            if(lineNumber != lastLineNumber) {
+            if (lineNumber != lastLineNumber) {
                 //p.setPen( Qt::gray );
                 convertColor(Qt::gray, red, green, blue);
                 PS_setcolor(doc, "fillstroke", "rgb", red, green, blue, 0.0);
@@ -171,10 +170,10 @@ void YZPrinter::doPrint()
 
         curX = marginLeft * maxwidth;
 
-        while(mView->drawNextCol()) {
+        while (mView->drawNextCol()) {
             QColor c = mView->drawColor();
 
-            if(c.isValid() && c != Qt::white) {
+            if (c.isValid() && c != Qt::white) {
                 convertColor(mView->drawColor(), red, green, blue);
             } else {
                 convertColor(Qt::black, red, green, blue);
@@ -191,13 +190,13 @@ void YZPrinter::doPrint()
 
         curY += linespace * mView->drawHeight();
 
-        if(curY >= cliph * linespace + topY) {
+        if (curY >= cliph * linespace + topY) {
             // draw Rect
             convertColor(Qt::black, red, green, blue);
             PS_setcolor(doc, "fillstroke", "rgb", red, green, blue, 0.0);
             PS_rect(doc, 0, 0, width, curY);
 
-            if(number) {
+            if (number) {
                 PS_moveto(doc, marginLeft * maxwidth - maxwidth / 2, titleRect.height());
                 PS_lineto(doc, marginLeft * maxwidth - maxwidth / 2, curY);
             }
@@ -208,13 +207,13 @@ void YZPrinter::doPrint()
         }
     }
 
-    if(curY != topY) {
+    if (curY != topY) {
         // draw Rect
         convertColor(Qt::black, red, green, blue);
         PS_setcolor(doc, "fillstroke", "rgb", red, green, blue, 0.0);
         PS_rect(doc, 0, 0, width, curY);
 
-        if(number) {
+        if (number) {
             PS_moveto(doc, marginLeft * maxwidth - maxwidth / 2, titleRect.height());
             PS_lineto(doc, marginLeft * maxwidth - maxwidth / 2, curY);
         }
@@ -232,8 +231,7 @@ void YZPrinter::doPrint()
     mView->setVisibleArea(oldColumnsVis, oldLinesVis, false);
 }
 
-
-void YZPrinter::convertColor(const QColor& c, double &r, double &g, double &b)
+void YZPrinter::convertColor(const QColor &c, double &r, double &g, double &b)
 {
     int r0, g0, b0;
     c.getRgb(&r0, &g0, &b0);

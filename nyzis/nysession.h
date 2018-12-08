@@ -45,23 +45,23 @@ public:
     /*
      * YSession interface :
      */
-    virtual bool guiQuit(int errorCode) ;
-    virtual void guiPopupMessage(const QString& message);
+    virtual bool guiQuit(int errorCode);
+    virtual void guiPopupMessage(const QString &message);
     virtual void guiSetFocusCommandLine();
     virtual void guiSetFocusMainWindow();
-    virtual bool guiPromptYesNo(const QString& title, const QString& message);
-    virtual int guiPromptYesNoCancel(const QString& title, const QString& message);
+    virtual bool guiPromptYesNo(const QString &title, const QString &message);
+    virtual int guiPromptYesNoCancel(const QString &title, const QString &message);
     virtual void guiSplitHorizontally(YView *view);
-    virtual void guiSetClipboardText(const QString& text, Clipboard::Mode mode);
+    virtual void guiSetClipboardText(const QString &text, Clipboard::Mode mode);
 
 protected:
-    virtual YView* guiCreateView(YBuffer* buffer);
+    virtual YView *guiCreateView(YBuffer *buffer);
     virtual void guiDeleteView(YView *view);
 
 private:
     NYSession();
-    NYSession(const NYSession&); // disable copy
-    NYSession& operator=(const NYSession&); // disable copy
+    NYSession(const NYSession &); // disable copy
+    NYSession &operator=(const NYSession &); // disable copy
     virtual ~NYSession();
 
     /**
@@ -83,8 +83,6 @@ public Q_SLOTS:
       */
     void frontendGuiReady();
     bool processInput(int);
-
 };
 
 #endif // NY_SESSION_H
-

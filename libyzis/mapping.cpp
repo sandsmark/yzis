@@ -23,8 +23,8 @@
 #include "luaengine.h"
 #include "session.h"
 
-#define dbg()    yzDebug("YZMapping")
-#define err()    yzError("YZMapping")
+#define dbg() yzDebug("YZMapping")
+#define err() yzError("YZMapping")
 
 using namespace yzis;
 
@@ -32,7 +32,7 @@ YZMapping *YZMapping::me = 0L;
 
 YZMapping *YZMapping::self()
 {
-    if(YZMapping::me == 0L) {
+    if (YZMapping::me == 0L) {
         YZMapping::me = new YZMapping();
     }
 
@@ -45,28 +45,29 @@ YZMapping::YZMapping()
 }
 
 YZMapping::~YZMapping()
-{}
+{
+}
 
-bool YZMapping::applyMappings(QString& text, QMap<QString, QString>& mappings)
+bool YZMapping::applyMappings(QString &text, QMap<QString, QString> &mappings)
 {
     bool pendingMapp = false;
     QString old = text;
     QMap<QString, QString>::Iterator it = mappings.begin(), end = mappings.end();
     bool match = false;
 
-    for(; it != end && !match ; ++it) {
+    for (; it != end && !match; ++it) {
         match = text.contains(it.key());
 
-        if(it.value().startsWith("<Script>") && match) {
+        if (it.value().startsWith("<Script>") && match) {
             char *result;
             QByteArray t = it.key().toUtf8();
             YLuaEngine::self()->exe(it.value().mid(8, it.value().length() - 10), "s>s", t.data(), &result);
             text.replace(it.key(), result);
-        } else if(it.value().startsWith("<Noremap>") && match) {
+        } else if (it.value().startsWith("<Noremap>") && match) {
             text.replace(it.key(), it.value().right(it.value().length() - 9));
             mNoremap = true;
-        } else if(match) {
-            if(it.key() == "<BTAB>") {  //backtab comes with shift modifier in front of it, so remove it too
+        } else if (match) {
+            if (it.key() == "<BTAB>") { //backtab comes with shift modifier in front of it, so remove it too
                 text.replace("<SHIFT>" + it.key(), it.value());
             } else {
                 text.replace(it.key(), it.value());
@@ -79,34 +80,34 @@ bool YZMapping::applyMappings(QString& text, QMap<QString, QString>& mappings)
     return pendingMapp;
 }
 
-bool YZMapping::applyMappings(QString& text, int modes, bool *mapped)
+bool YZMapping::applyMappings(QString &text, int modes, bool *mapped)
 {
     // dbg() << "Text1: " << text << endl;
     bool pendingMapp = false;
     QString old = text;
 
-    if(mNoremap) {
+    if (mNoremap) {
         mNoremap = false;
         return pendingMapp;
     }
 
-    if(modes & MapNormal) {
+    if (modes & MapNormal) {
         pendingMapp = pendingMapp || applyMappings(text, mNormalMappings);
     }
 
-    if(modes & MapPendingOp) {
+    if (modes & MapPendingOp) {
         pendingMapp = pendingMapp || applyMappings(text, mPendingOpMappings);
     }
 
-    if(modes & MapVisual) {
+    if (modes & MapVisual) {
         pendingMapp = pendingMapp || applyMappings(text, mVisualMappings);
     }
 
-    if(modes & MapInsert) {
+    if (modes & MapInsert) {
         pendingMapp = pendingMapp || applyMappings(text, mInsertMappings);
     }
 
-    if(modes & MapCmdline) {
+    if (modes & MapCmdline) {
         pendingMapp = pendingMapp || applyMappings(text, mCmdLineMappings);
     }
 
@@ -115,13 +116,12 @@ bool YZMapping::applyMappings(QString& text, int modes, bool *mapped)
     return pendingMapp;
 }
 
-void YZMapping::registerModifier(const QString& map)
+void YZMapping::registerModifier(const QString &map)
 {
     YSession::self()->registerModifier(map);
 }
 
-void YZMapping::unregisterModifier(const QString& map)
+void YZMapping::unregisterModifier(const QString &map)
 {
     YSession::self()->unregisterModifier(map);
 }
-

@@ -30,10 +30,8 @@ class KYEditor : public QYEdit
 {
     Q_OBJECT
 public:
-    KYEditor(KYView* parent = 0);
+    KYEditor(KYView *parent = 0);
     virtual ~KYEditor();
-
 };
 
 #endif // YZIS_PART_EDITOR_H
-
