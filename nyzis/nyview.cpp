@@ -22,7 +22,7 @@
 #include <ctype.h>
 
 /* Qt */
-#include <qtimer.h>
+#include <QTimer>
 #include "debug.h"
 
 /* yzis */
@@ -451,6 +451,13 @@ void NYView::guiUpdateFileName()
 
 void NYView::guiUpdateMode()
 {
+    if (currentMode()->modeType() == ModeType::ModeInsert) {
+        // I-Beam cursor
+        printf("\033[6 q\n");
+    } else {
+        // Block cursor
+        printf("\033[2 q\n");
+    }
     restoreFocus();
 }
 

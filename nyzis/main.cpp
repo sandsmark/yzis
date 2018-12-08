@@ -29,7 +29,7 @@ Copyright (c) 2004-2005 Mickael Marchand <marchand@kde.org>
 #include <csignal>
 
 /* Qt */
-#include <qglobal.h>
+#include <QtGlobal>
 #include <QCoreApplication>
 #include <QTextCodec>
 #include <QDateTime>
@@ -112,7 +112,8 @@ static void cleaning(void)
     /* ncurses stuff */
     endwin();
     /* other */
-    printf("\n"); // prevent prompt to be badly placed after nyzis exits
+    // Change back to block cursor (I just assume everyone wants that)
+    printf("\033[2 q\n");
 }
 
 
