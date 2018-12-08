@@ -58,6 +58,7 @@ NYSession::NYSession()
     // notimeout( stdscr, true ); // XXX conflict with nodelay ?? if you want to test half or no delay, comment this line.
     halfdelay(1);
     // nodelay( stdscr, true );
+    set_escdelay(100);
     wattron(stdscr, A_STANDOUT); // will be herited by subwin
     use_default_colors();
 
