@@ -270,52 +270,54 @@ void YColor::setNamedColor(const QString &name)
 {
     invalidate();
 
-    if (!name.isEmpty()) {
-        QByteArray n = name.toLatin1();
-        int len = qstrlen(n.constData());
+    if (name.isEmpty()) {
+        return;
+    }
 
-        if (name[0] == '#') {
-            QString hex(name.mid(1));
-            --len;
-            m_red = m_green = m_blue = 0;
+    QByteArray n = name.toLatin1();
+    int len = n.length();
+
+    if (name.startsWith('#')) {
+        QString hex(name.mid(1));
+        --len;
+        m_red = m_green = m_blue = 0;
+        m_valid = true;
+
+        if (len == 6) {
+            m_red = (hex2int(hex[0]) << 4) + hex2int(hex[1]);
+            m_green = (hex2int(hex[2]) << 4) + hex2int(hex[3]);
+            m_blue = (hex2int(hex[4]) << 4) + hex2int(hex[5]);
+        } else if (len == 3) {
+            m_red = (hex2int(hex[0]) << 4) + hex2int(hex[0]);
+            m_green = (hex2int(hex[1]) << 4) + hex2int(hex[1]);
+            m_blue = (hex2int(hex[2]) << 4) + hex2int(hex[2]);
+        } else {
+            m_valid = false;
+        }
+
+        if (m_valid) {
+            m_red |= (m_red << 8);
+            m_green |= (m_green << 8);
+            m_blue |= (m_blue << 8);
+        }
+    } else { // find a color name
+        ++len;
+        char *name_no_space = (char *)malloc(len);
+
+        for (int o = 0, i = 0; i < len; i++) {
+            if (n[i] != '\t' && n[i] != ' ') {
+                name_no_space[o++] = n[i];
+            }
+        }
+
+        RGBData x;
+        x.name = name_no_space;
+        RGBData *r = (RGBData *)bsearch(&x, rgbTbl, rgbTblSize, sizeof(RGBData), rgb_cmp);
+        free(name_no_space);
+
+        if (r) {
             m_valid = true;
-
-            if (len == 6) {
-                m_red = (hex2int(hex[0]) << 4) + hex2int(hex[1]);
-                m_green = (hex2int(hex[2]) << 4) + hex2int(hex[3]);
-                m_blue = (hex2int(hex[4]) << 4) + hex2int(hex[5]);
-            } else if (len == 3) {
-                m_red = (hex2int(hex[0]) << 4) + hex2int(hex[0]);
-                m_green = (hex2int(hex[1]) << 4) + hex2int(hex[1]);
-                m_blue = (hex2int(hex[2]) << 4) + hex2int(hex[2]);
-            } else {
-                m_valid = false;
-            }
-
-            if (m_valid) {
-                m_red |= (m_red << 8);
-                m_green |= (m_green << 8);
-                m_blue |= (m_blue << 8);
-            }
-        } else { // find a color name
-            ++len;
-            char *name_no_space = (char *)malloc(len);
-
-            for (int o = 0, i = 0; i < len; i++) {
-                if (n[i] != '\t' && n[i] != ' ') {
-                    name_no_space[o++] = n[i];
-                }
-            }
-
-            RGBData x;
-            x.name = name_no_space;
-            RGBData *r = (RGBData *)bsearch(&x, rgbTbl, rgbTblSize, sizeof(RGBData), rgb_cmp);
-            free(name_no_space);
-
-            if (r) {
-                m_valid = true;
-                setRgb(r->value);
-            }
+            setRgb(r->value);
         }
     }
 }

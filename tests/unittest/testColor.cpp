@@ -21,12 +21,15 @@ void TestColor::subTestColor(const QString& name,
     YColor c;
     QRgb rgb = YzqRgb(red, green, blue);
 #define CHECK_VALIDITY() \
+    QVERIFY(c.isValid()); \
     QCOMPARE( c.name(), hex ); \
     QCOMPARE( c.rgb(), rgb ); \
     QCOMPARE( c.red(), red ); \
     QCOMPARE( c.green(), green ); \
     QCOMPARE( c.blue(), blue ); \
     c.setNamedColor( name );
+
+    c.setNamedColor(name);
     CHECK_VALIDITY()
     c.setNamedColor(hex);
     CHECK_VALIDITY()
