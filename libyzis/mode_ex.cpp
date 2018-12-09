@@ -116,11 +116,11 @@ YModeEx::YModeEx() :
 
 YModeEx::~YModeEx()
 {
-    foreach (const YExCommand *c, commands) {
+    for (const YExCommand *c : commands) {
         delete c;
     }
 
-    foreach (const YExRange *r, ranges) {
+    for (const YExRange *r : ranges) {
         delete r;
     }
 
@@ -312,7 +312,7 @@ void YModeEx::completeCommandLine(YView *view)
 
             QStringList l = extractCommandNames();
 
-            foreach (const QString &s, l) {
+            for (const QString &s : l) {
                 if (s.startsWith(mCompletionCurrentSearch)) {
                     mCompletePossibilities << s;
                 }
@@ -354,7 +354,7 @@ const QStringList YModeEx::extractCommandNames()
 {
     QStringList list;
 
-    foreach (const YExCommand *c, commands) {
+    for (const YExCommand *c : commands) {
         list << c->longName();
     }
 
@@ -431,7 +431,7 @@ QString YModeEx::parseRange(const QString &inputs, YView *view, int *range, bool
     QString _input = inputs;
     *matched = false;
 
-    foreach (const YExRange *currentRange, ranges) {
+    for (const YExRange *currentRange : ranges) {
         QRegExp reg(currentRange->regexp());
         *matched = reg.exactMatch(_input);
 
@@ -500,7 +500,7 @@ CmdState YModeEx::execExCommand(YView *view, const QString &inputs)
 
     matched = false;
 
-    foreach (const YExCommand *curCommand, commands) {
+    for (const YExCommand *curCommand : commands) {
         QRegExp reg(curCommand->regexp());
         matched = reg.exactMatch(_input);
 
@@ -997,7 +997,7 @@ CmdState YModeEx::genericMap(const YExCommandArgs &args, int type)
             mModifierKeys << rx.cap(1);
             YViewList views = YSession::self()->getAllViews();
 
-            foreach (YView *v, views) {
+            for (YView *v : views) {
                 v->registerModifierKeys(rx.cap(1));
             }
         }
@@ -1218,7 +1218,7 @@ CmdState YModeEx::registers(const YExCommandArgs &)
     QList<QChar> keys = YSession::self()->getRegisters();
     QString regContents;
 
-    foreach (QChar c, keys) {
+    for (QChar c : keys) {
         infoMessage += QString("\"") + c + "  ";
         // why I use space as separator? I don't know :)
         // if you know what must be used here, fix it ;)

@@ -173,7 +173,7 @@ void YSearch::Private::setCurrentSearch(const QString &pattern)
     mCurrentSearch = pattern;
     YSelectionMap searchMap;
 
-    foreach (YBuffer *b, YSession::self()->buffers()) {
+    for (YBuffer *b : YSession::self()->buffers()) {
         QList<YView *> views = b->views();
         searchMap.clear();
         /** search all **/
@@ -203,7 +203,7 @@ void YSearch::Private::setCurrentSearch(const QString &pattern)
             } while (found);
         }
 
-        foreach (YView *view, views) {
+        for (YView *view : views) {
             highlightSearch(view, searchMap);
         }
     }
@@ -335,8 +335,8 @@ void YSearch::update()
         YSelectionMap searchMap;
 
         // clear current hl search selection
-        foreach (YBuffer *b, YSession::self()->buffers())
-            foreach (YView *view, b->views()) {
+        for (YBuffer *b : YSession::self()->buffers())
+            for (YView *view : b->views()) {
                 d->highlightSearch(view, searchMap);
             }
     }

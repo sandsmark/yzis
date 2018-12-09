@@ -277,7 +277,7 @@ void YInternalOptionPool::applyOption(YOption *option, OptContext ctx, OptScope 
         option->apply(NULL, NULL);
     } else if (ctx == ContextBuffer) {
         if (scope == ScopeGlobal) {
-            foreach (YBuffer *buffer, YSession::self()->buffers()) {
+            for(YBuffer *buffer : YSession::self()->buffers()) {
                 option->apply(buffer, v);
             }
         } else if (b) {
@@ -285,8 +285,8 @@ void YInternalOptionPool::applyOption(YOption *option, OptContext ctx, OptScope 
         }
     } else if (ctx == ContextView) {
         if (scope == ScopeGlobal) {
-            foreach (YBuffer *buffer, YSession::self()->buffers())
-                foreach (YView *view, buffer->views()) {
+            for (YBuffer *buffer : YSession::self()->buffers())
+                for (YView *view : buffer->views()) {
                     option->apply(buffer, view);
                 }
         } else if (v) {

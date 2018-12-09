@@ -43,7 +43,7 @@ static void configureViews(YBuffer *buffer)
 {
     dbg() << "configureViews(" << buffer->toString() << ")" << endl;
 
-    foreach (YView *view, buffer->views()) {
+    for (YView *view : buffer->views()) {
         view->setPaintAutoCommit(false);
     }
 }
@@ -52,7 +52,7 @@ static void commitViewsChanges(YBuffer *buffer)
 {
     dbg() << "commitViewsChanges(" << buffer->toString() << ")" << endl;
 
-    foreach (YView *view, buffer->views()) {
+    for (YView *view : buffer->views()) {
         view->commitPaintEvent();
     }
 }

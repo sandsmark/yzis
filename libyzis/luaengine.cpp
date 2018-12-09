@@ -148,7 +148,7 @@ QString YLuaEngine::lua_table_to_string(lua_State *L, int index, int depth)
     QList<QString> keys = content.keys();
     qSort(keys);
 
-    foreach (QString key, keys) {
+    for (QString key : keys) {
         s += prefix + "  " + key + " -> " + content[key] + '\n';
     }
 

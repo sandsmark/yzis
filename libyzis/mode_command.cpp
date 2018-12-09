@@ -321,13 +321,13 @@ CmdState YModeCommand::execCommand(YView *view, const YKeySequence &inputs,
     }
 
     // Actually execute the command, will parse rest of input as necessary
-    foreach (YView *v, view->buffer()->views()) {
+    for (YView *v : view->buffer()->views()) {
         v->setPaintAutoCommit(false);
     }
 
     result = (this->*(c->poolMethod()))(YCommandArgs(c, view, regs, count, hadCount, &inputs, &parsePos));
 
-    foreach (YView *v, view->buffer()->views()) {
+    for (YView *v : view->buffer()->views()) {
         v->commitPaintEvent();
     }
 

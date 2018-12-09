@@ -150,7 +150,7 @@ QString YBuffer::toString() const
     QString s;
     QString sViewlist;
 
-    foreach (YView *v, d->views) {
+    for(YView *v : d->views) {
         QString tmp;
         tmp.sprintf("%p", v);
         sViewlist += tmp + ',';
