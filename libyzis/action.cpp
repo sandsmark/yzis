@@ -371,13 +371,17 @@ YCursor YZAction::match(YView *pView, const YCursor cursor, bool *found) const
 {
     QString matchers = pView->buffer()->getLocalStringOption("matchpairs");
     QString current = pView->buffer()->textline(cursor.y());
-    QChar cchar = current.at(cursor.x());
+
+
     int i = 0;
     int j = 0;
     int curY = cursor.y();
+    const int curX = qBound(0, cursor.x(), current.length() - 1);
     int count = 1;
     bool back = false;
     int start = 0;
+
+    QChar cchar = current.at(curX);
 
     for (i = 0; i < (int)matchers.length(); i++) {
         if (matchers[i] == cchar) {
