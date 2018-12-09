@@ -1105,7 +1105,7 @@ void YBuffer::initHL(int line)
     // dbg() << "initHL " << line << endl;
     d->isHLUpdating = true;
 
-    if (d->highlight != 0L) {
+    if (d->highlight) {
         int hlLine = line;
         bool ctxChanged = true;
         QVector<uint> foldingList;
@@ -1173,9 +1173,9 @@ YLine *YBuffer::yzline(int line, bool noHL /*= true*/)
 
 const YLine *YBuffer::yzline(int line) const
 {
-    const YLine *yl = NULL;
+    const YLine *yl = nullptr;
 
-    if (line >= lineCount()) {
+    if (line < 0 || line >= lineCount()) {
         dbg() << "ERROR: you are asking for line " << line << " (max is " << lineCount() << ")" << endl;
         YZIS_SAFE_MODE
         {

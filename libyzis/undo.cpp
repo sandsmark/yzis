@@ -84,8 +84,8 @@ void YBufferOperation::performOperation(YView *pView, bool opposite)
 
 UndoItem::UndoItem()
 {
-    startCursorX = startCursorY = 0;
-    endCursorX = endCursorY = 0;
+    startCursorX = startCursorY = -1;
+    endCursorX = endCursorY = -1;
 }
 
 // -------------------------------------------------------------------
@@ -93,12 +93,12 @@ UndoItem::UndoItem()
 // -------------------------------------------------------------------
 
 YZUndoBuffer::YZUndoBuffer(YBuffer *buffer) :
-    mBuffer(buffer), mFutureUndoItem(0L)
+    mBuffer(buffer), mFutureUndoItem(nullptr)
 {
     mCurrentIndex = 0;
     mInsideUndo = false;
     // Create the mFutureUndoItem
-    commitUndoItem(0, 0);
+    commitUndoItem(-1, -1);
 }
 
 YZUndoBuffer::~YZUndoBuffer()
@@ -148,7 +148,7 @@ void YZUndoBuffer::addBufferOperation(YBufferOperation::OperationType type,
         return;
     }
 
-    YASSERT(mFutureUndoItem != NULL);
+    YASSERT(mFutureUndoItem != nullptr);
     YBufferOperation *bufOperation = new YBufferOperation();
     bufOperation->type = type;
     bufOperation->data = data;
@@ -180,7 +180,7 @@ static QList<T> reverse(const QList<T> &yzlist)
 
 void YZUndoBuffer::undo(YView *pView)
 {
-    if (mayUndo() == false) {
+    if (!mayUndo()) {
         // notify the user that undo is not possible
         return;
     }
@@ -190,7 +190,7 @@ void YZUndoBuffer::undo(YView *pView)
     UndoItem *item = mUndoItemList[mCurrentIndex - 1];
     UndoItemBase reversed = reverse(*item);
 
-    foreach (YBufferOperation *operation, reversed) {
+    for (YBufferOperation *operation : reversed) {
         operation->performOperation(pView, true);
     }
 
@@ -204,7 +204,9 @@ void YZUndoBuffer::undo(YView *pView)
     }
     */
     mCurrentIndex--;
-    pView->gotoLinePosition(item->endCursorY, item->endCursorX);
+    if (item->startCursorY >= 0 && item->startCursorX >= 0) {
+        pView->gotoLinePosition(item->startCursorY, item->startCursorX);
+    }
     pView->commitPaintEvent();
     setInsideUndo(false);
 }
@@ -221,12 +223,15 @@ void YZUndoBuffer::redo(YView *pView)
     ++mCurrentIndex;
     UndoItem *undoItem = mUndoItemList[mCurrentIndex - 1];
 
-    foreach (YBufferOperation *operation, *undoItem) {
+    for (YBufferOperation *operation : *undoItem) {
         operation->performOperation(pView, false);
     }
 
-    setInsideUndo(false);
     pView->commitPaintEvent();
+    if (undoItem->startCursorY >= 0 && undoItem->startCursorX >= 0) {
+        pView->gotoLinePosition(undoItem->startCursorY, undoItem->startCursorX);
+    }
+    setInsideUndo(false);
 }
 
 bool YZUndoBuffer::mayRedo() const

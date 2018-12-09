@@ -320,6 +320,7 @@ public:
     CmdState undoJump(const YCommandArgs &args);
     CmdState incrementNumber(const YCommandArgs &args);
     CmdState decrementNumber(const YCommandArgs &args);
+    CmdState reindent(const YCommandArgs &args);
 
     QList<YCommand *> commands;
     QList<YMotion *> motions;

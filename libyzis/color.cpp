@@ -212,7 +212,7 @@ static int __cdecl rgb_cmp(const void *d1, const void *d2)
 static int rgb_cmp(const void *d1, const void *d2)
 #endif
 {
-    return qstricmp(((RGBData *)d1)->name, ((RGBData *)d2)->name);
+    return qstricmp(((const RGBData *)d1)->name, ((const RGBData *)d2)->name);
 }
 
 YColor::YColor()

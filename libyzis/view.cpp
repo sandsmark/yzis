@@ -175,7 +175,8 @@ void YView::reindent(const QPoint pos)
     YCursor match = mBuffer->action()->match(this, cur, &found);
 
     if (!found) {
-        return;
+        // Just match previous line
+        match = YCursor(pos.x(), pos.y() - 1);
     }
 
     dbg() << "Match found on line " << match.y() << endl;
@@ -186,7 +187,7 @@ void YView::reindent(const QPoint pos)
     }
 
     mBuffer->action()->replaceLine(this, YCursor(0, mMainCursor.line()), currentLine);
-    gotoViewCursor(viewCursorFromLinePosition(mMainCursor.line(), currentLine.length()));
+    gotoViewCursor(viewCursorFromLinePosition(mMainCursor.line(), pos.x() + rx.cap(1).length() + 1));
 }
 
 /*

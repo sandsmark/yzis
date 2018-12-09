@@ -209,6 +209,7 @@ void YModeCommand::initCommandPool()
     commands.append(new YCommand(YKeySequence("m"), &YModeCommand::mark, ArgChar));
     commands.append(new YCommand(YKeySequence("r"), &YModeCommand::replace, ArgChar));
     commands.append(new YCommand(YKeySequence("u"), &YModeCommand::undo));
+    commands.append(new YCommand(YKeySequence("=="), &YModeCommand::reindent));
     // orzel 2008-12-11 : i'm commenting "U" out as "U" is supposed to be "undo all" and not redo (see vim help)
     // commands.append( new YCommand(YKeySequence("U"), &YModeCommand::redo) );
     commands.append(new YCommand(YKeySequence("<C-r>"), &YModeCommand::redo));
@@ -1953,6 +1954,13 @@ CmdState YModeCommand::insertLineBefore(const YCommandArgs &args)
 
     args.view->gotoViewCursor(args.view->viewCursorMoveVertical(-1));
     gotoInsertMode(args);
+    args.view->commitNextUndo();
+    return CmdOk;
+}
+
+CmdState YModeCommand::reindent(const YCommandArgs &args)
+{
+    args.view->reindent(QPoint(args.view->getLinePositionCursor().x() - 1, args.view->getLinePositionCursor().y()));
     args.view->commitNextUndo();
     return CmdOk;
 }
