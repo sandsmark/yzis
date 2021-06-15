@@ -69,7 +69,7 @@ QYEdit::~QYEdit()
 int QYEdit::charWidth() const
 {
     int w = fontMetrics().maxWidth();
-    return w > 0 ? w : fontMetrics().width("W");
+    return w > 0 ? w : fontMetrics().horizontalAdvance("W");
 }
 
 QYView *QYEdit::view() const
@@ -257,7 +257,7 @@ void QYEdit::mousePressEvent(QMouseEvent *e)
             mView->gotoViewCursor(dest);
             mView->stickToColumn();
         }
-    } else if (e->button() == Qt::MidButton) {
+    } else if (e->button() == Qt::MiddleButton) {
         QString text = QApplication::clipboard()->text(QClipboard::Selection);
 
         if (text.isNull()) {

@@ -121,7 +121,7 @@ QTextStream &YZHistory::writeToStream(QTextStream &stream) const
     for (QStringList::iterator i = start; i != end; ++i) {
         stream << ":";
         stream << *i;
-        stream << endl;
+        stream << Qt::endl;
     }
 
     return stream;

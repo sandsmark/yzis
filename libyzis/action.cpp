@@ -179,7 +179,7 @@ void YZAction::copyLine(YView *, const YCursor pos, int len, const QList<QChar> 
     QStringList buff;
     QString text = "";
     QString line;
-    buff << QString::null;
+    buff << QString();
 
     for (int i = 0; i < len && (bY + i) < mBuffer->lineCount(); i++) {
         line = mBuffer->textline(bY + i);
@@ -187,7 +187,7 @@ void YZAction::copyLine(YView *, const YCursor pos, int len, const QList<QChar> 
         text += line + '\n';
     }
 
-    buff << QString::null;
+    buff << QString();
     YSession::self()->guiSetClipboardText(text, Clipboard::Clipboard);
 
     for (int ab = 0; ab < reg.size(); ++ab) {
@@ -205,7 +205,7 @@ void YZAction::copyArea(YView *, const YInterval &i, const QList<QChar> &reg)
     bool copyWholeLines = (bX == 0 && i.from().closed() && eX == 0 && i.to().opened());
 
     if (copyWholeLines) {
-        buff << QString::null;
+        buff << QString();
     }
 
     if (i.from().opened()) {

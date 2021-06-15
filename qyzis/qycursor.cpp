@@ -59,7 +59,7 @@ void QYCursor::setCursorShape(CursorShape shape)
     int w = parentWidget()->fontMetrics().maxWidth();
 
     if (w == 0) {
-        w = parentWidget()->fontMetrics().width("W");
+        w = parentWidget()->fontMetrics().horizontalAdvance("W");
     }
 
     int h = parentWidget()->fontMetrics().lineSpacing();

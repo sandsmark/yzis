@@ -332,9 +332,7 @@ QRgb YColor::rgb() const
 }
 QString YColor::name() const
 {
-    QString s;
-    s.sprintf("#%02x%02x%02x", red(), green(), blue());
-    return s;
+    return QString::asprintf("#%02x%02x%02x", red(), green(), blue());
 }
 int YColor::red() const
 {

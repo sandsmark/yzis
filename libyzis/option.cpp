@@ -178,7 +178,7 @@ MapOption YOptionValue::mapFromString(bool *success, const QString &value)
 {
     *success = true;
     MapOption ret;
-    QStringList vs = value.split(",", QString::SkipEmptyParts);
+    QStringList vs = value.split(",", Qt::SkipEmptyParts);
 
     for (int i = 0; *success && i < vs.size(); i++) {
         int idx_v = vs[i].indexOf(':');

@@ -27,7 +27,7 @@ NYStatusBar::~NYStatusBar()
 
 void NYStatusBar::setup(WINDOW *mainwin, int line)
 {
-    dbg() << QString().sprintf("setup( mainwin = %p )", mainwin) << endl;
+    dbg() << QString::asprintf("setup( mainwin = %p )", mainwin) << endl;
 
     if (m_bar) {
         delwin(m_bar);

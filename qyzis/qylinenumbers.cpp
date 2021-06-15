@@ -137,5 +137,5 @@ void QYLineNumbers::setLineNumber(int y, int h, int line)
 
 void QYLineNumbers::setMaxLineNumber(int line)
 {
-    setFixedWidth(fontMetrics().width(' ' + QString::number(line) + ' '));
+    setFixedWidth(fontMetrics().horizontalAdvance(' ' + QString::number(line) + ' '));
 }

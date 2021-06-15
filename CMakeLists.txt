@@ -18,7 +18,7 @@ set(CMAKE_INCLUDE_DIRECTORIES_PROJECT_BEFORE ON)
 set(CMAKE_COLOR_MAKEFILE ON)
 
 
-cmake_minimum_required(VERSION 2.4.8 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
 
 # yzis stores the cmake modules in cmake/modules
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")

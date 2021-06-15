@@ -105,9 +105,7 @@ YView::~YView()
 
 QString YView::toString() const
 {
-    QString s;
-    s.sprintf("View(this=%p id=%d buffer='%s')", this, getId(), qp(buffer()->fileNameShort()));
-    return s;
+    return QString::asprintf("View(this=%p id=%d buffer='%s')", this, getId(), qp(buffer()->fileNameShort()));
 }
 
 void YView::setupKeys()

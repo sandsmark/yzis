@@ -117,7 +117,7 @@ QString YKey::toBasicRep() const
      */
     //return QString("NO_REP"); see issue #280
     dbg() << "no match for key " << mKey << endl;
-    return QString::null;
+    return QString();
 }
 
 bool YKey::parseBasicRep(QString rep)

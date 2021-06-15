@@ -146,7 +146,7 @@ QString YLuaEngine::lua_table_to_string(lua_State *L, int index, int depth)
     lua_pop(L, 1);
     // dbg() << HERE() << "step 5" << endl;
     QList<QString> keys = content.keys();
-    qSort(keys);
+    std::sort(keys.begin(), keys.end());
 
     for (QString key : keys) {
         s += prefix + "  " + key + " -> " + content[key] + '\n';

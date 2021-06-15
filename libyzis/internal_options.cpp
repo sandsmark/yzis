@@ -114,7 +114,7 @@ void YInternalOptionPool::saveTo(const QString &file, const QString &what, const
     if (f.open(QIODevice::WriteOnly)) {
         QTextStream stream(&f);
         QList<QString> keys = mOptions.keys();
-        qSort(keys);
+        std::sort(keys.begin(), keys.end());
         QString cGroup = "";
 
         for (int i = 0; i < keys.size(); ++i) {

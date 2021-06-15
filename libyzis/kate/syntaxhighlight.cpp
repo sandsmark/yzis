@@ -2796,7 +2796,7 @@ int YzisHighlighting::addToContextList(const QString &ident, int ctx0)
 
                     //#stay, #pop is not interesting here
                     if (incCtx.contains("##")) {
-                        QStringList parts = incCtx.split("##", QString::SkipEmptyParts);
+                        QStringList parts = incCtx.split("##", Qt::SkipEmptyParts);
                         QString contextName = parts.first();
                         QString file = parts.last();
 

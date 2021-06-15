@@ -33,7 +33,6 @@
 #include <QMap>
 #include <QHash>
 #include <QTime>
-#include <QLinkedList>
 #include <QVector>
 #include <QMimeDatabase>
 
@@ -73,7 +72,7 @@ public:
 
 // some typedefs
 typedef QList<YzisAttribute*> YzisAttributeList;
-typedef QLinkedList<YzisHlIncludeRule*> YzisHlIncludeRules;
+typedef QList<YzisHlIncludeRule*> YzisHlIncludeRules;
 typedef QList<YzisHlItemData*> YzisHlItemDataList;
 typedef QList<YzisHlData*> YzisHlDataList;
 typedef QList<int> IntList;

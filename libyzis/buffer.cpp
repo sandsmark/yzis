@@ -151,15 +151,12 @@ QString YBuffer::toString() const
     QString sViewlist;
 
     for(YView *v : d->views) {
-        QString tmp;
-        tmp.sprintf("%p", v);
-        sViewlist += tmp + ',';
+        sViewlist += QString::asprintf("%p", v) + ',';
     }
 
     sViewlist.chop(1);
-    s.sprintf("Buffer(this=%p filename='%s' views=%s modif=%d new=%d",
+    return QString::asprintf("Buffer(this=%p filename='%s' views=%s modif=%d new=%d",
               this, qp(fileNameShort()), qp(sViewlist), d->isModified, d->isFileNew);
-    return s;
 }
 
 // ------------------------------------------------------------------------

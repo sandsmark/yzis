@@ -222,8 +222,8 @@ QChar QYView::currentChar() const
 
 void QYView::wheelEvent(QWheelEvent *e)
 {
-    if (e->orientation() == Qt::Vertical) {
-        int n = -(e->delta() * mVScroll->singleStep()) / 40; // WHEEL_DELTA(120) / 3 XXX
+    if (e->angleDelta().y()) {
+        int n = -(e->angleDelta().y() * mVScroll->singleStep()) / 40; // WHEEL_DELTA(120) / 3 XXX
         scrollView(topLine() + n);
     } else {
         // TODO : scroll horizontally
@@ -245,7 +245,7 @@ void QYView::applyConfig(const QSettings &settings, bool refresh)
 {
     QFont defaultFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
     defaultFont.setFixedPitch(true);
-    defaultFont.setStyleHint(QFont::TypeWriter, QFont::ForceIntegerMetrics);
+    defaultFont.setStyleHint(QFont::TypeWriter);
     QFont user_font = settings.value("appearance/font", defaultFont).value<QFont>();
 
     if (!QFontInfo(user_font).fixedPitch()) {

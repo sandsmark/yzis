@@ -69,7 +69,7 @@ QString YExCommandArgs::toString() const
 {
     QString s;
     s += "YExCommandArgs:\n";
-    s += QString().sprintf("view=%p\n", view);
+    s += QString::asprintf("view=%p\n", view);
     s += QString("input=%1\n").arg(input);
     s += QString("cmd=%1\n").arg(cmd);
     s += QString("arg=%1\n").arg(arg);
@@ -213,7 +213,7 @@ CmdState YModeEx::execCommand(YView *view, const YKeySequence &inputs,
                   << "didn't match" << endl;
         }
     } else if (key == YKey(Qt::Key_U, Qt::ControlModifier)) {
-        view->guiSetCommandLineText(QString::null);
+        view->guiSetCommandLineText(QString());
     } else {
         view->guiSetCommandLineText(view->guiGetCommandLineText() + key.toString());
     }
@@ -248,7 +248,7 @@ const QString &YModeEx::completionItem(int idx)
 void YModeEx::completeCommandLine(YView *view)
 {
     QString current = view->guiGetCommandLineText();
-    QStringList words = current.split(" ", QString::SkipEmptyParts);
+    QStringList words = current.split(" ", Qt::SkipEmptyParts);
 
     if (mCompletePossibilities.isEmpty()) { //no list set up yet, init the completion stuff before proceding
         //XXX we probably need something to say that a command can get a filename parameter, the following check is very lame for now...
