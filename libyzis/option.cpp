@@ -294,7 +294,11 @@ void YOption::apply(YBuffer *b, YView *v)
 bool YOption::match(const QString &entry)
 {
     for (int i = 0; i < m_aliases.size(); i++) {
-        if (entry.startsWith(m_aliases[i]) && !entry.mid(m_aliases[i].length())[0].isLetter()) {
+        if (!entry.startsWith(m_aliases[i])) {
+            continue;
+        }
+        const QString substr = entry.mid(m_aliases[i].length());
+        if (substr.isEmpty() || !substr[0].isLetter()) {
             return true;
         }
     }
@@ -307,8 +311,14 @@ QString YOption::readValue(const QString &entry, OptAction *action)
     QString value = entry;
 
     for (int i = 0; *action == OptInvalid && i < m_aliases.size(); i++) {
-        if (entry.startsWith(m_aliases[i]) && !entry.mid(m_aliases[i].length())[0].isLetter()) {
-            QString data = entry.mid(m_aliases[i].length());
+        if (!entry.startsWith(m_aliases[i])) {
+            continue;
+        }
+        QString data = entry.mid(m_aliases[i].length());
+        if (data.isEmpty()) {
+            continue;
+        }
+        if (!data[0].isLetter()) {
             unsigned int idx = 1;
 
             if (data[0] == '&') {

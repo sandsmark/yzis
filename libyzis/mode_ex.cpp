@@ -508,7 +508,7 @@ CmdState YModeEx::execExCommand(YView *view, const QString &inputs)
             unsigned int nc = reg.captureCount();
             dbg() << "matched " << curCommand->keySeq() << " " << reg.cap(1) << "," << reg.cap(nc) << endl;
             QString arg = reg.cap(nc);
-            bool force = arg[0] == '!';
+            bool force = !arg.isEmpty() && arg[0] == '!';
 
             if (force) {
                 arg = arg.mid(1);
