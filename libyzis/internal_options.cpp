@@ -261,6 +261,10 @@ void YInternalOptionPool::init()
                                    QStringList("cpt"), QStringList()));
 
     for (int i = 0; i < options.size(); i++) {
+        if (options[i]->scope() != ScopeGlobal) {
+            continue;
+        }
+        Q_ASSERT(!mOptions.contains("Global\\" + options[i]->name()));
         mOptions["Global\\" + options[i]->name()] = new YOptionValue(*options[i]->defaultValue());
     }
 

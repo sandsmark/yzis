@@ -143,6 +143,7 @@ YBuffer::~YBuffer()
     // These two aren't deleted when the buffer is made BufferInactive
     delete d->docMarks;
     delete d->viewMarks;
+    delete d;
 }
 
 QString YBuffer::toString() const

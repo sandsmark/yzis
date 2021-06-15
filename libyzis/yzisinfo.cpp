@@ -77,6 +77,12 @@ YInfo::YInfo(const QString &path)
 YInfo::~YInfo()
 {
     dbg() << HERE() << endl;
+    for (YInfoJumpListRecord *record : mJumpList) {
+        delete record;
+    }
+    for (YInfoStartPositionRecord *record : mStartPosition) {
+        delete record;
+    }
 }
 
 /**
@@ -193,6 +199,7 @@ void YInfo::updateStartPosition(const YBuffer *buffer, const YCursor cursor)
     for (StartPositionVector::Iterator it = mStartPosition.begin(); it != mStartPosition.end(); ++it) {
         if ((*it)->filename() == buffer->fileName()) {
             found = true;
+            delete *it;
             mStartPosition.erase(it);
             mStartPosition.push_back(new YInfoStartPositionRecord(buffer->fileName(), cursor));
             return;

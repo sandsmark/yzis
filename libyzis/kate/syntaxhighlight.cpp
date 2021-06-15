@@ -1263,6 +1263,7 @@ void YzisHighlighting::cleanup()
     qDeleteAll(m_attributeArrays);
     m_attributeArrays.clear();
     internalIDList.clear();
+    qDeleteAll(m_additionalData.values());
 }
 
 void YzisHighlighting::generateContextStack(int *ctxNum, int ctx, QVector<short>* ctxs, int *prevLine)
