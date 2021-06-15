@@ -60,11 +60,11 @@ public:
     YFont &operator=(const YFont &color);
 
 private:
-    int m_weight;
-    bool m_italic;
-    bool m_underline;
-    bool m_overline;
-    bool m_strikeOut;
+    int m_weight = Normal;
+    bool m_italic = false;
+    bool m_underline = false;
+    bool m_overline = false;
+    bool m_strikeOut = false;
 };
 
 #endif

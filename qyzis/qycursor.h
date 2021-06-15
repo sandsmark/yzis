@@ -49,9 +49,9 @@ protected:
     virtual void paintEvent(QPaintEvent *pe);
 
 private:
-    CursorShape mCursorShape;
-    QYEdit *mEdit;
-    QYView *mView;
+    CursorShape mCursorShape = CursorHidden;
+    QYEdit *mEdit = nullptr;
+    QYView *mView = nullptr;
 };
 
 YDebugStream &operator<<(YDebugStream &out, const QYCursor::CursorShape &shape);
