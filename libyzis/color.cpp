@@ -41,7 +41,7 @@ static int hex2int(QChar hexchar)
     } else if (hexchar >= 'a' && hexchar <= 'f') {
         v = hexchar.cell() - 'a' + 10;
     } else {
-        v = -1;
+        v = 0;
     }
 
     return v;
@@ -255,7 +255,7 @@ YColor::YColor(Qt::GlobalColor color)
 void YColor::invalidate()
 {
     m_valid = false;
-    m_red = m_green = m_blue = -1;
+    m_red = m_green = m_blue = 0;
 }
 
 void YColor::setRgb(QRgb rgb)
