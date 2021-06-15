@@ -274,7 +274,7 @@ void YColor::setNamedColor(const QString &name)
         return;
     }
 
-    QByteArray n = name.toLatin1();
+    const QByteArray n = name.toLatin1();
     int len = n.length();
 
     if (name.startsWith('#')) {
@@ -304,7 +304,7 @@ void YColor::setNamedColor(const QString &name)
         ++len;
         char *name_no_space = (char *)malloc(len);
 
-        for (int o = 0, i = 0; i < len; i++) {
+        for (int o = 0, i = 0; i < n.length(); i++) {
             if (n[i] != '\t' && n[i] != ' ') {
                 name_no_space[o++] = n[i];
             }
