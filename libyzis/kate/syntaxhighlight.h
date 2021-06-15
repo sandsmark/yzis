@@ -32,7 +32,7 @@
 #include <QStringList>
 #include <QMap>
 #include <QHash>
-#include <QTime>
+#include <QElapsedTimer>
 #include <QVector>
 #include <QMimeDatabase>
 
@@ -471,7 +471,7 @@ private:
 
     YzisSyntaxDocument *syntax;
     uint dynamicCtxsCount;
-    QTime lastCtxsReset;
+    QElapsedTimer lastCtxsReset;
     bool forceNoDCReset;
     QMimeDatabase m_mimeDatabase;
 };
