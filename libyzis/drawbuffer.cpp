@@ -36,8 +36,6 @@ YDrawBuffer::YDrawBuffer(const YView *view, int columns, int lines) :
     mScreenOffset(0, 0),
     mView(view)
 {
-    mFirstBufferLine = 0;
-    mScreenTopBufferLine = 0;
     mEOLCell.step(" ");
     setScreenSize(columns, lines);
     mContent << (YDrawSection() << YDrawLine());

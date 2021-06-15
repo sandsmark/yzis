@@ -321,12 +321,12 @@ private:
 
     YCursor mScreenOffset;
     YDrawCell mEOLCell;
-    int mScreenWidth;
-    int mScreenHeight;
-    int mFirstBufferLine;
-    int mScreenTopBufferLine;
+    int mScreenWidth = 0;
+    int mScreenHeight = 0;
+    int mFirstBufferLine = 0;
+    int mScreenTopBufferLine = 0;
 
-    const YView *mView;
+    const YView *mView = nullptr;
 
     friend YZIS_EXPORT YDebugStream &operator<<(YDebugStream &out, const YDrawBuffer &buff);
 };

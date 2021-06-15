@@ -63,10 +63,10 @@ private:
     /* working cell */
     YDrawCell *mCell;
 
-    int mWidth;
-    int mLength;
+    int mWidth = 0;
+    int mLength = 0;
 
-    bool changed;
+    bool changed = false;
 
     friend class YDrawBuffer;
     friend class YDrawBufferIterator;

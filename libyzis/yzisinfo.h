@@ -159,7 +159,7 @@ private:
     void saveExHistory(QTextStream &write);
 
     QFile mYzisinfo;
-    bool mYzisinfoInitialized; // is yzisinfo initialized
+    bool mYzisinfoInitialized = false; // is yzisinfo initialized
 
     /**
      * start position history
@@ -177,7 +177,7 @@ private:
     * current jump list item
     */
 
-    unsigned int mCurrentJumpListItem;
+    unsigned int mCurrentJumpListItem = 0;
 };
 
 #endif // YZISINFO_H
