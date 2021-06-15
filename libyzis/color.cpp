@@ -302,7 +302,7 @@ void YColor::setNamedColor(const QString &name)
         }
     } else { // find a color name
         ++len;
-        char *name_no_space = (char *)malloc(len);
+        char *name_no_space = (char *)calloc(len, 1);
 
         for (int o = 0, i = 0; i < n.length(); i++) {
             if (n[i] != '\t' && n[i] != ' ') {
