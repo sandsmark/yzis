@@ -28,7 +28,13 @@
 
 using namespace yzis;
 
-YZMapping *YZMapping::me = 0L;
+YZMapping *YZMapping::me = nullptr;
+
+void YZMapping::destroy()
+{
+    delete YZMapping::me;
+    YZMapping::me = nullptr;
+}
 
 YZMapping *YZMapping::self()
 {

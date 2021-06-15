@@ -32,6 +32,7 @@ public:
     ~YZMapping();
 
     static YZMapping *self();
+    static void destroy();
 
     void addNormalMapping(const QString &key, const QString &map)
     {

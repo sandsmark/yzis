@@ -3056,6 +3056,12 @@ YzisHlManager::~YzisHlManager()
 
 //static KStaticDeleter<YzisHlManager> sdHlMan;
 
+void YzisHlManager::destroy()
+{
+    delete s_self;
+    s_self = nullptr;
+}
+
 YzisHlManager *YzisHlManager::self()
 {
     if(!s_self) {

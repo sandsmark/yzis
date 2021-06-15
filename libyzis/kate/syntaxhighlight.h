@@ -409,6 +409,7 @@ public:
     ~YzisHlManager();
 
     static YzisHlManager *self();
+    static void destroy();
 
     //    inline KConfig *getKConfig() { return &m_config; };
 

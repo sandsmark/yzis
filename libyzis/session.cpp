@@ -307,7 +307,7 @@ YSession::~YSession()
     dbg() << "~YSession" << endl;
     mYzisinfo->write(); // save yzisinfo
     endModes();
-    delete YzisHlManager::self();
+    YzisHlManager::destroy();
     delete mSchemaManager;
     delete mSearch;
     delete events;
@@ -315,7 +315,7 @@ YSession::~YSession()
     delete mOptions;
     delete mYzisinfo;
     delete YZMapping::self();
-    delete YLuaEngine::self();
+    YLuaEngine::destroy();
     delete mTagStack;
     delete mResourceMgr;
 }

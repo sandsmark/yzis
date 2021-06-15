@@ -45,18 +45,19 @@ public:
     /*
      * YSession interface :
      */
-    virtual bool guiQuit(int errorCode);
-    virtual void guiPopupMessage(const QString &message);
+    virtual bool guiQuit(int errorCode) override;
+    virtual void guiPopupMessage(const QString &message) override;
+    virtual bool guiPromptYesNo(const QString &title, const QString &message) override;
+    virtual int guiPromptYesNoCancel(const QString &title, const QString &message) override;
+    virtual void guiSplitHorizontally(YView *view) override;
+    virtual void guiSetClipboardText(const QString &text, Clipboard::Mode mode) override;
+
     virtual void guiSetFocusCommandLine();
     virtual void guiSetFocusMainWindow();
-    virtual bool guiPromptYesNo(const QString &title, const QString &message);
-    virtual int guiPromptYesNoCancel(const QString &title, const QString &message);
-    virtual void guiSplitHorizontally(YView *view);
-    virtual void guiSetClipboardText(const QString &text, Clipboard::Mode mode);
 
 protected:
-    virtual YView *guiCreateView(YBuffer *buffer);
-    virtual void guiDeleteView(YView *view);
+    virtual YView *guiCreateView(YBuffer *buffer) override;
+    virtual void guiDeleteView(YView *view) override;
 
 private:
     NYSession();
@@ -69,7 +70,7 @@ private:
      */
     void initialiseKeycodes();
 
-    virtual void guiChangeCurrentView(YView *);
+    virtual void guiChangeCurrentView(YView *) override;
 
     /**
       * mapping ncurses->qt for keycodes

@@ -173,7 +173,13 @@ void YLuaEngine::print_lua_stack(lua_State *L, const char *msg, bool type_only)
     }
 }
 
-YLuaEngine *YLuaEngine::me = 0;
+YLuaEngine *YLuaEngine::me = nullptr;
+
+void YLuaEngine::destroy()
+{
+    delete YLuaEngine::me;
+    YLuaEngine::me = nullptr;
+}
 
 YLuaEngine *YLuaEngine::self()
 {

@@ -64,6 +64,7 @@ class YZIS_EXPORT YLuaEngine
 public:
     /** Get the pointer to the singleton YLuaEngine */
     static YLuaEngine *self();
+    static void destroy();
 
     ~YLuaEngine();
 
