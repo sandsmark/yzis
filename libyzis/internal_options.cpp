@@ -158,7 +158,7 @@ void changeEncoding(YBuffer *b, YView *v)
         QString enc = b->getLocalStringOption("encoding");
 
         if (enc != b->encoding()) {
-            if (b->fileIsModified() && YSession::self()->guiPromptYesNo(_("File modified"), _("This file has been modified, do you want to save it ?"))) {
+            if (b->fileIsModified() && YSession::self()->guiPromptYesNo(QObject::tr("File modified"), QObject::tr("This file has been modified, do you want to save it ?"))) {
                 b->save();
             }
 

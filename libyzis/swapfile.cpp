@@ -108,7 +108,7 @@ void YSwapFile::flush()
 
         f.close();
     } else {
-        YSession::self()->guiPopupMessage(_("Warning, the swapfile could not be opened maybe due to restrictive permissions."));
+        YSession::self()->guiPopupMessage(QObject::tr("Warning, the swapfile could not be opened maybe due to restrictive permissions."));
         mNotResetted = true; //don't try again ...
     }
 
@@ -178,7 +178,7 @@ void YSwapFile::init()
                << Qt::endl;
         f.close();
     } else {
-        YSession::self()->guiPopupMessage(_("Warning, the swapfile could not be created maybe due to restrictive permissions."));
+        YSession::self()->guiPopupMessage(QObject::tr("Warning, the swapfile could not be created maybe due to restrictive permissions."));
         mNotResetted = true;
         return;
     }
@@ -229,7 +229,7 @@ bool YSwapFile::recover()
 
         f.close();
     } else {
-        YSession::self()->guiPopupMessage(_("The swap file could not be opened, there will be no recovering for this file, you might want to check permissions of files."));
+        YSession::self()->guiPopupMessage(QObject::tr("The swap file could not be opened, there will be no recovering for this file, you might want to check permissions of files."));
         mRecovering = false;
         return false;
     }

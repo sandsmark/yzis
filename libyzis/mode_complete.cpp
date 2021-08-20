@@ -43,7 +43,7 @@ YModeCompletion::YModeCompletion() :
     YMode()
 {
     mType = ModeCompletion;
-    mString = _("{ Completion }");
+    mString = QObject::tr("{ Completion }");
     mMapMode = MapInsert;
     mIsEditMode = true;
     mIsCmdLineMode = false;
@@ -137,11 +137,11 @@ void YModeCompletion::doComplete(YView *view, bool forward)
     action->replaceText(view, mCompletionStart, currentCursor.x() - mCompletionStart.x(), proposal);
     view->gotoLinePosition(currentCursor.y(), mCompletionStart.x() + proposal.length());
     // display match number in the display bar
-    QString msg(_("Match %1 of %2"));
+    QString msg(QObject::tr("Match %1 of %2"));
     msg = msg.arg(mCurrentProposal).arg(mProposedCompletions.size() - 1);
 
     if (mCurrentProposal == 0) {
-        msg = _("Back at original");
+        msg = QObject::tr("Back at original");
     }
 
     view->displayInfo(msg);

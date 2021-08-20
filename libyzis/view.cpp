@@ -243,19 +243,19 @@ void YView::updateCursor()
 
         if (topLine() < 1)
             if ((topLine() + getLinesVisible()) >= nblines) {
-                percentage = _("All");
+                percentage = QObject::tr("All");
             } else {
-                percentage = _("Top");
+                percentage = QObject::tr("Top");
             }
         else if ((topLine() + getLinesVisible()) >= nblines) {
-            percentage = _("Bot");
+            percentage = QObject::tr("Bot");
         } else if (y < 0 || y > nblines) {
             err() << HERE() << "Percentage out of range" << endl;
         } else {
             percentage.setNum((int)(y * 100 / (nblines == 0 ? 1 : nblines)));
         }
     } else {
-        percentage = _("All");
+        percentage = QObject::tr("All");
     }
 
     if (guiStatusBar()) {
@@ -271,7 +271,7 @@ void YView::updateMode()
     mode = currentMode()->toString();
 
     if (isRecording()) {
-        mode += _(" { Recording }");
+        mode += QObject::tr(" { Recording }");
     }
 
     if (guiStatusBar()) {
@@ -656,7 +656,7 @@ void YView::printToFile(const QString & /*path*/)
             qtprinter.printToFile(path);
             qtprinter.run();
         } else {
-            YSession::self()->guiPopupMessage(_("To use the Qt printer, you need to have an X11 DISPLAY set and running, you should try pslib in console mode"));
+            YSession::self()->guiPopupMessage(QObject::tr("To use the Qt printer, you need to have an X11 DISPLAY set and running, you should try pslib in console mode"));
         }
 
         return ;

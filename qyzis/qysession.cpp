@@ -72,25 +72,25 @@ void QYSession::setupActions()
     QAction *a;
     QMenu *m;
     QMenuBar *mb = menuBar();
-    m = mb->addMenu(_("&File"));
-    a = new QAction(QIcon(":/images/new.png"), _("&New..."), this);
+    m = mb->addMenu(tr("&File"));
+    a = new QAction(QIcon(":/images/new.png"), tr("&New..."), this);
     connect(a, SIGNAL(triggered()), this, SLOT(slotFileNew()));
     m->addAction(a);
-    a = new QAction(QIcon(":/images/open.png"), _("&Open..."), this);
+    a = new QAction(QIcon(":/images/open.png"), tr("&Open..."), this);
     connect(a, SIGNAL(triggered()), this, SLOT(slotFileOpen()));
     m->addAction(a);
-    a = new QAction(QIcon(":/images/quit.png"), _("&Quit..."), this);
+    a = new QAction(QIcon(":/images/quit.png"), tr("&Quit..."), this);
     connect(a, SIGNAL(triggered()), this, SLOT(slotFileQuit()));
     m->addAction(a);
 #if 0
     // orzel : not working yet, disabled
-    m = mb->addMenu(_("&Settings"));
-    a = new QAction(_("&Preferences..."), this);
+    m = mb->addMenu(tr("&Settings"));
+    a = new QAction(tr("&Preferences..."), this);
     connect(a, SIGNAL(triggered()), this, SLOT(slotPreferences()));
     m->addAction(a);
 #endif
-    m = mb->addMenu(_("&Help"));
-    a = new QAction(_("&About QYzis"), this);
+    m = mb->addMenu(tr("&Help"));
+    a = new QAction(tr("&About QYzis"), this);
     connect(a, SIGNAL(triggered()), this, SLOT(slotAbout()));
     m->addAction(a);
 }
@@ -140,8 +140,8 @@ void QYSession::slotPreferences()
 void QYSession::slotAbout()
 {
     dbg() << "slotAbout()" << endl;
-    QMessageBox::about(this, _("About QYzis"),
-                       _("Qt frontend for the yzis text editor\n\n"
+    QMessageBox::about(this, tr("About QYzis"),
+                       tr("Qt frontend for the yzis text editor\n\n"
                          "http://www.yzis.org"));
 }
 
@@ -219,13 +219,13 @@ void QYSession::guiDeleteView(YView *view)
 void QYSession::guiPopupMessage(const QString &message)
 {
     dbg() << "popupMessage(" << message << ")" << endl;
-    QMessageBox::information(this, _("Error"), message);
+    QMessageBox::information(this, tr("Error"), message);
 }
 
 bool QYSession::guiPromptYesNo(const QString &title, const QString &message)
 {
     dbg() << "guiPromptYesNo(" << title << "," << message << ")" << endl;
-    int v = QMessageBox::question(this, title, message, _("Yes"), _("No"));
+    int v = QMessageBox::question(this, title, message, tr("Yes"), tr("No"));
 
     if (v == 0) {
         return true;
@@ -237,7 +237,7 @@ bool QYSession::guiPromptYesNo(const QString &title, const QString &message)
 int QYSession::guiPromptYesNoCancel(const QString &title, const QString &message)
 {
     dbg() << "guiPromptYesNoCancel(" << title << "," << message << ")" << endl;
-    return QMessageBox::question(this, title, message, _("Yes"), _("No"), _("Cancel"));
+    return QMessageBox::question(this, title, message, tr("Yes"), tr("No"), tr("Cancel"));
 }
 
 void QYSession::guiSplitHorizontally(YView *view)

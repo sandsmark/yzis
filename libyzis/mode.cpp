@@ -213,7 +213,7 @@ YModeIntro::YModeIntro() :
     YMode()
 {
     mType = ModeIntro;
-    mString = _("[ Introduction ]");
+    mString = QObject::tr("[ Introduction ]");
     mIsEditMode = true;
     mIsCmdLineMode = false;
     mIsSelMode = false;

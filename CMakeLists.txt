@@ -94,7 +94,6 @@ if (MSVC)
 endif (MSVC)
 
 if (UNIX)
-    find_package(X11 REQUIRED)
     add_definitions("-DYZIS_UNIX")
 endif (UNIX)
 

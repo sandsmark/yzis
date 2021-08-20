@@ -170,7 +170,7 @@ static bool jumpToJumpRecord(const YInfoJumpListRecord *record)
         // TODO: is this necessary?  It was in the old code, but it seems
         // like it just gets in the way when using kyzis (nyzis may be another matter)
         if (buffer->fileIsModified()) {
-            YSession::self()->guiPopupMessage(_("File has been modified"));
+            YSession::self()->guiPopupMessage(QObject::tr("File has been modified"));
             return false;
         }
 
@@ -231,7 +231,7 @@ bool tagJumpTo(const QString &word)
     }
 
     if (!openTagFile()) {
-        YSession::self()->guiPopupMessage(_("Unable to find tag file"));
+        YSession::self()->guiPopupMessage(QObject::tr("Unable to find tag file"));
         return true;
     }
 
@@ -268,7 +268,7 @@ void tagNext()
         doJumpToTag(*entry);
         showNumMatches();
     } else {
-        YSession::self()->currentView()->displayInfo(_("Could not find next tag"));
+        YSession::self()->currentView()->displayInfo(QObject::tr("Could not find next tag"));
     }
 }
 
@@ -281,7 +281,7 @@ void tagPrev()
         doJumpToTag(*entry);
         showNumMatches();
     } else {
-        YSession::self()->currentView()->displayInfo(_("Could not find previous tag"));
+        YSession::self()->currentView()->displayInfo(QObject::tr("Could not find previous tag"));
     }
 }
 
@@ -290,7 +290,7 @@ bool tagPop()
     YTagStack &stack = YSession::self()->getTagStack();
 
     if (stack.empty()) {
-        YSession::self()->currentView()->displayInfo(_("At bottom of tag stack"));
+        YSession::self()->currentView()->displayInfo(QObject::tr("At bottom of tag stack"));
         return true;
     }
 

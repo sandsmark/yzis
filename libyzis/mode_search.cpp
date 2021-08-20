@@ -40,7 +40,7 @@ YModeSearch::YModeSearch() :
     YMode()
 {
     mType = YMode::ModeSearch;
-    mString = _("[ Search ]");
+    mString = QObject::tr("[ Search ]");
     mMapMode = MapCmdline;
     mHistory = new YZHistory;
     incSearchFound = false;
@@ -109,7 +109,7 @@ CmdState YModeSearch::execCommand(YView *view, const YKeySequence &keys, YKeySeq
         if (found) {
             view->gotoLinePosition(pos.y(), pos.x());
         } else {
-            view->displayInfo(_("Pattern not found: ") + what);
+            view->displayInfo(QObject::tr("Pattern not found: ") + what);
         }
 
         view->modePool()->pop();
@@ -191,7 +191,7 @@ YModeSearchBackward::YModeSearchBackward() :
     YModeSearch()
 {
     mType = YMode::ModeSearchBackward;
-    mString = _("[ Search backward ]");
+    mString = QObject::tr("[ Search backward ]");
 }
 YModeSearchBackward::~YModeSearchBackward()
 {

@@ -267,7 +267,7 @@ void YLuaEngine::exe(const QString &function, const char *sig, ...)
 endwhile:
     nres = strlen(sig);
 
-    if (!yzpcall(narg, nres, _("Executing function %1").arg(function))) {
+    if (!yzpcall(narg, nres, QObject::tr("Executing function %1").arg(function))) {
         va_end(vl);
         return;
     }
@@ -315,7 +315,7 @@ void YLuaEngine::execute(const QString &function, int nbArgs, int nbResults)
 {
     dbg().SPrintf("execute( function=%s, nbArgs=%d, nbResults=%d", qp(function), nbArgs, nbResults);
     lua_getglobal(L, function.toUtf8());
-    yzpcall(nbArgs, nbResults, _("YLuaEngine::execute function %1").arg(function));
+    yzpcall(nbArgs, nbResults, QObject::tr("YLuaEngine::execute function %1").arg(function));
 }
 
 QString YLuaEngine::source(const QString &filename)
@@ -327,7 +327,7 @@ QString YLuaEngine::source(const QString &filename)
     //    lua_gettable(L, LUA_GLOBALSINDEX);
     lua_getglobal(L, "dofile");
     lua_pushstring(L, filename.toUtf8());
-    /*bool success = */ yzpcall(1, 1, _("Lua error when running file %1:\n").arg(filename));
+    /*bool success = */ yzpcall(1, 1, QObject::tr("Lua error when running file %1:\n").arg(filename));
     cleanLuaStack(L); // in case sourcing the file left something on the stack
     return luaReturnValue;
 }
@@ -341,7 +341,7 @@ int YLuaEngine::execInLua(const QString &luacode)
     lua_pushstring(L, luacode.toUtf8());
 
     // print_lua_stack(L, "loadstring step 0");
-    if (!yzpcall(1, 2, _("Executing code in lua\n"))) {
+    if (!yzpcall(1, 2, QObject::tr("Executing code in lua\n"))) {
         // Error in the call
         return 1;
     }
@@ -396,7 +396,7 @@ bool YLuaEngine::yzpcall(int nbArg, int nbReturn, const QString &context)
     } else if (lua_isfunction(L, -2)) {
         // error handler function on the stack at position -2
         lua_pop(L, 1);
-        yzpcall(0, 0, _("error handling function called from within yzpcall"));
+        yzpcall(0, 0, QObject::tr("error handling function called from within yzpcall"));
     } else {
         // big error, we do not grok what happend
         print_lua_stack(L, "loadstring returns strange things");

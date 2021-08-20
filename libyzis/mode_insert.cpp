@@ -40,7 +40,7 @@ YModeInsert::YModeInsert() :
     YModeCommand()
 {
     mType = YMode::ModeInsert;
-    mString = _("[ Insert ]");
+    mString = QObject::tr("[ Insert ]");
     mIM = true;
     mMapMode = MapInsert;
     mIsEditMode = true;
@@ -380,7 +380,7 @@ YModeReplace::YModeReplace() :
     YModeInsert()
 {
     mType = ModeReplace;
-    mString = _("[ Replace ]");
+    mString = QObject::tr("[ Replace ]");
 }
 
 CmdState YModeReplace::commandInsert(const YCommandArgs &args)

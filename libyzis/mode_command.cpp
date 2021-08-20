@@ -51,7 +51,7 @@ YModeCommand::YModeCommand() :
     YMode()
 {
     mType = ModeCommand;
-    mString = _("[ Awaiting Command ]");
+    mString = QObject::tr("[ Awaiting Command ]");
     commands.clear();
     motions.clear();
     mIsEditMode = false;

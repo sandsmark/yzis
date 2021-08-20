@@ -589,7 +589,7 @@ void YzisSyntaxDocument::setupModeList(bool force)
             // Let's make a new YzisSyntaxModeListItem to instert in myModeList from the information in katesyntax..rc
             YzisSyntaxModeListItem *mli = new YzisSyntaxModeListItem;
             mli->name       = settings.value("name").toString();
-            mli->nameTranslated = _(mli->name.toUtf8());
+            mli->nameTranslated = QObject::tr(mli->name.toUtf8());
             mli->section    = settings.value("section").toByteArray();
             mli->mimetype   = settings.value("mimetype").toString();
             mli->extension  = settings.value("extension").toString();
@@ -646,14 +646,14 @@ void YzisSyntaxDocument::setupModeList(bool force)
                         // modified time to keep cache in sync
                         settings.setValue("lastModified", lastModified);
                         // Now that the data is in the config file, translate section
-                        mli->section    = _("Language Section");  // We need the i18n context for when reading again the config
-                        mli->nameTranslated = _(mli->name.toUtf8());
+                        mli->section    = QObject::tr("Language Section");  // We need the i18n context for when reading again the config
+                        mli->nameTranslated = QObject::tr(mli->name.toUtf8());
                         // Append the new item to the list.
                         myModeList.append(mli);
                     }
                 } else {
                     YzisSyntaxModeListItem *emli = new YzisSyntaxModeListItem;
-                    emli->section = _("Errors!");
+                    emli->section = QObject::tr("Errors!");
                     emli->mimetype = "invalid_file/invalid_file";
                     emli->extension = "invalid_file.invalid_file";
                     emli->version = "1.";

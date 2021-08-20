@@ -54,8 +54,6 @@
 // if defined, will be displayed in the "Intro" Mode
 #define VERSION_CHAR_DATE "mercurial>2008-12-08"
 
-#define _(a) QString::fromUtf8(gettext(a))
-
 #ifdef SAFE_MODE
 #define YZIS_SAFE_MODE
 #else

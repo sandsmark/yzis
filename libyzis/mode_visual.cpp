@@ -44,7 +44,7 @@ YModeVisual::YModeVisual() :
     mStartViewCursor()
 {
     mType = YMode::ModeVisual;
-    mString = _("[ Visual ]");
+    mString = QObject::tr("[ Visual ]");
     mMapMode = MapVisual;
     commands.clear();
     mIsEditMode = true;
@@ -298,7 +298,7 @@ YModeVisualLine::YModeVisualLine() :
     YModeVisual()
 {
     mType = YMode::ModeVisualLine;
-    mString = _("[ Visual Line ]");
+    mString = QObject::tr("[ Visual Line ]");
 }
 YModeVisualLine::~YModeVisualLine()
 {
@@ -325,7 +325,7 @@ YModeVisualBlock::YModeVisualBlock() :
     YModeVisual()
 {
     mType = YMode::ModeVisualBlock;
-    mString = _("[ Visual Block ]");
+    mString = QObject::tr("[ Visual Block ]");
 }
 YModeVisualBlock::~YModeVisualBlock()
 {

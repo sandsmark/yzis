@@ -1226,7 +1226,7 @@ YzisHighlighting::YzisHighlighting(const YzisSyntaxModeListItem *def) : refCount
     if(def == 0) {
         noHl = true;
         iName = "None"; // not translated internal name (for config and more)
-        iNameTranslated = _("None"); // user visible name
+        iNameTranslated = QObject::tr("None"); // user visible name
         iSection = "";
         m_priority = 0;
         iHidden = false;
@@ -1872,7 +1872,7 @@ void YzisHighlighting::createYzisHlItemData(YzisHlItemDataList &list)
 {
     // If no highlighting is selected we need only one default.
     if(noHl) {
-        list.append(new YzisHlItemData(_("Normal Text"), YzisHlItemData::dsNormal));
+        list.append(new YzisHlItemData(QObject::tr("Normal Text"), YzisHlItemData::dsNormal));
         return;
     }
 
@@ -3242,22 +3242,22 @@ QString YzisHlManager::defaultStyleName(int n, bool translateNames)
         names << "Region Marker";
         // this one is for marking invalid input
         names << "Error";
-        translatedNames << _("Normal");
-        translatedNames << _("Keyword");
-        translatedNames << _("Data Type");
-        translatedNames << _("Decimal/Value");
-        translatedNames << _("Base-N Integer");
-        translatedNames << _("Floating Point");
-        translatedNames << _("Character");
-        translatedNames << _("String");
-        translatedNames << _("Comment");
-        translatedNames << _("Others");
-        translatedNames << _("Alert");
-        translatedNames << _("Function");
+        translatedNames << QObject::tr("Normal");
+        translatedNames << QObject::tr("Keyword");
+        translatedNames << QObject::tr("Data Type");
+        translatedNames << QObject::tr("Decimal/Value");
+        translatedNames << QObject::tr("Base-N Integer");
+        translatedNames << QObject::tr("Floating Point");
+        translatedNames << QObject::tr("Character");
+        translatedNames << QObject::tr("String");
+        translatedNames << QObject::tr("Comment");
+        translatedNames << QObject::tr("Others");
+        translatedNames << QObject::tr("Alert");
+        translatedNames << QObject::tr("Function");
         // this next one is for denoting the beginning/end of a user defined folding region
-        translatedNames << _("Region Marker");
+        translatedNames << QObject::tr("Region Marker");
         // this one is for marking invalid input
-        translatedNames << _("Error");
+        translatedNames << QObject::tr("Error");
     }
 
     return translateNames ? translatedNames[n] : names[n];

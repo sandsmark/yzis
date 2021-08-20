@@ -634,7 +634,7 @@ void YBuffer::load(const QString &file)
         insertRegion(YCursor(0, 0), data);
         fl.close();
     } else if (QFile::exists(d->path)) {
-        YSession::self()->guiPopupMessage(_("Failed opening file %1 for reading : %2").arg(d->path).arg(fl.errorString()));
+        YSession::self()->guiPopupMessage(QObject::tr("Failed opening file %1 for reading : %2").arg(d->path).arg(fl.errorString()));
     }
 
     setChanged(false);
@@ -719,7 +719,7 @@ bool YBuffer::save()
 
         file.close();
     } else {
-        YSession::self()->guiPopupMessage(_("Failed opening file %1 for writing : %2").arg(d->path).arg(file.errorString()));
+        YSession::self()->guiPopupMessage(QObject::tr("Failed opening file %1 for writing : %2").arg(d->path).arg(file.errorString()));
         d->isHLUpdating = true;
         return false;
     }
@@ -727,7 +727,7 @@ bool YBuffer::save()
     d->isHLUpdating = false; //override so that it does not parse all lines
 
     foreach (YView *view, d->views) {
-        view->displayInfo(_("Written %1 bytes to file %2").arg(getWholeTextLength()).arg(d->path));
+        view->displayInfo(QObject::tr("Written %1 bytes to file %2").arg(getWholeTextLength()).arg(d->path));
     }
 
     setChanged(false);
@@ -1361,7 +1361,7 @@ YCursor YBuffer::end() const
 bool YBuffer::checkRecover()
 {
     //check if we have a pending replay
-    if (d->mPendingReplay && YSession::self()->guiPromptYesNo(_("Recover"), _("A swap file was found for this file, it was presumably created because your computer or yzis crashed, do you want to start the recovery of this file ?"))) {
+    if (d->mPendingReplay && YSession::self()->guiPromptYesNo(QObject::tr("Recover"), QObject::tr("A swap file was found for this file, it was presumably created because your computer or yzis crashed, do you want to start the recovery of this file ?"))) {
         if (d->swapFile->recover()) {
             setChanged(true);
         }

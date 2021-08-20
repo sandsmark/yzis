@@ -232,7 +232,7 @@ YView *NYSession::guiCreateView(YBuffer *buffer)
 void NYSession::guiPopupMessage(const QString &_message)
 {
     int nl, nc;
-    QString anyKeyMsg = _("(Press any key)");
+    QString anyKeyMsg = tr("(Press any key)");
     int length = anyKeyMsg.length();
     QString message = _message.simplified();
 #if 0

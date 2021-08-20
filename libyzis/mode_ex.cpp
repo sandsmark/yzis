@@ -102,7 +102,7 @@ YModeEx::YModeEx() :
     YMode()
 {
     mType = ModeEx;
-    mString = _("[ Ex ]");
+    mString = QObject::tr("[ Ex ]");
     mMapMode = MapCmdline;
     commands.clear();
     ranges.clear();
@@ -522,7 +522,7 @@ CmdState YModeEx::execExCommand(YView *view, const QString &inputs)
     if (_input.length() == 0) {
         view->gotoViewCursor(view->viewCursorFromLinePosition(view->buffer()->firstNonBlankChar(to), to));
     } else if (!commandIsValid) {
-        YSession::self()->guiPopupMessage(_("Not an editor command: ") + _input);
+        YSession::self()->guiPopupMessage(QObject::tr("Not an editor command: ") + _input);
     }
 
     return ret;
@@ -673,7 +673,7 @@ CmdState YModeEx::quit(const YExCommandArgs &args)
             ret = CmdQuit;
             YSession::self()->exitRequest();
         } else {
-            YSession::self()->guiPopupMessage(_("One file is modified! Save it first..."));
+            YSession::self()->guiPopupMessage(QObject::tr("One file is modified! Save it first..."));
         }
     } else {
         //close current view, if it's the last one on a buffer , check it is saved or not
@@ -688,14 +688,14 @@ CmdState YModeEx::quit(const YExCommandArgs &args)
                     ret = CmdOk;
                 }
             } else {
-                YSession::self()->guiPopupMessage(_("One file is modified! Save it first..."));
+                YSession::self()->guiPopupMessage(QObject::tr("One file is modified! Save it first..."));
             }
         } else {
             if (force || !args.view->buffer()->fileIsModified()) {
                 ret = CmdQuit;
                 YSession::self()->deleteView(args.view);
             } else {
-                YSession::self()->guiPopupMessage(_("One file is modified! Save it first..."));
+                YSession::self()->guiPopupMessage(QObject::tr("One file is modified! Save it first..."));
             }
         }
     }
@@ -789,7 +789,7 @@ CmdState YModeEx::edit(const YExCommandArgs &args)
 
     // check if the file needs to be saved
     if (!force && args.view->buffer()->fileIsModified()) {
-        YSession::self()->guiPopupMessage(_("No write since last change (add ! to override)"));
+        YSession::self()->guiPopupMessage(QObject::tr("No write since last change (add ! to override)"));
         return CmdError;
     }
 
@@ -851,10 +851,10 @@ CmdState YModeEx::set(const YExCommandArgs &args)
 
     if (!matched) {
         ret = CmdError;
-        YSession::self()->guiPopupMessage(QString(_("Invalid option name : %1")).arg(args.arg.simplified()));
+        YSession::self()->guiPopupMessage(QString(QObject::tr("Invalid option name : %1")).arg(args.arg.simplified()));
     } else if (!success) {
         ret = CmdError;
-        YSession::self()->guiPopupMessage(_("Bad value for option given"));
+        YSession::self()->guiPopupMessage(QObject::tr("Bad value for option given"));
     }
 
     return ret;
@@ -923,7 +923,7 @@ CmdState YModeEx::substitute(const YExCommandArgs &args)
 CmdState YModeEx::hardcopy(const YExCommandArgs &args)
 {
     if (args.arg.length() == 0) {
-        YSession::self()->guiPopupMessage(_("Please specify a filename"));
+        YSession::self()->guiPopupMessage(QObject::tr("Please specify a filename"));
         return CmdError;
     }
 
@@ -953,7 +953,7 @@ CmdState YModeEx::source(const YExCommandArgs &args)
     dbg().SPrintf("source() filename=%s", qp(filename));
 
     if (YLuaEngine::self()->source(filename) != 0) {
-        YSession::self()->guiPopupMessage(_("The file %1 could not be found").arg(filename));
+        YSession::self()->guiPopupMessage(QObject::tr("The file %1 could not be found").arg(filename));
     }
 
     dbg() << "source() done" << endl;
@@ -1214,7 +1214,7 @@ CmdState YModeEx::enew(const YExCommandArgs &)
 
 CmdState YModeEx::registers(const YExCommandArgs &)
 {
-    QString infoMessage(_("Registers:\n")); // will contain register-value table
+    QString infoMessage(QObject::tr("Registers:\n")); // will contain register-value table
     QList<QChar> keys = YSession::self()->getRegisters();
     QString regContents;
 
@@ -1380,7 +1380,7 @@ CmdState YModeEx::cd(const YExCommandArgs &args)
         tagReset();
         return CmdOk;
     } else {
-        YSession::self()->guiPopupMessage(_("Cannot change to specified directory"));
+        YSession::self()->guiPopupMessage(QObject::tr("Cannot change to specified directory"));
         return CmdError;
     }
 }
